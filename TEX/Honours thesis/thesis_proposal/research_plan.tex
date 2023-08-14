@@ -1,0 +1,98 @@
+% \documentclass[12pt]{article}
+% \usepackage{natbib}
+% \usepackage{graphicx}
+% \usepackage{amsmath}
+% \usepackage{hyperref}
+% \usepackage{url}
+% \usepackage{geometry}
+% \usepackage{titlesec}
+% \usepackage{titling}
+% \usepackage{parskip}
+
+% % Set margins
+% \geometry{
+%   left=2cm,
+%   right=2cm,
+%   top=2cm,
+%   bottom=2cm,
+% }
+
+% % Remove paragraph indentation
+% \setlength{\parindent}{0pt}
+
+% % Customize title and author names
+% \setlength{\droptitle}{-7em}  % This is your set space above the title.
+% \title{\textbf{Thesis timeline and plan}}
+% \pretitle{\begin{center}\Huge}
+% \posttitle{\end{center}}
+% \author{\textbf{Student}: Jordan Moncrieff} \\ %\textbf{Supervisor 1:} Bruce Gendre \\ \textbf{}{Supervisor 2:} Fiona Panther}
+% % \preauthor{\begin{center}\large\ttfamily}
+% \postauthor{\end{center}}
+
+% \begin{document}
+
+% \maketitle
+
+\chapter{Research plan}
+
+\section{Introduction}
+% This project aims to study binary black hole mergers, with a particular focus on the concept of gravitational reconnection. This phenomenon, where gravitational field lines from separate black holes connect together, could result in astrophysically relevant phenomena, including a jet emission of particles trapped within stable Lagrange points. This could potentially provide an electromagnetic counterpart to binary black hole mergers.\par
+
+This document gives a rough plan for my project going forward, with an approximate (and idealised) timeline.
+
+\section{Project Timeline}
+
+Bellow I will list the tasks I hope to achieve in this project. They are listed in the rough order I expect to achieve them, although there will be overlap, along with obvious changes in direction throughout the project. I am not foolish enough to add the expected time of each task.
+
+\subsection{Summer Internship}
+
+\begin{itemize}
+    \item \textbf{Thesis Drafting:} The first task will be to begin drafting the honours thesis. This will include a detailed explanation of the project and introductory theory on general relativity, black holes, along with some of the basic plasma and high energy physics that inspired the project. The process of writing my thesis will continue throughout the next semester.
+    
+    \item \textbf{Literature Review:} A literature review will be conducted to understand the current state of research on binary black hole mergers and related topics. This will help identify gaps in the existing knowledge and guide the direction of the project.
+    
+    \item \textbf{Analytical Modelling:} An attempt will be made to analytically model the field at Lagrange points using gravito-electromagnetism and the Lense-Thirring effect. This will help understand how a particle in equilibrium is affected by dipolar (essentially magnetic) forces produced by spinning masses.
+    
+    \item \textbf{Review of Formalisms:} Post-Newtonian formalism of general relativity, as well as perturbation and asymptotic methods, will be reviewed. I will try applying these formalisms to produce a more realistic approximation of the system studied with gravitoelectromagnetism. This will push the analytical methods as far as they can go, as exact solutions to Einstein's field equations within binary black holes are unlikely to exist.
+    
+    \item \textbf{Numerical Simulation:} Using the analytic formulas from the post Newtonian framework, numerical simulations will be conducted to study the resulting behaviour around these binary orbits. Python will be used for these simulations, and the idea is to begin exploring how to model the system  without having to resort to very intensive numerical relativity simulations.
+    
+    \item \textbf{Numerical Relativity:} The feasibility of conducting a proper simulation of the merger using numerical relativity will be assessed.
+\end{itemize}
+
+\subsection{Semester 2}
+
+\begin{itemize}
+    \item \textbf{Continuation of Summer Tasks:} The tasks planned for the summer break will be continued into the second semester. Given the ambitious nature of these tasks, I suspect that they will take longer than the summer break to complete (and there is a good chance they will take me to the end of the thesis, but this plan is being optimistic).
+    
+    \item \textbf{Relativistic Simulations:} Once the summer tasks are completed, the focus will shift to producing more robust fully relativistic simulations of the phenomena. I believe these full simulations are necessary to clearly demonstrate the phenomena of gravitational reconnection, which I conjecture will only become important in strong gravitational field limits where approximation methods fail.
+    
+    \item \textbf{Supercomputing:} Numerical relativity simulations will require the use of supercomputing resources. From a previous internship I might still have time on Pawsey that can be used, otherwise I will look into OzStar and other options (Fiona would be knowledgeable in this area). It would be good to get some contacts who are experienced in numerical relativity to assist with this.
+    
+    \item \textbf{Astrophysical Consequences:} If time permits, the astrophysical consequences of gravitational reconnection will be explored, particularly jet formation and resulting EM emission from BBH mergers.
+\end{itemize}
+
+\section{Future Work}
+The project's future work will depend on
+the progress made during the summer internship and the second semester. There are many places this project can go from this point, for example:
+
+\begin{itemize}
+    \item \textbf{Further simulations:} Continue developing better numerical relativity simulations of the process.
+    
+    \item \textbf{Horizons:} Explore how event horizons \textit{within} binaries behave. Do all the properties of black holes behave the same when you have a binary? What are the exotic spacetime geometries inside binaries?
+    
+    \item \textbf{Astrophysical consequences} Study the resulting jet phenomena. Particle, fluid, and nuclear simulations could be useful.
+    
+    \item \textbf{Observations:} Look for these signals in BBH mergers. Setup pipeline to look for these signals post GW detections.
+    
+    \item \textbf{Nuclear Physics:} The material in Lagrange point being ejected could act as a mini-kilonova, which would posses many very interesting Nuclear properties.
+    
+    \item  \textbf{Fundamental Physics:} Explore how QFT effects (e.g. Hawking radiation) impact BBHs. Are there new quantum effects for binaries? Can we use binaries to probe quantum gravitational effects? Results could be good test of general relativity and singularity theorems.
+
+    
+\end{itemize}
+
+\bibliographystyle{abbrv}
+\bibliography{thesis_proposal/proposal_ref}
+
+% \end{document}

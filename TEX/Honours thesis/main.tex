@@ -1,0 +1,134 @@
+\documentclass[11pt,a4paper,twoside,openright,final,titlepage]{report}
+\usepackage[utf8]{inputenc}
+\usepackage{amsmath}
+\usepackage{amsfonts}
+\usepackage{amssymb}
+\usepackage{makeidx}
+\usepackage{graphicx}
+\usepackage{layout}
+\usepackage{lscape}
+\usepackage{xfrac}
+\usepackage{tabularx}
+\usepackage{rotating}
+\usepackage{longtable}
+%\usepackage{todonotes}
+\usepackage[colorlinks=true,
+							citecolor=black,
+							linkcolor=black,
+							urlcolor=red,
+							linktocpage=true,
+							hyperfootnotes=false]{hyperref}
+
+\usepackage[square,sort,numbers,authoryear]{natbib}
+\usepackage{chapterbib}
+\setlength\bibhang{.3in}
+
+
+\usepackage{lineno}
+\usepackage{setspace}
+\onehalfspacing
+\usepackage{microtype}
+\usepackage{color}
+\usepackage{fancyhdr}
+\usepackage[labelfont=bf]{caption}
+% For electronic submission use:
+\usepackage[inner=2cm,outer=2cm,top=2cm=bottom=2cm]{geometry}
+% For printing use:
+%\usepackage[inner=4cm,outer=2cm,top=2cm=bottom=2cm]{geometry}
+\usepackage{tocbibind}
+
+
+\renewcommand{\chaptermark}[1]{\markboth{\MakeUppercase{\thechapter. #1 }}{}}
+\renewcommand{\sectionmark}[1]{}
+\fancyhf{}
+\fancyhead[RO]{\bfseries\rightmark}
+\fancyhead[LE]{\bfseries\leftmark}
+\fancyfoot[C]{\thepage}
+\pagestyle{fancy}
+
+\newcommand\frontmatter{\pagenumbering{roman}}
+\newcommand\mainmatter{\cleardoublepage\pagenumbering{arabic}}
+
+\newenvironment{chapabstract}{%
+	\begin{center}%
+		\singlespacing
+		\bfseries ABSTRACT
+	\end{center}}%
+	
+\begin{document}
+	
+%	\layout
+	\begin{titlepage}
+		\centering
+		\vfill
+		\textit{This thesis is presented in partial fulfilment        of the requirements for the Bachelor of Philosophy          (Honours) of the University of Western Australia}\\
+		\vskip 1cm
+		{\bfseries\Large
+				Physics honours thesis \\}
+		
+		\vskip1.5cm
+		
+		\includegraphics[width=.40\linewidth]{UWA_new}
+		\vskip 2cm	
+		\textbf{Author:} Jordan Moncrieff\\
+		% B.Sc. in FieldA; B.Sc. in FieldB; M.Sc in FieldC \\
+		% February 2016\\
+		\vskip .5cm
+		% Center1\\
+		% Centre2\\
+		% SchoolA\\
+%% 		\vskip 1.5cm
+		\textbf{Supervisors:} 
+		    Dr. Bruce Gendre\\
+			Dr. Fiona Panther\\
+
+	\end{titlepage}
+	%\maketitle
+	\frontmatter
+%	\linenumbers
+	% \clearpage
+	% \thispagestyle{empty}
+	% \phantom{a}
+	% \vfill
+	% \vfill
+
+        % Add in official decleration later
+	% \include{Declaration/declaration}
+
+    
+	\begin{abstract}
+		This is my thesis, yada yada yada.
+		
+	\end{abstract}
+
+        % Add in acknowledgements later
+	% \include{Acknowledgments/acknowledgements}
+
+    \include{Declaration/author_declaration}
+    
+	\setcounter{tocdepth}{2}
+	\tableofcontents
+	% \listoffigures
+	% \listoftables
+	\mainmatter
+	\raggedbottom
+        \include{Chapter_1/Intro}
+        \include{Chapter_2/Field_theory}
+        \include{Chapter_3/BHs}
+        \include{Chapter_4/simulations}
+        \include{Chapter_5/results_discussion}
+
+
+        
+        \include{preliminaries/preliminaries}
+        % \include{preliminaries/L1_points}
+        \include{particle_orbits/orbits}
+        % \include{thesis_proposal/research_plan}
+        \include{thesis_proposal/proposal_shortened}
+    %\include{Chapter_2/Theory}
+	%\include{Chapter_3/Methods}
+	%\include{Chapter_4/Numerical}
+	%\include{Chapter_5/Data}	
+	%\include{Chapter_6/Results}	
+    %\include{Chapter_7/Conclusions}	
+\end{document}

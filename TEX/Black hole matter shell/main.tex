@@ -1,0 +1,83 @@
+\documentclass{article}
+
+% Language setting
+% Replace `english' with e.g. `spanish' to change the document language
+\usepackage[english]{babel}
+
+% Set page size and margins
+% Replace `letterpaper' with `a4paper' for UK/EU standard size
+\usepackage[letterpaper,top=2cm,bottom=2cm,left=3cm,right=3cm,marginparwidth=1.75cm]{geometry}
+
+% Useful packages
+\usepackage{amsmath}
+\usepackage{graphicx}
+\usepackage[colorlinks=true, allcolors=blue]{hyperref}
+
+\title{Black hole matter shells}
+\author{Jordan Moncrieff}
+
+\begin{document}
+\maketitle
+
+\begin{abstract}
+It is well known that due to gravitational time dilatation an observer at infinity will observe that it takes an infinite amount of time for a particle falling towards a black hole to reach the event horizon. This might suggest that in the space just above the event horizon of any black hole is a "shell of matter" that is "frozen" outside the black hole. In this document I will show that this idea can not be accurate and provide an explanation for where the inconsistency lies. I will then perform a calculation showing that in order for there to be matter around the event horizon at the time of a black hole merger, there must be an object accreting into the black hole, i.e. there will not be any "matter shell" left over from a distant interaction with the black hole. This could explain why no EM counterpart has been observed from magnetic reconnection.
+\end{abstract}
+
+\section{Inconsistency and resolution}
+
+According to an observer at infinity, it takes an infinite amount of time for a particle to reach the event horizon of a black hole. However, from the reference frame of the particle falling into the black hole only a finite time has elapsed\footnote{This is a well known calculation, any GR textbook should show this, e.g. see the notes by Lim.}. By the equivalence principle, both the observer and the infalling particle should agree on whether the particle passes the event horizon, so there seems to be a contradiction. If the observer is correct, then no particle could ever pass the event horizon, thus the black hole would never grow - this can't be correct because we observe black holes astronomically. Thus the infalling particle must be correct, but how can we reconcile this with the view of the observer?
+
+This paradox can be resolved as follows: When the particle approaches the event horizon, the radius of the black hole expands as the mass of the particle is added, thus while it would take an infinite time for the particle to reach the old event horizon (the radius of the event horizon before the particle mass is added) it can reach the new event horizon in finite time. 
+
+Thus an accreting black hole will have a surrounding shell of matter, but that matter shell will only exist until the particles pass a point where the mass from the particles is added to the black hole, resulting in the increased mass of the black hole makes the radius large enough such that the particle can pass the event horizon.
+
+\section{How long will this matter shell last}
+
+So particles falling into a black hole do enter the event horizon in finite time according to observers at infinity, but time dilation still means that this finite time still may be very large. If this time scale was large enough - say on the order of the time between black hole formation and coalescence with another black hole - then there would be sufficient matter surrounding the shell for a ejection of a large amount of mass to occur, even if it has been a very long time since any material began falling into the black hole. This would mean that there is no need for an accretor to be present at the time of BBH coalescence for a signal to be produced.
+
+To perform this calculation, we consider a massive particle falling radially into a Schwarzschild black hole. The time elapsed $t$ according to the observer at infinity is given by (in units $G=c=1$, see \href{https://physics.stackexchange.com/questions/449151/closed-form-expression-for-position-as-function-of-time-of-object-falling-direct}{link to derivation}):
+
+\begin{equation}
+    t(r,r_0, M)=
+    \frac{\sqrt{2}}{3} M \left[ \sqrt{\frac{r_0}{M}} \left( 6 + \frac{r_0}{M} \right) - \sqrt{\frac{r}{M}} \left( 6 + \frac{r}{M} \right) 
+    \right]
+    - 4 M \left[ 
+    \rm{arctanh}\left( \sqrt{\frac{2 M}{r_0}} \right) - 
+    \rm{arctanh}\left( \sqrt{\frac{2 M}{r}} \right)
+    \right]
+\end{equation}
+
+We only care about the asymptotic time taken as r comes very close to the Schwarzscild radius - given by $R_s=2 M$ - so we can neglect all terms expect for the last inverse hyperbolic tan term. We can also convert from the GR units $G=c=1$ to SI units by noting that the $M$ outside the brackets must have units of time, and the expression inside the (transcendental function) tanh must be dimensionless in order for the equations to be dimensionally consistent. Thus using $M$ with dimensions of mass, $c$ with dimensions $[c]=L/T$, $G$ with dimensions $L^2 T^{-2} M^{-1}$, then the combination $G M / c^3$ has dimension of time $T$, and $G M / c^2$ has dimensions of length $L$. Thus the asymptotic expression for the time taken to reach a radius $r$ from the centre of a Schwarzschild black hole is given (in SI units) by:
+
+\begin{equation}\label{eq:Asymptotic time SI}
+    t(r) \simeq \frac{4 G M}{c^3} \rm{arctanh\left(  \sqrt{\frac{2 G M}{c^2 r}}   \right)}
+    = \frac{2 R_s}{c} \rm{arctanh \left(  \sqrt{\frac{R_s}{r}}  \right)}
+\end{equation}
+
+Note that $\rm{arctanh}(1^+) \longrightarrow \infty$, so it takes an infinite time to reach $r = R_s$ as expected. But we want to work with an $r$ very close but not equal to $R_s$. We can solve equation (\ref{eq:Asymptotic time SI}) for r, to see how close to the event horizon the particle can get on a time scale $t$. Rearranging gives distance $r-R_s$ of the particle to the event horizon :
+
+\begin{equation}\label{eq:Astymptotic radius first approx}
+    r = \frac{R_s}{\rm{tanh\left(  \frac{c t}{2 R_s} \right)}}
+\end{equation}
+
+By the definition fo hyperbolic tan, $\rm{tanh(x)} = \frac{\rm{sinh(x)}}{cosh(x)}=\frac{e^x+e^{-x}}{e^{x}-e^{-x}}$, and making use of the fact that $c t / 2 R_s$ is very small, allows us to use the approximation $(1+\epsilon)^{-1} \approx 1 - \epsilon$ to approximate tanh as $\rm{tanh(x)} \approx 1 - 2 e^{-2 x}$. Applying this approximation to equation (\ref{eq:Astymptotic radius first approx}) allows us to write the distance the infalling particle reaches from the event horizon in some time $T$
+
+\begin{equation}
+    r - R_s \simeq 2  \exp{\left(   \frac{-c t}{R_s}   \right)}
+\end{equation}
+
+So for example, on a timescale of one year (approximately $\pi \cdot 10^7$ seconds) an infalling particle will reach within a distance  of approximately $r-R_s \approx 2 \exp{\left( - 10^{12}   \right)}$ -  a number which is \textbf{significantly} less than the Planck length. So unless there is an object accreting matter into the BBH system, there is likely not going to be a shell of matter. We could calculate the mass of the shell surrounding each BBH given the assumption that the matter must reach $\Delta r = r-R_s$ such that $\Delta r$ is the radius increase from the incoming matter. This would tell us exactly how much material would be ejected, and hence could be used to give the accretion rate of the BBH at the time of merger. 
+
+\section{Shell due to accretion}
+
+Given an accrection rate $R$ (in kg per second) into one of the black holes, we want to calculate how much matter would be in a shell around one of the black holes at the time of merger. If we imagine a circumbianry disk around the black hole, the coalesence of the BHs will result emit gravitational radiation that will expell the disk in all directions, leading to no coherent jet. However, matter orbiting the black holes - which could be of considerable mass due to time dilation - could be ejected in a directed jet due to reconnection. This jet could be detectable. The jet would emit material as 
+
+Would material just build up at the ISCO? How is the ISCO affected by the presence of a secpnd BH? What hppens to that material after collision?
+
+
+In this section I will do an order of magnitude estimate for the amount of matter in this shell.
+
+\bibliographystyle{alpha}
+\bibliography{sample}
+
+\end{document}

@@ -1,0 +1,81 @@
+% \documentclass[12pt,a4paper]{report}
+% \usepackage[letterpaper,top=2cm,bottom=2cm,left=3cm,right=3cm,marginparwidth=1.75cm]{geometry}
+% \usepackage{parskip}
+% \usepackage{fourier}
+% \usepackage{amsmath}
+% \usepackage{graphicx}
+% \usepackage[colorlinks=true, allcolors=blue]{hyperref}
+
+% \chapter{Thesis proposal}
+% \begin{document}
+\begin{center}
+    {\bfseries\Large
+    Studying the evolution of gravitational fields around compact object binaries - thesis proposal\\}
+\vskip .5cm  
+Jordan Moncrieff\\
+\vskip .5cm
+\textbf{Supervisors:} 
+    Bruce Gendre and Fiona Panther
+\end{center}
+
+% \begin{abstract}
+%     A extended version of the thesis proposal I will submit. Serves as a small introduction to the thesis. Dot points interspersed throughout are the dot points the guidelines give us to complete.
+% \end{abstract}
+
+
+\section{Aims and significance}
+
+• What is the specific aims of the project–the problem(s) it hopes to solve or particular question(s) it will answer?
+
+The aim of the thesis is to study the gravitational field around orbiting compact binary objects near the point of merger. The primary objective is to explore the possibility of a new gravitational phenomena, gravitational reconnection. Gravitational reconnection would be the gravitational analogue of the well known phenomena of magnetic reconnection, which results in various important Astrophysical process such as solar flares and coronal mass ejections. By investigating the conditions under which gravitational reconnection can occur, the project aims to gain a deeper understanding of the astrophysical processes involved in the final stages of compact binary mergers. If gravitational reconnection is found to occur in this context, this could have important implications for our understanding of the formation and evolution of astrophysical jets in the universe.
+
+• Why is the research worth doing and to what will it contribute?
+
+The potential discovery of gravitational reconnection leading to jet formation would imply an electromagnetic counterpart to black hole mergers, much like the post-merger electromagnetic counterparts of neutron stars. This would open up exciting opportunities for further research into the behavior of compact binary mergers and the physics of extreme astrophysical environments. Additionally, this would inform future efforts to perform electromagnetic follow-ups after gravitational wave detections between binary black holes. By combining observations of gravitational waves with electromagnetic radiation at different wavelengths, we can obtain a more complete picture of the physical processes involved in the most extreme environments in the universe, and gain insights into the fundamental laws that govern the behavior of matter and energy on a cosmic scale.
+
+
+\section{Status (literature review)}
+
+- Below is the "story" of my thesis.
+
+Since Einstein published his general theory of relativity, it has become evident that gravitation and electromagnetism are intricately intertwined. In the weak field limit of general relativity, the Einstein field equations, governing gravity, simplify to the gravitomagnetic equations, which bear a striking resemblance to Maxwell's equations. Consequently, this remarkable similarity between gravity and electromagnetism has given rise to various analogies between gravitational and electromagnetic phenomena. To give a particular example, the frame dragging effect near rotating black holes gives rise to a force resembling that of the dipole field produced by a rotating charged sphere. This connection between the two fields, along with enumerable others, highlights the deep interplay between gravity and electromagnetism. This parallelism has prompted numerous theories aiming to unify electromagnetism and general relativity into a cohesive framework.
+
+In recent years, the field of astronomy has witnessed a significant transformation, empowering researchers to explore gene
+ral relativistic phenomena with unprecedented precision. Particularly, Multimessenger astronomy has emerged as a powerful approach, combining data from diverse detectors such as gravitational wave detectors, telescopes operating across different wavelengths, and neutrino detectors. Through the synergistic utilization of these complementary tools, scientists have achieved unprecedented levels of detail in studying black holes and their surrounding environments. An exemplary demonstration of the power of multimessenger astronomy occurred in August 2017 when the LIGO and Virgo gravitational wave detectors observed a signal consistent with the merger of two neutron stars, denoted as GW170817 \cite{abbott2017gw170817}. This event triggered an intensive electromagnetic observation campaign spanning the entire electromagnetic spectrum, ranging from radio waves to gamma-rays. The resulting observations provided the initial direct evidence for the synthesis of heavy elements, such as gold and platinum, following a neutron star merger \cite{kasen2017origin}. This groundbreaking discovery was only achievable through the combined efforts of gravitational wave and electromagnetic observations, underscoring the critical role of multimessenger astronomy in unraveling the universe's most profound and captivating mysteries.
+
+Nonetheless, for the situation of interest in our study - the merger of binary black holes - it is currently unknown if there exists an electromagnetic counterpart \cite{perna2019limits}. However, an intriguing possibility arises if gravitational field lines were to reconnect at a stable Lagrange point of orbiting Kerr black holes. In such a scenario, any matter trapped at that Lagrange point - which would be subjected to high pressure - would briefly become liberated from the field, potentially resulting in the ejection of material in the form of a jet. This mechanism could give rise to an electromagnetic counterpart and offer plausible explanations for jet phenomena with currently unknown origins (Not sure about that).
+
+\danger Will likely leave the preceding paragraphs out of the proposal (for brevity). But could be fit into the intro of the thesis.
+
+• Have closely similar projects been undertaken before?
+• Identify some leading research workers in the field, particularly some whose work you have had occasion to study. Give some references.
+
+
+The literature on black hole mergers is extensive\footnote{For a review of computational aspects, see \cite{RevModPhys.82.3069}.}. The field gained significant momentum following the initial detection of gravitational waves in 2015 \cite{abbott2016observation}. The possibility of electromagnetic counterparts to binary black hole mergers has been proposed, with potential signals already detected \cite{graham2020candidate}. Various theories have been put forth to explain the mechanisms behind such signals \cite{kelly2017prompt}. To the best of my knowledge, investigation into gravitational reconnection has not been undertaken. Nevertheless, recent studies on magnetic reconnection in the vicinity of black holes have emerged \cite{AsenjoFelipeA2017RMRi,comisso2021magnetic}, led by researchers such as Felipe A. Asenjo and Luca Comisso.
+
+• Describe the current status of the project you carried out so far. For those worked on the same or a closely related project previously (e.g. as a vacation project) are to note this here under as subsection titled ”previous work”.
+
+Thus far, the project has primarily focused on acquiring an understanding of the relevant background material. Subjects that have been studied (including references to some of the texts I have used) include general relativity \cite{hartle2003gravity,carroll2019spacetime}, high-energy astrophysics \cite{longair2010high}, and plasma physics \cite{choudhuri_1998}. Additionally, I have undertaken simpler simulations as part of practice exercises. For instance, a Python program was developed to simulate the trajectory of both massive and massless particles around a Kerr black hole, showcasing phenomena such as the innermost stable circular orbits and frame dragging.
+
+
+\section{Research Methods and Plan}
+
+• Describe the methods to be used.
+
+My research will involve both theoretical calculations, along with computer simulations (numerical relativity). 
+
+For the theoretical calculations, they will obviously mainly be pen and paper, potentially with the help of Mathematica and general relativity packages such as that in ref \cite{Shoshany2021_OGRe}.
+
+The computer simulations, if we decide to go down the numerical relativity route, will likely involve the \href{http://einsteintoolkit.org/about.html}{Einstein toolkit}, which has associated Python packages.
+
+
+• General research plan. Include timeline if applicable.
+
+\danger I am not sure on this. Discuss in next meeting.
+
+
+\bibliographystyle{unsrt}
+\bibliography{thesis_proposal/proposal_ref}
+
+
+% \end{document}

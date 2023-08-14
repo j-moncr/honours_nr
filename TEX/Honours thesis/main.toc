@@ -1,0 +1,111 @@
+\gdef \the@ipfilectr {@-1}
+\gdef \the@ipfilectr {}
+\contentsline {chapter}{Contents}{iii}{chapter*.2}%
+\gdef \the@ipfilectr {@-2}
+\contentsline {chapter}{\numberline {1}Introduction}{1}{chapter.1}%
+\contentsline {section}{\numberline {1.1}Status (literature review)}{1}{section.1.1}%
+\gdef \the@ipfilectr {}
+\gdef \the@ipfilectr {@-3}
+\contentsline {chapter}{\numberline {2}Field Theory}{3}{chapter.2}%
+\contentsline {section}{\numberline {2.1}The Basis of Modern Physics}{3}{section.2.1}%
+\contentsline {section}{\numberline {2.2}Special relativity}{3}{section.2.2}%
+\contentsline {section}{\numberline {2.3}Special Relativity and the Metric}{4}{section.2.3}%
+\contentsline {section}{\numberline {2.4}Electromagnetism as a Field Theory}{5}{section.2.4}%
+\contentsline {section}{\numberline {2.5}Magnetic Reconnection and Physicality of Fields}{6}{section.2.5}%
+\contentsline {subsection}{\numberline {2.5.1}Alfven's theorem}{6}{subsection.2.5.1}%
+\contentsline {subsection}{\numberline {2.5.2}Magnetic reconnection}{7}{subsection.2.5.2}%
+\contentsline {subsection}{\numberline {2.5.3}Physical nature of fields}{8}{subsection.2.5.3}%
+\contentsline {section}{\numberline {2.6}General relativity}{8}{section.2.6}%
+\contentsline {subsection}{\numberline {2.6.1}Additional postulates}{8}{subsection.2.6.1}%
+\contentsline {subsection}{\numberline {2.6.2}Why general relativity is hard}{9}{subsection.2.6.2}%
+\contentsline {subsection}{\numberline {2.6.3}Differential geometry}{10}{subsection.2.6.3}%
+\contentsline {subsection}{\numberline {2.6.4}Einstein's field equation}{11}{subsection.2.6.4}%
+\contentsline {subsection}{\numberline {2.6.5}The weak field limit}{12}{subsection.2.6.5}%
+\gdef \the@ipfilectr {}
+\gdef \the@ipfilectr {@-4}
+\contentsline {chapter}{\numberline {3}Black holes}{15}{chapter.3}%
+\contentsline {section}{\numberline {3.1}Schwarzschild's discovery}{15}{section.3.1}%
+\contentsline {section}{\numberline {3.2}Kerr black holes}{15}{section.3.2}%
+\contentsline {section}{\numberline {3.3}Binary black holes}{16}{section.3.3}%
+\contentsline {subsection}{\numberline {3.3.1}Mergers}{16}{subsection.3.3.1}%
+\contentsline {subsection}{\numberline {3.3.2}Analogy with magnetic reconnection}{16}{subsection.3.3.2}%
+\contentsline {subsection}{\numberline {3.3.3}Accreting matter}{16}{subsection.3.3.3}%
+\contentsline {subsection}{\numberline {3.3.4}Consequences}{16}{subsection.3.3.4}%
+\gdef \the@ipfilectr {}
+\gdef \the@ipfilectr {@-5}
+\contentsline {chapter}{\numberline {4}Modelling}{17}{chapter.4}%
+\contentsline {section}{\numberline {4.1}How to study the consequences}{17}{section.4.1}%
+\contentsline {section}{\numberline {4.2}First model}{17}{section.4.2}%
+\contentsline {section}{\numberline {4.3}Adding higher order terms}{17}{section.4.3}%
+\contentsline {section}{\numberline {4.4}Numerical relativity}{17}{section.4.4}%
+\contentsline {subsection}{\numberline {4.4.1}What is numerical relativity}{17}{subsection.4.4.1}%
+\contentsline {subsection}{\numberline {4.4.2}Theoretical basis}{17}{subsection.4.4.2}%
+\contentsline {subsection}{\numberline {4.4.3}Our model}{17}{subsection.4.4.3}%
+\contentsline {subsection}{\numberline {4.4.4}Results}{17}{subsection.4.4.4}%
+\gdef \the@ipfilectr {}
+\gdef \the@ipfilectr {@-6}
+\contentsline {chapter}{\numberline {5}Results and discussion}{19}{chapter.5}%
+\contentsline {section}{\numberline {5.1}Results}{19}{section.5.1}%
+\contentsline {section}{\numberline {5.2}Limitation}{19}{section.5.2}%
+\contentsline {section}{\numberline {5.3}Future work}{19}{section.5.3}%
+\contentsline {section}{\numberline {5.4}Discussion}{19}{section.5.4}%
+\contentsline {section}{\numberline {5.5}Conclusion}{19}{section.5.5}%
+\gdef \the@ipfilectr {}
+\gdef \the@ipfilectr {@-7}
+\contentsline {chapter}{\numberline {6}Thesis preliminaries}{21}{chapter.6}%
+\contentsline {section}{\numberline {6.1}Introduction}{21}{section.6.1}%
+\contentsline {section}{\numberline {6.2}Introduction to general relativity}{21}{section.6.2}%
+\contentsline {subsection}{\numberline {6.2.1}Derivation of EFEs from action}{23}{subsection.6.2.1}%
+\contentsline {section}{\numberline {6.3}Black hole solutions}{23}{section.6.3}%
+\contentsline {subsection}{\numberline {6.3.1}Schwarzschild metric}{24}{subsection.6.3.1}%
+\contentsline {subsection}{\numberline {6.3.2}Kerr metric}{24}{subsection.6.3.2}%
+\contentsline {subsection}{\numberline {6.3.3}Reissner–Nordström metric}{25}{subsection.6.3.3}%
+\contentsline {subsection}{\numberline {6.3.4}Kerr-Newman}{25}{subsection.6.3.4}%
+\contentsline {section}{\numberline {6.4}Orbits of Black holes}{25}{section.6.4}%
+\contentsline {section}{\numberline {6.5}Gravitomagnetism}{25}{section.6.5}%
+\contentsline {subsection}{\numberline {6.5.1}Gravitomagnetic equations}{25}{subsection.6.5.1}%
+\contentsline {subsection}{\numberline {6.5.2}Frame dragging}{25}{subsection.6.5.2}%
+\contentsline {section}{\numberline {6.6}Magnetohydrodynamics}{26}{section.6.6}%
+\contentsline {subsection}{\numberline {6.6.1}Fluid mechanics and Navier-Stokes equation}{26}{subsection.6.6.1}%
+\contentsline {subsection}{\numberline {6.6.2}Electromagnetism}{27}{subsection.6.6.2}%
+\contentsline {subsection}{\numberline {6.6.3}Magnetohydrodynamics basic equation}{27}{subsection.6.6.3}%
+\contentsline {subsection}{\numberline {6.6.4}Magnetic pressure}{28}{subsection.6.6.4}%
+\contentsline {subsubsection}{Magnetic tension}{28}{section*.8}%
+\contentsline {subsubsection}{Energy equation}{28}{section*.10}%
+\contentsline {subsubsection}{Magnetic Reynolds number}{29}{section*.11}%
+\contentsline {subsection}{\numberline {6.6.5}Alfven's theorem and flux freezing}{29}{subsection.6.6.5}%
+\contentsline {subsection}{\numberline {6.6.6}Alfven waves}{30}{subsection.6.6.6}%
+\contentsline {subsection}{\numberline {6.6.7}Magnetic reconnection}{30}{subsection.6.6.7}%
+\gdef \the@ipfilectr {}
+\gdef \the@ipfilectr {@-8}
+\contentsline {chapter}{\numberline {7}Orbits around black holes}{33}{chapter.7}%
+\contentsline {section}{\numberline {7.1}Schwarzschild solution}{33}{section.7.1}%
+\contentsline {subsection}{\numberline {7.1.1}Task list}{33}{subsection.7.1.1}%
+\contentsline {section}{\numberline {7.2}Governing equations}{33}{section.7.2}%
+\contentsline {subsection}{\numberline {7.2.1}Einstein's field equations}{33}{subsection.7.2.1}%
+\contentsline {subsection}{\numberline {7.2.2}Schwarzschild metric}{35}{subsection.7.2.2}%
+\contentsline {subsection}{\numberline {7.2.3}Kerr metric}{35}{subsection.7.2.3}%
+\contentsline {subsection}{\numberline {7.2.4}Geodesic equation}{35}{subsection.7.2.4}%
+\contentsline {subsection}{\numberline {7.2.5}Effective potential}{36}{subsection.7.2.5}%
+\contentsline {subsection}{\numberline {7.2.6}Event horizon}{36}{subsection.7.2.6}%
+\contentsline {subsection}{\numberline {7.2.7}Constants of motion}{37}{subsection.7.2.7}%
+\contentsline {subsection}{\numberline {7.2.8}Potential for massive and massless orbits}{39}{subsection.7.2.8}%
+\contentsline {subsection}{\numberline {7.2.9}ISCO}{40}{subsection.7.2.9}%
+\contentsline {subsection}{\numberline {7.2.10}Massless particle}{41}{subsection.7.2.10}%
+\contentsline {subsection}{\numberline {7.2.11}Particle orbits}{41}{subsection.7.2.11}%
+\contentsline {section}{\numberline {7.3}Kerr black hole}{43}{section.7.3}%
+\contentsline {subsection}{\numberline {7.3.1}Form of the metric}{43}{subsection.7.3.1}%
+\contentsline {subsection}{\numberline {7.3.2}Symmetries}{44}{subsection.7.3.2}%
+\contentsline {section}{\numberline {7.4}Physical relevance of equations}{45}{section.7.4}%
+\contentsline {subsection}{\numberline {7.4.1}Hard boundaries}{45}{subsection.7.4.1}%
+\contentsline {subsubsection}{Schwarzschild black hole}{45}{section*.21}%
+\contentsline {subsubsection}{Kerr black hole - soft boundaries}{46}{section*.22}%
+\contentsline {section}{\numberline {7.5}Soft boundaries}{46}{section.7.5}%
+\contentsline {section}{\numberline {7.6}Double Schwarzschild}{47}{section.7.6}%
+\contentsline {section}{\numberline {7.7}Astrophysical significance}{47}{section.7.7}%
+\contentsline {section}{\numberline {7.8}GR and EM analogy}{47}{section.7.8}%
+\contentsline {subsection}{\numberline {7.8.1}Magnetic reconnection}{47}{subsection.7.8.1}%
+\contentsline {section}{\numberline {7.9}Appendix}{47}{section.7.9}%
+\contentsline {subsection}{\numberline {7.9.1}Geometric units}{47}{subsection.7.9.1}%
+\gdef \the@ipfilectr {}
+\gdef \the@ipfilectr {@-9}

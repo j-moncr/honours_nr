@@ -1,0 +1,59 @@
+\chapter{Black holes}
+
+\section{Schwarzschild's discovery}
+Sketch of Schwarzschild's derivation and consequence of singularity. Show that matter from an observing falling into BH never passes event horizon according to outside observer.
+
+The distance between two points in space-time is given by the invariant line element $ds^2$. In Schwarzschild space-time, the line is given by equation (\ref{eq:Schwarzschild line-element}):
+
+\begin{equation}
+    ds^2 = - d\tau^2 = - (1-\frac{2 M}{r}) dt^2 +  (1-\frac{2 M}{r})^{-1} dr^2
+            + r^2 (d\theta^2+\sin^2\theta d\phi^2)
+\label{eq:Schwarzschild line-element}
+\end{equation}
+
+\section{Kerr black holes}
+Long after Kerr's discovery, other black hole solutions where found. It was shown (no hair theorem) that all black holes can be characterised by a charge and spin (like an electron). 
+
+The metric for a Kerr black hole (spherically symmetric, stationary, black hole of mass M rotating at constant angular momentum J) is given by:
+
+\begin{equation}\label{eq:Kerr metric}
+    ds^2 = -\left(1-\frac{2Mr}{\rho^2}\right) dt^2-\frac{4Mar \sin^2{\theta}}{\rho^2} d\phi dt+ \frac{\rho^2}{\Delta} dr^2 + \rho^2 d\theta^2 +\left(r^2+a^2+
+    \frac{2Mra^2\sin^2{\theta}}{\rho^2}
+    \right)\sin{\theta}^2 d\phi^2
+\end{equation}
+
+Where $a:=\frac{J}{M}$, $\rho^2:=r^2+a^2 \cos{\theta}$, and $\Delta:=r^2-2Mr+a^2$ \cite{carroll2019spacetime}.
+
+It is easy to see that setting $a=0$ leaves us with the Schwarzschild solution (the case of zero spin is the same as Schwarzschild solution in equation (\ref{eq:Schwarzschild line-element})), and in the limit that $r \gg a$ we get the weak field metric (in terms of gravitational potential $\Phi(r)=-\frac{G M}{r}$)
+
+\begin{equation}
+    ds^2 = - (1+2\Phi(r)) dt^2 +  (1-2\Phi(r)) dr^2
+            + r^2 (d\theta^2+\sin^2\theta d\phi^2)
+\label{eq:Weak field metric}
+\end{equation}
+
+Which as $r\rightarrow \infty$ approaches flat (Minkowski) spacetime
+
+\begin{equation}
+    ds^2 = - dt^2 + dx^2 + dy^2 + dz^2
+\label{eq:Minkowski metruc}
+\end{equation}
+
+Explain Kerr black holes, frame dragging (relate back to weak field limit).
+
+Show plots from Kerr simulation.
+
+\section{Binary black holes}
+\subsection{Mergers}
+
+Mention how when two black holes orbit, GW emission results in energy losses, so by conservation of energy gravitational binding energy must decrease leading to inspiral and eventual merger.
+
+
+\subsection{Analogy with magnetic reconnection}
+Looking at magnetic reconnection, it requires a dipole
+
+\subsection{Accreting matter}
+. Look at L1 Lagrange point (for matter infalling outside event horizon) or L4 (stable orbits - show simulation)
+
+\subsection{Consequences}
+This could cause an ejection, explain how.
