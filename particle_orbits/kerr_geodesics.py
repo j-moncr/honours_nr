@@ -72,7 +72,7 @@ def solve_EOM(t_span, y0, params, t_eval):
 
     # Convert from Boyer-Lindquist coordinates to Cartesian coordinates
     # R = np.sqrt(r**2 + a**2)
-    R=r
+    R = r
     x, y, z = R*np.sin(theta)*np.cos(phi), R*np.sin(theta)*np.sin(phi), R*np.cos(theta)
 
     return x, y, z
@@ -202,12 +202,12 @@ if __name__ == "__main__":
     # Initial conditions, for massive particle circular orbit about a Schwarzschild (spin=0) black hole
 
 
-    r0 = 45.e6
+    r0 = 10
     theta0 = np.pi/2
     phi0 = 0.0
     t_prime_0 = 0.0
     p_r0 = 0.0
-    p_theta0 = 9.e-8
+    p_theta0 = 0.00001
 
     # Constants of motion
     G = c = M = 1.0
@@ -225,8 +225,8 @@ if __name__ == "__main__":
     y0 = [r0, theta0, phi0, t_prime_0, p_r0, p_theta0]
 
     # Time
-    T = 1e12
-    dt = 1e3
+    T = 100
+    dt = 0.01
     t_span = [0.0, T]
     t = np.arange(0.0, T, dt)
 
@@ -234,5 +234,5 @@ if __name__ == "__main__":
 
     plot_trajectory(x, y, z, params)
 
-    print(x)
+    # print(x)
 

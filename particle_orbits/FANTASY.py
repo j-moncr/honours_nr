@@ -504,12 +504,12 @@ if __name__ == "__main__":
     
     # Assume cirular orbits a = - omega^2 x, with omega = v/r = sqrt(M/r^3)
 
-    r = 1.
-    M = 1000
+    r = 1.5
+    M = 0.1
     angular_freq = np.sqrt(M/r**3) # angular velocity, give higher order PN expansion later
 
-    N = 100
-    num_orbits = 0.5
+    N = 300
+    num_orbits = 1
     T = (2 * np.pi / angular_freq) * num_orbits
     dt = T / N
     t = np.linspace(0, T, N)
@@ -657,8 +657,8 @@ if __name__ == "__main__":
     v1_0 = v1[0,:]
     v2_0 = v2[0,:]
     v12_0 = v12[0,:]
-    S1 = np.array([0.0,0.0,1])
-    S2 = np.array([0.0,0.0,1])
+    S1 = np.array([0.0,0.0,0])
+    S2 = np.array([0.0,0.0,0])
 
     Param = [r3_0, m1, m2, r1_0, r2_0, r12_0, v1_0, v2_0, v12_0, S1, S2]
     
@@ -706,9 +706,10 @@ if __name__ == "__main__":
     fig = plt.figure()
     ax = fig.add_subplot(111, projection='3d')
     ax.plot(x,y,z, label="Particle")
-    ax.set_xlabel("x")
-    ax.set_ylabel("y")
-    ax.set_zlabel("z")
+    ax.set_title("Particle Trajectory near BBH using 1.5PN Approximation")
+    ax.set_xlabel("x / (c^2 / GM)")
+    ax.set_ylabel("y / (c^2 / GM)")
+    ax.set_zlabel("z / (c^2 / GM)")
     
     
     ax.plot(r1[:,0], r1[:,1], r1[:,2], label='BH1', color="blue")
