@@ -1,0 +1,1249 @@
+(* Content-type: application/vnd.wolfram.mathematica *)
+
+(*** Wolfram Notebook File ***)
+(* http://www.wolfram.com/nb *)
+
+(* CreatedBy='Mathematica 13.0' *)
+
+(*CacheID: 234*)
+(* Internal cache information:
+NotebookFileLineBreakTest
+NotebookFileLineBreakTest
+NotebookDataPosition[       158,          7]
+NotebookDataLength[     51694,       1241]
+NotebookOptionsPosition[     50521,       1212]
+NotebookOutlinePosition[     50920,       1228]
+CellTagsIndexPosition[     50877,       1225]
+WindowFrame->Normal*)
+
+(* Beginning of Notebook Content *)
+Notebook[{
+
+Cell[CellGroupData[{
+Cell[BoxData[{
+ RowBox[{
+  RowBox[{
+   RowBox[{"G", "=", "1"}], ";"}], 
+  RowBox[{"(*", 
+   RowBox[{"gravitational", " ", "constant"}], 
+   "*)"}]}], "\[IndentingNewLine]", 
+ RowBox[{
+  RowBox[{
+   RowBox[{"m1", "=", "1"}], ";"}], 
+  RowBox[{"(*", 
+   RowBox[{"mass", " ", "of", " ", "first", " ", "object"}], 
+   "*)"}]}], "\[IndentingNewLine]", 
+ RowBox[{
+  RowBox[{
+   RowBox[{"m2", "=", "1"}], ";"}], 
+  RowBox[{"(*", 
+   RowBox[{"mass", " ", "of", " ", "second", " ", "object"}], 
+   "*)"}]}], "\[IndentingNewLine]", 
+ RowBox[{
+  RowBox[{
+   RowBox[{"r1", "=", 
+    RowBox[{"{", 
+     RowBox[{"0", ",", "0"}], "}"}]}], ";"}], 
+  RowBox[{"(*", 
+   RowBox[{"position", " ", "of", " ", "first", " ", "object"}], 
+   "*)"}]}], "\[IndentingNewLine]", 
+ RowBox[{
+  RowBox[{
+   RowBox[{"r2", "=", 
+    RowBox[{"{", 
+     RowBox[{"1", ",", "0"}], "}"}]}], ";"}], 
+  RowBox[{"(*", 
+   RowBox[{"position", " ", "of", " ", "second", " ", "object"}], 
+   "*)"}]}], "\[IndentingNewLine]", 
+ RowBox[{
+  RowBox[{
+   RowBox[{"r", "=", 
+    RowBox[{
+     RowBox[{"Sqrt", "[", 
+      RowBox[{
+       RowBox[{
+        RowBox[{"(", 
+         RowBox[{"x", "-", 
+          RowBox[{"r1", "[", 
+           RowBox[{"[", "1", "]"}], "]"}]}], ")"}], "^", "2"}], "+", 
+       RowBox[{
+        RowBox[{"(", 
+         RowBox[{"y", "-", 
+          RowBox[{"r1", "[", 
+           RowBox[{"[", "2", "]"}], "]"}]}], ")"}], "^", "2"}]}], "]"}], "+", 
+     RowBox[{"Sqrt", "[", 
+      RowBox[{
+       RowBox[{
+        RowBox[{"(", 
+         RowBox[{"x", "-", 
+          RowBox[{"r2", "[", 
+           RowBox[{"[", "1", "]"}], "]"}]}], ")"}], "^", "2"}], "+", 
+       RowBox[{
+        RowBox[{"(", 
+         RowBox[{"y", "-", 
+          RowBox[{"r2", "[", 
+           RowBox[{"[", "2", "]"}], "]"}]}], ")"}], "^", "2"}]}], "]"}]}]}], 
+   ";"}], 
+  RowBox[{"(*", 
+   RowBox[{"distance", " ", "from", " ", "objects"}], 
+   "*)"}]}], "\[IndentingNewLine]", 
+ RowBox[{
+  RowBox[{
+   RowBox[{"potential", "=", 
+    RowBox[{
+     RowBox[{
+      RowBox[{"-", "G"}], "*", 
+      RowBox[{"m1", "/", 
+       RowBox[{"Sqrt", "[", 
+        RowBox[{
+         RowBox[{
+          RowBox[{"(", 
+           RowBox[{"x", "-", 
+            RowBox[{"r1", "[", 
+             RowBox[{"[", "1", "]"}], "]"}]}], ")"}], "^", "2"}], "+", 
+         RowBox[{
+          RowBox[{"(", 
+           RowBox[{"y", "-", 
+            RowBox[{"r1", "[", 
+             RowBox[{"[", "2", "]"}], "]"}]}], ")"}], "^", "2"}]}], "]"}]}]}],
+      "-", 
+     RowBox[{"G", "*", 
+      RowBox[{"m2", "/", 
+       RowBox[{"Sqrt", "[", 
+        RowBox[{
+         RowBox[{
+          RowBox[{"(", 
+           RowBox[{"x", "-", 
+            RowBox[{"r2", "[", 
+             RowBox[{"[", "1", "]"}], "]"}]}], ")"}], "^", "2"}], "+", 
+         RowBox[{
+          RowBox[{"(", 
+           RowBox[{"y", "-", 
+            RowBox[{"r2", "[", 
+             RowBox[{"[", "2", "]"}], "]"}]}], ")"}], "^", "2"}]}], 
+        "]"}]}]}]}]}], ";"}], 
+  RowBox[{"(*", 
+   RowBox[{"potential", " ", "energy"}], "*)"}]}], "\[IndentingNewLine]", 
+ RowBox[{
+  RowBox[{
+   RowBox[{"field", "=", 
+    RowBox[{"-", 
+     RowBox[{"Grad", "[", 
+      RowBox[{"potential", ",", 
+       RowBox[{"{", 
+        RowBox[{"x", ",", "y"}], "}"}]}], "]"}]}]}], ";"}], 
+  RowBox[{"(*", 
+   RowBox[{"gravitational", " ", "field"}], "*)"}]}], "\[IndentingNewLine]", 
+ RowBox[{"StreamPlot", "[", 
+  RowBox[{"field", ",", 
+   RowBox[{"{", 
+    RowBox[{"x", ",", 
+     RowBox[{"-", "2"}], ",", "2"}], "}"}], ",", 
+   RowBox[{"{", 
+    RowBox[{"y", ",", 
+     RowBox[{"-", "2"}], ",", "2"}], "}"}], ",", 
+   RowBox[{"VectorPoints", "\[Rule]", "Fine"}], ",", 
+   RowBox[{"PlotLegends", "\[Rule]", "Automatic"}]}], 
+  "]"}], "\[IndentingNewLine]"}], "Input",
+ CellChangeTimes->{{3.8910365491360693`*^9, 3.8910365491603565`*^9}, {
+  3.8910366163471346`*^9, 3.891036786158618*^9}, {3.8910368761029086`*^9, 
+  3.891036928127993*^9}, {3.8910406276301203`*^9, 3.8910406300352135`*^9}},
+ CellLabel->"In[1]:=",ExpressionUUID->"ab8d3ad8-80b2-47c3-8a36-5c964179719b"],
+
+Cell[BoxData[
+ TemplateBox[{
+   GraphicsBox[{{}}, {
+    DisplayFunction -> Identity, PlotRange -> {{-2, 2}, {-2, 2}}, 
+     DisplayFunction -> Identity, AspectRatio -> 1, Frame -> True, 
+     FrameTicks -> {{Automatic, Automatic}, {Automatic, Automatic}}, 
+     GridLinesStyle -> Directive[
+       GrayLevel[0.5, 0.4]], 
+     Method -> {
+      "VectorLengthFunction" -> 
+       Function[{System`VectorPlotsDump`m, System`VectorPlotsDump`vrange}, 
+         System`VectorPlotsDump`min = Min[System`VectorPlotsDump`vrange]; 
+         System`VectorPlotsDump`max = Max[System`VectorPlotsDump`vrange]; 
+         System`VectorPlotsDump`imin = If[
+            NumericQ[System`VectorPlotsDump`min], System`VectorPlotsDump`min, 
+            Min[System`VectorPlotsDump`m], 
+            Min[System`VectorPlotsDump`m]]; System`VectorPlotsDump`imax = If[
+            NumericQ[System`VectorPlotsDump`max], System`VectorPlotsDump`max, 
+            Max[System`VectorPlotsDump`m], 
+            Max[System`VectorPlotsDump`m]]; Map[If[
+            
+            Or[# > System`VectorPlotsDump`imax, # < 
+             System`VectorPlotsDump`imin], #, System`VectorPlotsDump`imax]& , 
+           System`VectorPlotsDump`m]], "DefaultBoundaryStyle" -> Automatic, 
+       "DefaultGraphicsInteraction" -> {
+        "Version" -> 1.2, "TrackMousePosition" -> {True, False}, 
+         "Effects" -> {
+          "Highlight" -> {"ratio" -> 2}, "HighlightPoint" -> {"ratio" -> 2}, 
+           "Droplines" -> {
+            "freeformCursorMode" -> True, 
+             "placement" -> {"x" -> "All", "y" -> "None"}}}}, 
+       "TransparentPolygonMesh" -> True}, PlotRangeClipping -> True, 
+     PlotRangePadding -> {{
+        Scaled[0.05], 
+        Scaled[0.05]}, {
+        Scaled[0.05], 
+        Scaled[0.05]}}, Ticks -> {Automatic, Automatic}, DisplayFunction -> 
+     Identity, AspectRatio -> 1, DisplayFunction :> Identity, Frame -> True, 
+     FrameTicks -> {{Automatic, Automatic}, {Automatic, Automatic}}, 
+     GridLinesStyle -> Directive[
+       GrayLevel[0.5, 0.4]], 
+     Method -> {
+      "VectorLengthFunction" -> 
+       Function[{System`VectorPlotsDump`m, System`VectorPlotsDump`vrange}, 
+         System`VectorPlotsDump`min = Min[System`VectorPlotsDump`vrange]; 
+         System`VectorPlotsDump`max = Max[System`VectorPlotsDump`vrange]; 
+         System`VectorPlotsDump`imin = If[
+            NumericQ[System`VectorPlotsDump`min], System`VectorPlotsDump`min, 
+            Min[System`VectorPlotsDump`m], 
+            Min[System`VectorPlotsDump`m]]; System`VectorPlotsDump`imax = If[
+            NumericQ[System`VectorPlotsDump`max], System`VectorPlotsDump`max, 
+            Max[System`VectorPlotsDump`m], 
+            Max[System`VectorPlotsDump`m]]; Map[If[
+            
+            Or[# > System`VectorPlotsDump`imax, # < 
+             System`VectorPlotsDump`imin], #, System`VectorPlotsDump`imax]& , 
+           System`VectorPlotsDump`m]], "DefaultBoundaryStyle" -> Automatic, 
+       "DefaultGraphicsInteraction" -> {
+        "Version" -> 1.2, "TrackMousePosition" -> {True, False}, 
+         "Effects" -> {
+          "Highlight" -> {"ratio" -> 2}, "HighlightPoint" -> {"ratio" -> 2}, 
+           "Droplines" -> {
+            "freeformCursorMode" -> True, 
+             "placement" -> {"x" -> "All", "y" -> "None"}}}}, 
+       "TransparentPolygonMesh" -> True}, PlotRange -> {{-2, 2}, {-2, 2}}, 
+     PlotRangeClipping -> True, PlotRangePadding -> {{
+        Scaled[0.05], 
+        Scaled[0.05]}, {
+        Scaled[0.05], 
+        Scaled[0.05]}}, Ticks -> {Automatic, Automatic}}], 
+   FormBox[
+    FormBox[
+     TemplateBox[{
+       FormBox[
+        StyleBox[
+         StyleBox[
+          PaneBox[
+           GraphicsBox[{
+             RasterBox[CompressedData["
+1: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
+
+              "], {{
+                Rational[-15, 2], 
+                Rational[-225, 2]}, {
+                Rational[15, 2], 
+                Rational[225, 2]}}], {Antialiasing -> False, 
+              AbsoluteThickness[0.1], 
+              Directive[
+               Opacity[0.3], 
+               GrayLevel[0]], 
+              LineBox[
+               NCache[{{
+                  Rational[15, 2], 
+                  Rational[-225, 2]}, {
+                  Rational[-15, 2], 
+                  Rational[-225, 2]}, {
+                  Rational[-15, 2], 
+                  Rational[225, 2]}, {
+                  Rational[15, 2], 
+                  Rational[225, 2]}, {
+                  Rational[15, 2], 
+                  Rational[-225, 2]}}, {{7.5, -112.5}, {-7.5, -112.5}, {-7.5, 
+                112.5}, {7.5, 112.5}, {7.5, -112.5}}]]}, {
+              CapForm[None], {}}, 
+             StyleBox[{Antialiasing -> False, 
+               StyleBox[
+                LineBox[{{7.5, -112.5}, {7.5, 112.5}}], {
+                 Directive[
+                  AbsoluteThickness[0.2], 
+                  Opacity[0.3], 
+                  GrayLevel[0]]}, StripOnInput -> False], 
+               StyleBox[
+                StyleBox[{{
+                   StyleBox[
+                    LineBox[{{{7.5, -112.5}, 
+                    Offset[{4., 0}, {7.5, -112.5}]}, {{7.5, -67.5}, 
+                    Offset[{4., 0}, {7.5, -67.5}]}, {{7.5, -22.5}, 
+                    Offset[{4., 0}, {7.5, -22.5}]}, {{7.5, 22.5}, 
+                    Offset[{4., 0}, {7.5, 22.5}]}, {{7.5, 67.5}, 
+                    Offset[{4., 0}, {7.5, 67.5}]}, {{7.5, 112.5}, 
+                    Offset[{4., 0}, {7.5, 112.5}]}}], {
+                    Directive[
+                    AbsoluteThickness[0.2], 
+                    GrayLevel[0.4]]}, StripOnInput -> False], 
+                   StyleBox[
+                    LineBox[{{{7.5, -101.25}, 
+                    Offset[{2.5, 0.}, {7.5, -101.25}]}, {{7.5, -90.}, 
+                    Offset[{2.5, 0.}, {7.5, -90.}]}, {{7.5, -78.75}, 
+                    Offset[{2.5, 0.}, {7.5, -78.75}]}, {{7.5, -56.25}, 
+                    Offset[{2.5, 0.}, {7.5, -56.25}]}, {{7.5, -45.}, 
+                    Offset[{2.5, 0.}, {7.5, -45.}]}, {{7.5, -33.75}, 
+                    Offset[{2.5, 0.}, {7.5, -33.75}]}, {{7.5, -11.25}, 
+                    Offset[{2.5, 0.}, {7.5, -11.25}]}, {{7.5, 0.}, 
+                    Offset[{2.5, 0.}, {7.5, 0.}]}, {{7.5, 
+                    11.250000000000014`}, 
+                    Offset[{2.5, 0.}, {7.5, 11.250000000000014`}]}, {{7.5, 
+                    33.75}, 
+                    Offset[{2.5, 0.}, {7.5, 33.75}]}, {{7.5, 45.}, 
+                    Offset[{2.5, 0.}, {7.5, 45.}]}, {{7.5, 56.25}, 
+                    Offset[{2.5, 0.}, {7.5, 56.25}]}, {{7.5, 78.75}, 
+                    Offset[{2.5, 0.}, {7.5, 78.75}]}, {{7.5, 90.}, 
+                    Offset[{2.5, 0.}, {7.5, 90.}]}, {{7.5, 101.25}, 
+                    Offset[{2.5, 0.}, {7.5, 101.25}]}}], {
+                    Directive[
+                    AbsoluteThickness[0.2], 
+                    GrayLevel[0.4], 
+                    Opacity[0.3]]}, StripOnInput -> False]}, 
+                  StyleBox[
+                   StyleBox[{{
+                    StyleBox[{
+                    InsetBox[
+                    FormBox["0", TraditionalForm], 
+                    Offset[{7., 0.}, {7.5, -112.5}], 
+                    ImageScaled[{0, 0.5}], Automatic, {1, 0}], 
+                    InsetBox[
+                    FormBox[
+                    TagBox[
+                    InterpretationBox[
+                    StyleBox["\"0.2\"", ShowStringCharacters -> False], 0.2, 
+                    AutoDelete -> True], NumberForm[#, {
+                    DirectedInfinity[1], 1}]& ], TraditionalForm], 
+                    Offset[{7., 0.}, {7.5, -67.5}], 
+                    ImageScaled[{0, 0.5}], Automatic, {1, 0}], 
+                    InsetBox[
+                    FormBox[
+                    TagBox[
+                    InterpretationBox[
+                    StyleBox["\"0.4\"", ShowStringCharacters -> False], 0.4, 
+                    AutoDelete -> True], NumberForm[#, {
+                    DirectedInfinity[1], 1}]& ], TraditionalForm], 
+                    Offset[{7., 0.}, {7.5, -22.5}], 
+                    ImageScaled[{0, 0.5}], Automatic, {1, 0}], 
+                    InsetBox[
+                    FormBox[
+                    TagBox[
+                    InterpretationBox[
+                    StyleBox["\"0.6\"", ShowStringCharacters -> False], 0.6, 
+                    AutoDelete -> True], NumberForm[#, {
+                    DirectedInfinity[1], 1}]& ], TraditionalForm], 
+                    Offset[{7., 0.}, {7.5, 22.5}], 
+                    ImageScaled[{0, 0.5}], Automatic, {1, 0}], 
+                    InsetBox[
+                    FormBox[
+                    TagBox[
+                    InterpretationBox[
+                    StyleBox["\"0.8\"", ShowStringCharacters -> False], 0.8, 
+                    AutoDelete -> True], NumberForm[#, {
+                    DirectedInfinity[1], 1}]& ], TraditionalForm], 
+                    Offset[{7., 0.}, {7.5, 67.5}], 
+                    ImageScaled[{0, 0.5}], Automatic, {1, 0}], 
+                    InsetBox[
+                    FormBox[
+                    TagBox[
+                    InterpretationBox[
+                    StyleBox["\"1.0\"", ShowStringCharacters -> False], 1., 
+                    AutoDelete -> True], NumberForm[#, {
+                    DirectedInfinity[1], 1}]& ], TraditionalForm], 
+                    Offset[{7., 0.}, {7.5, 112.5}], 
+                    ImageScaled[{0, 0.5}], Automatic, {1, 0}]}, {
+                    Directive[
+                    AbsoluteThickness[0.2], 
+                    GrayLevel[0.4]], {
+                    Directive[
+                    Opacity[1]], 
+                    Directive[
+                    Opacity[1]]}}, StripOnInput -> False], 
+                    
+                    StyleBox[{{}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, \
+{}, {}, {}}, {
+                    Directive[
+                    AbsoluteThickness[0.2], 
+                    GrayLevel[0.4], 
+                    Opacity[0.3]], {
+                    Directive[
+                    Opacity[1]], 
+                    Directive[
+                    Opacity[1]]}}, StripOnInput -> False]}, {}}, {{
+                    Directive[
+                    Opacity[1]], 
+                    Directive[
+                    Opacity[1]]}}, StripOnInput -> False], {"GraphicsLabel"}, 
+                   StripOnInput -> False]}, {"GraphicsTicks"}, StripOnInput -> 
+                 False], {{
+                  Directive[
+                   AbsoluteThickness[0.2], 
+                   GrayLevel[0.4]], 
+                  Directive[
+                   AbsoluteThickness[0.2], 
+                   GrayLevel[0.4], 
+                   Opacity[0.3]]}}, StripOnInput -> False]}, {"GraphicsAxes"},
+               StripOnInput -> False]}, PlotRangePadding -> Scaled[0.02], 
+            PlotRange -> All, Frame -> True, 
+            FrameTicks -> {{False, False}, {True, False}}, FrameStyle -> 
+            Opacity[0], FrameTicksStyle -> Opacity[0], 
+            ImageSize -> {Automatic, 225}, BaseStyle -> {}], Alignment -> 
+           Left, AppearanceElements -> None, ImageMargins -> {{5, 5}, {5, 5}},
+            ImageSizeAction -> "ResizeToFit"], LineIndent -> 0, StripOnInput -> 
+          False], {FontFamily -> "Arial"}, Background -> Automatic, 
+         StripOnInput -> False], TraditionalForm]}, "BarLegend", 
+      DisplayFunction -> (#& ), 
+      InterpretationFunction :> (RowBox[{"BarLegend", "[", 
+         RowBox[{
+           RowBox[{"{", 
+             RowBox[{
+               RowBox[{
+                 RowBox[{"Blend", "[", 
+                   RowBox[{"\"WL12DefaultVectorGradient\"", ",", "#1"}], 
+                   "]"}], "&"}], ",", 
+               RowBox[{"{", 
+                 RowBox[{"0.`", ",", "0.`"}], "}"}]}], "}"}], ",", 
+           RowBox[{"LabelStyle", "\[Rule]", 
+             RowBox[{"{", "}"}]}], ",", 
+           RowBox[{"LegendLayout", "\[Rule]", "\"Column\""}], ",", 
+           RowBox[{"LegendMarkerSize", "\[Rule]", "225"}], ",", 
+           RowBox[{"Charting`AxisLabel", "\[Rule]", "None"}], ",", 
+           RowBox[{"Charting`TickSide", "\[Rule]", "Right"}], ",", 
+           RowBox[{"ColorFunctionScaling", "\[Rule]", "True"}]}], "]"}]& )], 
+     TraditionalForm], TraditionalForm]},
+  "Legended",
+  DisplayFunction->(GridBox[{{
+      TagBox[
+       ItemBox[
+        PaneBox[
+         TagBox[#, "SkipImageSizeLevel"], Alignment -> {Center, Baseline}, 
+         BaselinePosition -> Baseline], DefaultBaseStyle -> "Labeled"], 
+       "SkipImageSizeLevel"], 
+      ItemBox[#2, DefaultBaseStyle -> "LabeledLabel"]}}, 
+    GridBoxAlignment -> {"Columns" -> {{Center}}, "Rows" -> {{Center}}}, 
+    AutoDelete -> False, GridBoxItemSize -> Automatic, 
+    BaselinePosition -> {1, 1}]& ),
+  Editable->True,
+  InterpretationFunction->(RowBox[{"Legended", "[", 
+     RowBox[{#, ",", 
+       RowBox[{"Placed", "[", 
+         RowBox[{#2, ",", "After"}], "]"}]}], "]"}]& )]], "Output",
+ CellChangeTimes->{
+  3.891036552323862*^9, {3.89103666475646*^9, 3.8910366864114*^9}, {
+   3.891036718408205*^9, 3.891036743230302*^9}, {3.891036776516474*^9, 
+   3.8910367891181145`*^9}, 3.891036929727892*^9, 3.891040631403081*^9, 
+   3.9009932389807386`*^9},
+ CellLabel->"Out[9]=",ExpressionUUID->"957a80e6-9b9b-483c-ad80-8686febe21c0"]
+}, Open  ]],
+
+Cell[CellGroupData[{
+
+Cell[BoxData[
+ RowBox[{
+  RowBox[{"G", "=", "1"}], ";", 
+  RowBox[{"(*", 
+   RowBox[{"gravitational", " ", "constant"}], "*)"}], 
+  RowBox[{"m1", "=", "1"}], ";", 
+  RowBox[{"(*", 
+   RowBox[{"mass", " ", "of", " ", "first", " ", "object"}], "*)"}], 
+  RowBox[{"m2", "=", "1"}], ";", 
+  RowBox[{"(*", 
+   RowBox[{"mass", " ", "of", " ", "second", " ", "object"}], "*)"}], 
+  RowBox[{"r1", "=", 
+   RowBox[{"{", 
+    RowBox[{"0", ",", "0"}], "}"}]}], ";", 
+  RowBox[{"(*", 
+   RowBox[{"position", " ", "of", " ", "first", " ", "object"}], "*)"}], 
+  RowBox[{"r2", "=", 
+   RowBox[{"{", 
+    RowBox[{"1", ",", "0"}], "}"}]}], ";", 
+  RowBox[{"(*", 
+   RowBox[{"position", " ", "of", " ", "second", " ", "object"}], "*)"}], 
+  RowBox[{"Animate", "[", 
+   RowBox[{
+    RowBox[{
+     RowBox[{"r", "=", 
+      RowBox[{
+       RowBox[{"Sqrt", "[", 
+        RowBox[{
+         RowBox[{
+          RowBox[{"(", 
+           RowBox[{"x", "-", 
+            RowBox[{"r1", "[", 
+             RowBox[{"[", "1", "]"}], "]"}], "+", 
+            RowBox[{"Cos", "[", "t", "]"}]}], ")"}], "^", "2"}], "+", 
+         RowBox[{
+          RowBox[{"(", 
+           RowBox[{"y", "-", 
+            RowBox[{"r1", "[", 
+             RowBox[{"[", "2", "]"}], "]"}], "+", 
+            RowBox[{"Sin", "[", "t", "]"}]}], ")"}], "^", "2"}]}], "]"}], "+", 
+       RowBox[{"Sqrt", "[", 
+        RowBox[{
+         RowBox[{
+          RowBox[{"(", 
+           RowBox[{"x", "-", 
+            RowBox[{"r2", "[", 
+             RowBox[{"[", "1", "]"}], "]"}], "-", 
+            RowBox[{"Cos", "[", "t", "]"}]}], ")"}], "^", "2"}], "+", 
+         RowBox[{
+          RowBox[{"(", 
+           RowBox[{"y", "-", 
+            RowBox[{"r2", "[", 
+             RowBox[{"[", "2", "]"}], "]"}], "-", 
+            RowBox[{"Sin", "[", "t", "]"}]}], ")"}], "^", "2"}]}], "]"}]}]}], 
+     ";", 
+     RowBox[{"(*", 
+      RowBox[{"distance", " ", "from", " ", "objects"}], "*)"}], 
+     RowBox[{"potential", "=", 
+      RowBox[{
+       RowBox[{
+        RowBox[{"-", "G"}], "*", 
+        RowBox[{"m1", "/", 
+         RowBox[{"Sqrt", "[", 
+          RowBox[{
+           RowBox[{
+            RowBox[{"(", 
+             RowBox[{"x", "-", 
+              RowBox[{"r1", "[", 
+               RowBox[{"[", "1", "]"}], "]"}], "+", 
+              RowBox[{"Cos", "[", "t", "]"}]}], ")"}], "^", "2"}], "+", 
+           RowBox[{
+            RowBox[{"(", 
+             RowBox[{"y", "-", 
+              RowBox[{"r1", "[", 
+               RowBox[{"[", "2", "]"}], "]"}], "+", 
+              RowBox[{"Sin", "[", "t", "]"}]}], ")"}], "^", "2"}]}], 
+          "]"}]}]}], "-", 
+       RowBox[{"G", "*", 
+        RowBox[{"m2", "/", 
+         RowBox[{"Sqrt", "[", 
+          RowBox[{
+           RowBox[{
+            RowBox[{"(", 
+             RowBox[{"x", "-", 
+              RowBox[{"r2", "[", 
+               RowBox[{"[", "1", "]"}], "]"}], "-", 
+              RowBox[{"Cos", "[", "t", "]"}]}], ")"}], "^", "2"}], "+", 
+           RowBox[{
+            RowBox[{"(", 
+             RowBox[{"y", "-", 
+              RowBox[{"r2", "[", 
+               RowBox[{"[", "2", "]"}], "]"}], "-", 
+              RowBox[{"Sin", "[", "t", "]"}]}], ")"}], "^", "2"}]}], 
+          "]"}]}]}]}]}], ";", 
+     RowBox[{"(*", 
+      RowBox[{"potential", " ", "energy"}], "*)"}], 
+     RowBox[{"field", "=", 
+      RowBox[{"-", 
+       RowBox[{"Grad", "[", 
+        RowBox[{"potential", ",", 
+         RowBox[{"{", 
+          RowBox[{"x", ",", "y"}], "}"}]}], "]"}]}]}], ";", 
+     RowBox[{"(*", 
+      RowBox[{"gravitational", " ", "field"}], "*)"}], 
+     RowBox[{"(*", 
+      RowBox[{
+       RowBox[{
+        RowBox[{
+         RowBox[{"density", "=", 
+          RowBox[{"ContourPlot", "[", 
+           RowBox[{
+            RowBox[{
+             RowBox[{
+              RowBox[{"field", "[", 
+               RowBox[{"[", "1", "]"}], "]"}], "^", "2"}], "+", 
+             RowBox[{
+              RowBox[{"field", "[", 
+               RowBox[{"[", "2", "]"}], "]"}], "^", "2"}]}], ",", 
+            RowBox[{"{", 
+             RowBox[{"x", ",", 
+              RowBox[{"-", "2"}], ",", "2"}], "}"}], ",", 
+            RowBox[{"{", 
+             RowBox[{"y", ",", 
+              RowBox[{"-", "2"}], ",", "2"}], "}"}], ",", 
+            RowBox[{"PlotPoints", "->", "50"}], ",", 
+            RowBox[{"ColorFunction", "->", "\"\<TemperatureMap\>\""}], ",", 
+            RowBox[{"Frame", "->", "False"}], ",", 
+            RowBox[{"PlotRange", "->", "All"}]}], "]"}]}], ";", 
+         "\[IndentingNewLine]", "density"}], ",", 
+        RowBox[{"{", 
+         RowBox[{"t", ",", "0", ",", 
+          RowBox[{"2", " ", "Pi"}]}], "}"}]}], "]"}], "*)"}], 
+     "\[IndentingNewLine]", 
+     RowBox[{"(*", 
+      RowBox[{
+       RowBox[{"vector", "=", 
+        RowBox[{"VectorPlot", "[", 
+         RowBox[{"field", ",", 
+          RowBox[{"{", 
+           RowBox[{"x", ",", 
+            RowBox[{"-", "1.5"}], ",", "2.5"}], "}"}], ",", 
+          RowBox[{"{", 
+           RowBox[{"y", ",", 
+            RowBox[{"-", "1"}], ",", "1"}], "}"}], ",", 
+          RowBox[{"VectorPoints", "\[Rule]", "Fine"}], ",", 
+          RowBox[{"PlotLegends", "\[Rule]", "Automatic"}]}], "]"}]}], ";"}], 
+      "*)"}], "\[IndentingNewLine]", 
+     RowBox[{"StreamPlot", "[", 
+      RowBox[{"field", ",", 
+       RowBox[{"{", 
+        RowBox[{"x", ",", 
+         RowBox[{"-", "2"}], ",", "2"}], "}"}], ",", 
+       RowBox[{"{", 
+        RowBox[{"y", ",", 
+         RowBox[{"-", "2"}], ",", "2"}], "}"}], ",", 
+       RowBox[{"StreamPoints", "->", "50"}], ",", 
+       RowBox[{"StreamScale", "->", "0.1"}], ",", 
+       RowBox[{"StreamStyle", "->", "\"\<Line\>\""}], ",", 
+       RowBox[{"ColorFunction", "->", "\"\<TemperatureMap\>\""}], ",", 
+       RowBox[{"Frame", "->", "False"}], ",", 
+       RowBox[{"PlotRange", "->", "All"}], ",", 
+       RowBox[{"Axes", "->", "True"}]}], "]"}]}], ",", 
+    RowBox[{"{", 
+     RowBox[{"t", ",", "0", ",", 
+      RowBox[{"2", " ", "Pi"}]}], "}"}]}], "]"}]}]], "Input",
+ CellChangeTimes->{{3.891036592043681*^9, 3.891036592068262*^9}, 
+   3.891036984845504*^9, {3.891037019363641*^9, 3.891037062250577*^9}, {
+   3.8910371200351896`*^9, 3.8910371691386375`*^9}, {3.891037564289521*^9, 
+   3.8910376142146573`*^9}, {3.891040678084749*^9, 3.8910407011766825`*^9}},
+ CellLabel->"In[10]:=",ExpressionUUID->"f9a00128-c035-4acc-9d82-5df34a8cf3f5"],
+
+Cell[BoxData[
+ TagBox[
+  StyleBox[
+   DynamicModuleBox[{$CellContext`t$$ = 4.409206066616527, Typeset`show$$ = 
+    True, Typeset`bookmarkList$$ = {}, Typeset`bookmarkMode$$ = "Menu", 
+    Typeset`animator$$, Typeset`animvar$$ = 1, Typeset`name$$ = 
+    "\"untitled\"", Typeset`specs$$ = {{
+      Hold[$CellContext`t$$], 0, 2 Pi}}, Typeset`size$$ = {
+    360., {178., 182.}}, Typeset`update$$ = 0, Typeset`initDone$$, 
+    Typeset`skipInitDone$$ = True}, 
+    DynamicBox[Manipulate`ManipulateBoxes[
+     1, StandardForm, "Variables" :> {$CellContext`t$$ = 0}, 
+      "ControllerVariables" :> {}, 
+      "OtherVariables" :> {
+       Typeset`show$$, Typeset`bookmarkList$$, Typeset`bookmarkMode$$, 
+        Typeset`animator$$, Typeset`animvar$$, Typeset`name$$, 
+        Typeset`specs$$, Typeset`size$$, Typeset`update$$, Typeset`initDone$$,
+         Typeset`skipInitDone$$}, 
+      "Body" :> ($CellContext`r = 
+        Sqrt[($CellContext`x - Part[$CellContext`r1, 1] + 
+             Cos[$CellContext`t$$])^2 + ($CellContext`y - 
+             Part[$CellContext`r1, 2] + Sin[$CellContext`t$$])^2] + 
+         Sqrt[($CellContext`x - Part[$CellContext`r2, 1] - 
+             Cos[$CellContext`t$$])^2 + ($CellContext`y - 
+             Part[$CellContext`r2, 2] - 
+             Sin[$CellContext`t$$])^2]; $CellContext`potential = \
+(-$CellContext`G) ($CellContext`m1/
+           Sqrt[($CellContext`x - Part[$CellContext`r1, 1] + 
+              Cos[$CellContext`t$$])^2 + ($CellContext`y - 
+              Part[$CellContext`r1, 2] + 
+              Sin[$CellContext`t$$])^2]) - $CellContext`G ($CellContext`m2/
+          Sqrt[($CellContext`x - Part[$CellContext`r2, 1] - 
+             Cos[$CellContext`t$$])^2 + ($CellContext`y - 
+             Part[$CellContext`r2, 2] - 
+             Sin[$CellContext`t$$])^2]); $CellContext`field = -
+         Grad[$CellContext`potential, {$CellContext`x, $CellContext`y}]; 
+       StreamPlot[$CellContext`field, {$CellContext`x, -2, 
+          2}, {$CellContext`y, -2, 2}, StreamPoints -> 50, StreamScale -> 0.1,
+          StreamStyle -> "Line", ColorFunction -> "TemperatureMap", Frame -> 
+         False, PlotRange -> All, Axes -> True]), 
+      "Specifications" :> {{$CellContext`t$$, 0, 2 Pi, 
+         AppearanceElements -> {
+          "ProgressSlider", "PlayPauseButton", "FasterSlowerButtons", 
+           "DirectionButton"}}}, 
+      "Options" :> {
+       ControlType -> Animator, AppearanceElements -> None, DefaultBaseStyle -> 
+        "Animate", DefaultLabelStyle -> "AnimateLabel", SynchronousUpdating -> 
+        True, ShrinkingDelay -> 10.}, "DefaultOptions" :> {}],
+     ImageSizeCache->{705., {199.8544921875, 205.1455078125}},
+     SingleEvaluation->True],
+    Deinitialization:>None,
+    DynamicModuleValues:>{},
+    SynchronousInitialization->True,
+    UndoTrackedVariables:>{Typeset`show$$, Typeset`bookmarkMode$$},
+    UnsavedVariables:>{Typeset`initDone$$},
+    UntrackedVariables:>{Typeset`size$$}], "Animate",
+   Deployed->True,
+   StripOnInput->False],
+  Manipulate`InterpretManipulate[1]]], "Output",
+ CellChangeTimes->{3.891040701809563*^9, 3.900993239533293*^9},
+ CellLabel->"Out[10]=",ExpressionUUID->"1085700b-2d67-46b6-ae2b-a7cd914540dd"]
+}, Open  ]],
+
+Cell[CellGroupData[{
+
+Cell[BoxData[
+ RowBox[{
+  RowBox[{"G", "=", "1"}], ";", 
+  RowBox[{"(*", 
+   RowBox[{"gravitational", " ", "constant"}], "*)"}], 
+  RowBox[{"m", "=", "1"}], ";", 
+  RowBox[{"(*", 
+   RowBox[{
+   "mass", " ", "of", " ", "each", " ", "point", " ", "mass", " ", "in", " ", 
+    "dipole"}], "*)"}], 
+  RowBox[{"d", "=", "0.2"}], ";", 
+  RowBox[{"(*", 
+   RowBox[{
+   "separation", " ", "between", " ", "point", " ", "masses", " ", "in", " ", 
+    "dipole"}], "*)"}], 
+  RowBox[{"r1", "=", 
+   RowBox[{"{", 
+    RowBox[{
+     RowBox[{"-", "0.5"}], ",", "0"}], "}"}]}], ";", 
+  RowBox[{"(*", 
+   RowBox[{"position", " ", "of", " ", "first", " ", "dipole"}], "*)"}], 
+  RowBox[{"r2", "=", 
+   RowBox[{"{", 
+    RowBox[{"0.5", ",", "0"}], "}"}]}], ";", 
+  RowBox[{"(*", 
+   RowBox[{"position", " ", "of", " ", "second", " ", "dipole"}], "*)"}], 
+  RowBox[{"v", "=", "0.1"}], ";", 
+  RowBox[{"(*", 
+   RowBox[{"velocity", " ", "of", " ", "dipoles"}], "*)"}], 
+  RowBox[{"Animate", "[", 
+   RowBox[{
+    RowBox[{
+     RowBox[{"r1", "+=", 
+      RowBox[{"v", " ", 
+       RowBox[{"{", 
+        RowBox[{"1", ",", "0"}], "}"}]}]}], ";", 
+     RowBox[{"(*", 
+      RowBox[{"move", " ", "first", " ", "dipole"}], "*)"}], 
+     RowBox[{"r2", "-=", 
+      RowBox[{"v", " ", 
+       RowBox[{"{", 
+        RowBox[{"1", ",", "0"}], "}"}]}]}], ";", 
+     RowBox[{"(*", 
+      RowBox[{"move", " ", "second", " ", "dipole"}], "*)"}], 
+     RowBox[{"r", "=", 
+      RowBox[{
+       RowBox[{"Sqrt", "[", 
+        RowBox[{
+         RowBox[{
+          RowBox[{"(", 
+           RowBox[{"x", "-", 
+            RowBox[{"r1", "[", 
+             RowBox[{"[", "1", "]"}], "]"}]}], ")"}], "^", "2"}], "+", 
+         RowBox[{"y", "^", "2"}]}], "]"}], "+", 
+       RowBox[{"Sqrt", "[", 
+        RowBox[{
+         RowBox[{
+          RowBox[{"(", 
+           RowBox[{"x", "-", 
+            RowBox[{"r2", "[", 
+             RowBox[{"[", "1", "]"}], "]"}]}], ")"}], "^", "2"}], "+", 
+         RowBox[{"y", "^", "2"}]}], "]"}]}]}], ";", 
+     RowBox[{"(*", 
+      RowBox[{"distance", " ", "from", " ", "dipoles"}], "*)"}], 
+     RowBox[{"potential", "=", 
+      RowBox[{
+       RowBox[{
+        RowBox[{"-", "G"}], "*", 
+        RowBox[{"m", "/", 
+         RowBox[{"Sqrt", "[", 
+          RowBox[{
+           RowBox[{
+            RowBox[{"(", 
+             RowBox[{"x", "-", 
+              RowBox[{"r1", "[", 
+               RowBox[{"[", "1", "]"}], "]"}]}], ")"}], "^", "2"}], "+", 
+           RowBox[{"y", "^", "2"}]}], "]"}]}]}], "+", 
+       RowBox[{"G", "*", 
+        RowBox[{"m", "/", 
+         RowBox[{"Sqrt", "[", 
+          RowBox[{
+           RowBox[{
+            RowBox[{"(", 
+             RowBox[{"x", "-", 
+              RowBox[{"r2", "[", 
+               RowBox[{"[", "1", "]"}], "]"}]}], ")"}], "^", "2"}], "+", 
+           RowBox[{"y", "^", "2"}]}], "]"}]}]}]}]}], ";", 
+     RowBox[{"(*", 
+      RowBox[{"potential", " ", "energy"}], "*)"}], 
+     RowBox[{"field", "=", 
+      RowBox[{"-", 
+       RowBox[{"Grad", "[", 
+        RowBox[{"potential", ",", 
+         RowBox[{"{", 
+          RowBox[{"x", ",", "y"}], "}"}]}], "]"}]}]}], ";", 
+     RowBox[{"(*", 
+      RowBox[{"gravitational", " ", "field"}], "*)"}], 
+     RowBox[{"StreamPlot", "[", 
+      RowBox[{"field", ",", 
+       RowBox[{"{", 
+        RowBox[{"x", ",", 
+         RowBox[{"-", "2"}], ",", "2"}], "}"}], ",", 
+       RowBox[{"{", 
+        RowBox[{"y", ",", 
+         RowBox[{"-", "2"}], ",", "2"}], "}"}], ",", 
+       RowBox[{"StreamPoints", "->", "50"}], ",", 
+       RowBox[{"StreamScale", "->", "0.1"}], ",", 
+       RowBox[{"StreamStyle", "->", "\"\<Line\>\""}], ",", 
+       RowBox[{"ColorFunction", "->", "\"\<TemperatureMap\>\""}], ",", 
+       RowBox[{"Frame", "->", "False"}], ",", 
+       RowBox[{"PlotRange", "->", "All"}], ",", 
+       RowBox[{"Axes", "->", "True"}]}], "]"}]}], ",", 
+    RowBox[{"{", 
+     RowBox[{"t", ",", "0", ",", "0.5"}], "}"}]}], "]"}]}]], "Input",
+ CellChangeTimes->{{3.8910408087443542`*^9, 3.8910408087596703`*^9}, 
+   3.891040847557961*^9, {3.891041081569327*^9, 3.891041082461501*^9}},
+ CellLabel->"In[11]:=",ExpressionUUID->"cdf1e475-70b9-4b35-abab-8c4f675e2c2c"],
+
+Cell[BoxData[
+ TagBox[
+  StyleBox[
+   DynamicModuleBox[{$CellContext`t$$ = 0.06991324424743653, Typeset`show$$ = 
+    True, Typeset`bookmarkList$$ = {}, Typeset`bookmarkMode$$ = "Menu", 
+    Typeset`animator$$, Typeset`animvar$$ = 1, Typeset`name$$ = 
+    "\"untitled\"", Typeset`specs$$ = {{
+      Hold[$CellContext`t$$], 0, 0.5}}, Typeset`size$$ = {360., {178., 182.}},
+     Typeset`update$$ = 0, Typeset`initDone$$, Typeset`skipInitDone$$ = True}, 
+    DynamicBox[Manipulate`ManipulateBoxes[
+     1, StandardForm, "Variables" :> {$CellContext`t$$ = 0}, 
+      "ControllerVariables" :> {}, 
+      "OtherVariables" :> {
+       Typeset`show$$, Typeset`bookmarkList$$, Typeset`bookmarkMode$$, 
+        Typeset`animator$$, Typeset`animvar$$, Typeset`name$$, 
+        Typeset`specs$$, Typeset`size$$, Typeset`update$$, Typeset`initDone$$,
+         Typeset`skipInitDone$$}, 
+      "Body" :> (AddTo[$CellContext`r1, $CellContext`v {1, 0}]; 
+       SubtractFrom[$CellContext`r2, $CellContext`v {1, 0}]; $CellContext`r = 
+        Sqrt[($CellContext`x - 
+             Part[$CellContext`r1, 1])^2 + $CellContext`y^2] + 
+         Sqrt[($CellContext`x - 
+             Part[$CellContext`r2, 
+              1])^2 + $CellContext`y^2]; $CellContext`potential = \
+(-$CellContext`G) ($CellContext`m/
+           Sqrt[($CellContext`x - 
+              Part[$CellContext`r1, 
+               1])^2 + $CellContext`y^2]) + $CellContext`G ($CellContext`m/
+           Sqrt[($CellContext`x - 
+              Part[$CellContext`r2, 
+               1])^2 + $CellContext`y^2]); $CellContext`field = -
+         Grad[$CellContext`potential, {$CellContext`x, $CellContext`y}]; 
+       StreamPlot[$CellContext`field, {$CellContext`x, -2, 
+          2}, {$CellContext`y, -2, 2}, StreamPoints -> 50, StreamScale -> 0.1,
+          StreamStyle -> "Line", ColorFunction -> "TemperatureMap", Frame -> 
+         False, PlotRange -> All, Axes -> True]), 
+      "Specifications" :> {{$CellContext`t$$, 0, 0.5, 
+         AppearanceElements -> {
+          "ProgressSlider", "PlayPauseButton", "FasterSlowerButtons", 
+           "DirectionButton"}}}, 
+      "Options" :> {
+       ControlType -> Animator, AppearanceElements -> None, DefaultBaseStyle -> 
+        "Animate", DefaultLabelStyle -> "AnimateLabel", SynchronousUpdating -> 
+        True, ShrinkingDelay -> 10.}, "DefaultOptions" :> {}],
+     ImageSizeCache->{705., {199.8544921875, 205.1455078125}},
+     SingleEvaluation->True],
+    Deinitialization:>None,
+    DynamicModuleValues:>{},
+    SynchronousInitialization->True,
+    UndoTrackedVariables:>{Typeset`show$$, Typeset`bookmarkMode$$},
+    UnsavedVariables:>{Typeset`initDone$$},
+    UntrackedVariables:>{Typeset`size$$}], "Animate",
+   Deployed->True,
+   StripOnInput->False],
+  Manipulate`InterpretManipulate[1]]], "Output",
+ CellChangeTimes->{3.89104081043466*^9, 3.8910408518782434`*^9, 
+  3.8910410889885464`*^9, 3.9009932402852864`*^9},
+ CellLabel->"Out[11]=",ExpressionUUID->"ee7218cd-e554-4218-8eb2-c3f9094b6d0c"]
+}, Open  ]],
+
+Cell[CellGroupData[{
+
+Cell[BoxData[
+ RowBox[{
+  RowBox[{"G", "=", "1"}], ";", 
+  RowBox[{"(*", 
+   RowBox[{"gravitational", " ", "constant"}], "*)"}], 
+  RowBox[{"m", "=", "1"}], ";", 
+  RowBox[{"(*", 
+   RowBox[{
+   "mass", " ", "of", " ", "each", " ", "point", " ", "mass", " ", "in", " ", 
+    "dipole"}], "*)"}], 
+  RowBox[{"d", "=", "0.2"}], ";", 
+  RowBox[{"(*", 
+   RowBox[{
+   "separation", " ", "between", " ", "point", " ", "masses", " ", "in", " ", 
+    "dipole"}], "*)"}], 
+  RowBox[{"r1", "=", 
+   RowBox[{"{", 
+    RowBox[{
+     RowBox[{"-", "0.5"}], ",", "0"}], "}"}]}], ";", 
+  RowBox[{"(*", 
+   RowBox[{"position", " ", "of", " ", "first", " ", "dipole"}], "*)"}], 
+  RowBox[{"r2", "=", 
+   RowBox[{"{", 
+    RowBox[{"0.5", ",", "0"}], "}"}]}], ";", 
+  RowBox[{"(*", 
+   RowBox[{"position", " ", "of", " ", "second", " ", "dipole"}], "*)"}], 
+  RowBox[{"v", "=", "0.1"}], ";", 
+  RowBox[{"(*", 
+   RowBox[{"velocity", " ", "of", " ", "dipoles"}], "*)"}], 
+  RowBox[{"Animate", "[", 
+   RowBox[{
+    RowBox[{
+     RowBox[{"t", "=", 
+      RowBox[{"Mod", "[", 
+       RowBox[{"t", ",", "1"}], "]"}]}], ";", 
+     RowBox[{"(*", 
+      RowBox[{
+      "reset", " ", "time", " ", "to", " ", "zero", " ", "after", " ", "one", 
+       " ", "second"}], "*)"}], 
+     RowBox[{"r1", "+=", 
+      RowBox[{"v", " ", 
+       RowBox[{"{", 
+        RowBox[{"1", ",", "0"}], "}"}]}]}], ";", 
+     RowBox[{"(*", 
+      RowBox[{"move", " ", "first", " ", "dipole"}], "*)"}], 
+     RowBox[{"r2", "-=", 
+      RowBox[{"v", " ", 
+       RowBox[{"{", 
+        RowBox[{"1", ",", "0"}], "}"}]}]}], ";", 
+     RowBox[{"(*", 
+      RowBox[{"move", " ", "second", " ", "dipole"}], "*)"}], 
+     RowBox[{"r1a", "=", 
+      RowBox[{"r1", "+", 
+       RowBox[{
+        RowBox[{"d", "/", "2"}], " ", 
+        RowBox[{"{", 
+         RowBox[{"1", ",", "0"}], "}"}]}]}]}], ";", 
+     RowBox[{"(*", 
+      RowBox[{
+      "position", " ", "of", " ", "first", " ", "point", " ", "mass", " ", 
+       "in", " ", "first", " ", "dipole"}], "*)"}], 
+     RowBox[{"r1b", "=", 
+      RowBox[{"r1", "-", 
+       RowBox[{
+        RowBox[{"d", "/", "2"}], " ", 
+        RowBox[{"{", 
+         RowBox[{"1", ",", "0"}], "}"}]}]}]}], ";", 
+     RowBox[{"(*", 
+      RowBox[{
+      "position", " ", "of", " ", "second", " ", "point", " ", "mass", " ", 
+       "in", " ", "first", " ", "dipole"}], "*)"}], 
+     RowBox[{"r2a", "=", 
+      RowBox[{"r2", "+", 
+       RowBox[{
+        RowBox[{"d", "/", "2"}], " ", 
+        RowBox[{"{", 
+         RowBox[{"1", ",", "0"}], "}"}]}]}]}], ";", 
+     RowBox[{"(*", 
+      RowBox[{
+      "position", " ", "of", " ", "first", " ", "point", " ", "mass", " ", 
+       "in", " ", "second", " ", "dipole"}], "*)"}], 
+     RowBox[{"r2b", "=", 
+      RowBox[{"r2", "-", 
+       RowBox[{
+        RowBox[{"d", "/", "2"}], " ", 
+        RowBox[{"{", 
+         RowBox[{"1", ",", "0"}], "}"}]}]}]}], ";", 
+     RowBox[{"(*", 
+      RowBox[{
+      "position", " ", "of", " ", "second", " ", "point", " ", "mass", " ", 
+       "in", " ", "second", " ", "dipole"}], "*)"}], 
+     RowBox[{"r", "=", 
+      RowBox[{
+       RowBox[{"Sqrt", "[", 
+        RowBox[{
+         RowBox[{
+          RowBox[{"(", 
+           RowBox[{"x", "-", 
+            RowBox[{"r1a", "[", 
+             RowBox[{"[", "1", "]"}], "]"}]}], ")"}], "^", "2"}], "+", 
+         RowBox[{"y", "^", "2"}]}], "]"}], "+", 
+       RowBox[{"Sqrt", "[", 
+        RowBox[{
+         RowBox[{
+          RowBox[{"(", 
+           RowBox[{"x", "-", 
+            RowBox[{"r1b", "[", 
+             RowBox[{"[", "1", "]"}], "]"}]}], ")"}], "^", "2"}], "+", 
+         RowBox[{"y", "^", "2"}]}], "]"}], "+", 
+       RowBox[{"Sqrt", "[", 
+        RowBox[{
+         RowBox[{
+          RowBox[{"(", 
+           RowBox[{"x", "-", 
+            RowBox[{"r2a", "[", 
+             RowBox[{"[", "1", "]"}], "]"}]}], ")"}], "^", "2"}], "+", 
+         RowBox[{"y", "^", "2"}]}], "]"}], "+", 
+       RowBox[{"Sqrt", "[", 
+        RowBox[{
+         RowBox[{
+          RowBox[{"(", 
+           RowBox[{"x", "-", 
+            RowBox[{"r2b", "[", 
+             RowBox[{"[", "1", "]"}], "]"}]}], ")"}], "^", "2"}], "+", 
+         RowBox[{"y", "^", "2"}]}], "]"}]}]}], ";", 
+     RowBox[{"(*", 
+      RowBox[{"distance", " ", "from", " ", "dipoles"}], "*)"}], 
+     RowBox[{"potential", "=", 
+      RowBox[{
+       RowBox[{
+        RowBox[{"-", "G"}], "*", 
+        RowBox[{"m", "/", 
+         RowBox[{"Sqrt", "[", 
+          RowBox[{
+           RowBox[{
+            RowBox[{"(", 
+             RowBox[{"x", "-", 
+              RowBox[{"r1a", "[", 
+               RowBox[{"[", "1", "]"}], "]"}]}], ")"}], "^", "2"}], "+", 
+           RowBox[{"y", "^", "2"}]}], "]"}]}]}], "+", 
+       RowBox[{"G", "*", 
+        RowBox[{"m", "/", 
+         RowBox[{"Sqrt", "[", 
+          RowBox[{
+           RowBox[{
+            RowBox[{"(", 
+             RowBox[{"x", "-", 
+              RowBox[{"r1b", "[", 
+               RowBox[{"[", "1", "]"}], "]"}]}], ")"}], "^", "2"}], "+", 
+           RowBox[{"y", "^", "2"}]}], "]"}]}]}], "-", 
+       RowBox[{"G", "*", 
+        RowBox[{"m", "/", 
+         RowBox[{"Sqrt", "[", 
+          RowBox[{
+           RowBox[{
+            RowBox[{"(", 
+             RowBox[{"x", "-", 
+              RowBox[{"r2a", "[", 
+               RowBox[{"[", "1", "]"}], "]"}]}], ")"}], "^", "2"}], "+", 
+           RowBox[{"y", "^", "2"}]}], "]"}]}]}], "-", 
+       RowBox[{"G", "*", 
+        RowBox[{"m", "/", 
+         RowBox[{"Sqrt", "[", 
+          RowBox[{
+           RowBox[{
+            RowBox[{"(", 
+             RowBox[{"x", "-", 
+              RowBox[{"r2b", "[", 
+               RowBox[{"[", "1", "]"}], "]"}]}], ")"}], "^", "2"}], "+", 
+           RowBox[{"y", "^", "2"}]}], "]"}]}]}]}]}], ";", 
+     RowBox[{"(*", 
+      RowBox[{"potential", " ", "energy"}], "*)"}], 
+     RowBox[{"field", "=", 
+      RowBox[{"-", 
+       RowBox[{"Grad", "[", 
+        RowBox[{"potential", ",", 
+         RowBox[{"{", 
+          RowBox[{"x", ",", "y"}], "}"}]}], "]"}]}]}], ";", 
+     RowBox[{"(*", 
+      RowBox[{"gravitational", " ", "field"}], "*)"}], 
+     RowBox[{"StreamPlot", "[", 
+      RowBox[{"field", ",", 
+       RowBox[{"{", 
+        RowBox[{"x", ",", 
+         RowBox[{"-", "2"}], ",", "2"}], "}"}], ",", 
+       RowBox[{"{", 
+        RowBox[{"y", ",", 
+         RowBox[{"-", "2"}], ",", "2"}], "}"}], ",", 
+       RowBox[{"StreamPoints", "->", "50"}], ",", 
+       RowBox[{"StreamScale", "->", "0.1"}], ",", 
+       RowBox[{"StreamStyle", "->", "\"\<Line\>\""}], ",", 
+       RowBox[{"ColorFunction", "->", "\"\<TemperatureMap\>\""}], ",", 
+       RowBox[{"Frame", "->", "False"}], ",", 
+       RowBox[{"PlotRange", "->", "All"}], ",", 
+       RowBox[{"Axes", "->", "True"}]}], "]"}]}], ",", 
+    RowBox[{"{", 
+     RowBox[{"t", ",", "0", ",", "Infinity"}], "}"}]}], "]"}]}]], "Input",
+ CellChangeTimes->{{3.8910411589526916`*^9, 3.8910411589648933`*^9}, {
+  3.891041242066152*^9, 3.891041257486292*^9}},
+ CellLabel->"In[12]:=",ExpressionUUID->"43874447-6267-41ef-863d-bd6eba2fe939"],
+
+Cell[BoxData[
+ TagBox[
+  StyleBox[
+   DynamicModuleBox[{$CellContext`t$$ = 0.4484062194824219, Typeset`show$$ = 
+    True, Typeset`bookmarkList$$ = {}, Typeset`bookmarkMode$$ = "Menu", 
+    Typeset`animator$$, Typeset`animvar$$ = 1, Typeset`name$$ = 
+    "\"untitled\"", Typeset`specs$$ = {{
+      Hold[$CellContext`t$$], 0, 
+      DirectedInfinity[1]}}, Typeset`size$$ = {360., {178., 182.}}, 
+    Typeset`update$$ = 0, Typeset`initDone$$, Typeset`skipInitDone$$ = True}, 
+    DynamicBox[Manipulate`ManipulateBoxes[
+     1, StandardForm, "Variables" :> {$CellContext`t$$ = 0}, 
+      "ControllerVariables" :> {}, 
+      "OtherVariables" :> {
+       Typeset`show$$, Typeset`bookmarkList$$, Typeset`bookmarkMode$$, 
+        Typeset`animator$$, Typeset`animvar$$, Typeset`name$$, 
+        Typeset`specs$$, Typeset`size$$, Typeset`update$$, Typeset`initDone$$,
+         Typeset`skipInitDone$$}, 
+      "Body" :> ($CellContext`t$$ = Mod[$CellContext`t$$, 1]; 
+       AddTo[$CellContext`r1, $CellContext`v {1, 0}]; 
+       SubtractFrom[$CellContext`r2, $CellContext`v {1, 
+          0}]; $CellContext`r1a = $CellContext`r1 + ($CellContext`d/2) {1, 
+           0}; $CellContext`r1b = $CellContext`r1 - ($CellContext`d/2) {1, 
+          0}; $CellContext`r2a = $CellContext`r2 + ($CellContext`d/2) {1, 
+           0}; $CellContext`r2b = $CellContext`r2 - ($CellContext`d/2) {1, 
+          0}; $CellContext`r = 
+        Sqrt[($CellContext`x - 
+             Part[$CellContext`r1a, 1])^2 + $CellContext`y^2] + 
+         Sqrt[($CellContext`x - 
+             Part[$CellContext`r1b, 1])^2 + $CellContext`y^2] + 
+         Sqrt[($CellContext`x - 
+             Part[$CellContext`r2a, 1])^2 + $CellContext`y^2] + 
+         Sqrt[($CellContext`x - 
+             Part[$CellContext`r2b, 
+              1])^2 + $CellContext`y^2]; $CellContext`potential = \
+(-$CellContext`G) ($CellContext`m/
+           Sqrt[($CellContext`x - 
+              Part[$CellContext`r1a, 
+               1])^2 + $CellContext`y^2]) + $CellContext`G ($CellContext`m/
+           Sqrt[($CellContext`x - 
+              Part[$CellContext`r1b, 
+               1])^2 + $CellContext`y^2]) - $CellContext`G ($CellContext`m/
+          Sqrt[($CellContext`x - 
+             Part[$CellContext`r2a, 
+              1])^2 + $CellContext`y^2]) - $CellContext`G ($CellContext`m/
+          Sqrt[($CellContext`x - 
+             Part[$CellContext`r2b, 
+              1])^2 + $CellContext`y^2]); $CellContext`field = -
+         Grad[$CellContext`potential, {$CellContext`x, $CellContext`y}]; 
+       StreamPlot[$CellContext`field, {$CellContext`x, -2, 
+          2}, {$CellContext`y, -2, 2}, StreamPoints -> 50, StreamScale -> 0.1,
+          StreamStyle -> "Line", ColorFunction -> "TemperatureMap", Frame -> 
+         False, PlotRange -> All, Axes -> True]), 
+      "Specifications" :> {{$CellContext`t$$, 0, 
+         DirectedInfinity[1], 
+         AppearanceElements -> {
+          "ProgressSlider", "PlayPauseButton", "FasterSlowerButtons", 
+           "DirectionButton"}}}, 
+      "Options" :> {
+       ControlType -> Animator, AppearanceElements -> None, DefaultBaseStyle -> 
+        "Animate", DefaultLabelStyle -> "AnimateLabel", SynchronousUpdating -> 
+        True, ShrinkingDelay -> 10.}, "DefaultOptions" :> {}],
+     ImageSizeCache->{705., {199.8544921875, 205.1455078125}},
+     SingleEvaluation->True],
+    Deinitialization:>None,
+    DynamicModuleValues:>{},
+    SynchronousInitialization->True,
+    UndoTrackedVariables:>{Typeset`show$$, Typeset`bookmarkMode$$},
+    UnsavedVariables:>{Typeset`initDone$$},
+    UntrackedVariables:>{Typeset`size$$}], "Animate",
+   Deployed->True,
+   StripOnInput->False],
+  Manipulate`InterpretManipulate[1]]], "Output",
+ CellChangeTimes->{3.891041160566825*^9, 3.891041262333735*^9, 
+  3.900993242358571*^9},
+ CellLabel->"Out[12]=",ExpressionUUID->"90d06b21-0072-47eb-8c5b-027b0b878376"]
+}, Open  ]]
+},
+WindowSize->{949, 461},
+WindowMargins->{{0, Automatic}, {Automatic, 0}},
+FrontEndVersion->"13.0 for Microsoft Windows (64-bit) (December 2, 2021)",
+StyleDefinitions->"Default.nb",
+ExpressionUUID->"ea3417ff-ee40-4f8d-9e38-110387a6970e"
+]
+(* End of Notebook Content *)
+
+(* Internal cache information *)
+(*CellTagsOutline
+CellTagsIndex->{}
+*)
+(*CellTagsIndex
+CellTagsIndex->{}
+*)
+(*NotebookFileOutline
+Notebook[{
+Cell[CellGroupData[{
+Cell[580, 22, 4031, 128, 188, "Input",ExpressionUUID->"ab8d3ad8-80b2-47c3-8a36-5c964179719b"],
+Cell[4614, 152, 18224, 360, 378, "Output",ExpressionUUID->"957a80e6-9b9b-483c-ad80-8686febe21c0"]
+}, Open  ]],
+Cell[CellGroupData[{
+Cell[22875, 517, 6341, 169, 328, "Input",ExpressionUUID->"f9a00128-c035-4acc-9d82-5df34a8cf3f5"],
+Cell[29219, 688, 3194, 60, 422, "Output",ExpressionUUID->"1085700b-2d67-46b6-ae2b-a7cd914540dd"]
+}, Open  ]],
+Cell[CellGroupData[{
+Cell[32450, 753, 4151, 116, 240, "Input",ExpressionUUID->"cdf1e475-70b9-4b35-abab-8c4f675e2c2c"],
+Cell[36604, 871, 2989, 57, 422, "Output",ExpressionUUID->"ee7218cd-e554-4218-8eb2-c3f9094b6d0c"]
+}, Open  ]],
+Cell[CellGroupData[{
+Cell[39630, 933, 7004, 199, 381, "Input",ExpressionUUID->"43874447-6267-41ef-863d-bd6eba2fe939"],
+Cell[46637, 1134, 3868, 75, 446, "Output",ExpressionUUID->"90d06b21-0072-47eb-8c5b-027b0b878376"]
+}, Open  ]]
+}
+]
+*)
+
