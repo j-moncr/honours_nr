@@ -503,14 +503,17 @@ def geodesic_integrator(N,delta,omega,q0,p0,Param,order=2, update_parameters=Fal
 if __name__ == "__main__":
     
     # Assume cirular orbits a = - omega^2 x, with omega = v/r = sqrt(M/r^3)
+    G = 1
+    M = 100
+    b = 5                          # Inital seperation radii of the two black holes
 
-    r = 1.5
-    M = 0.1
-    angular_freq = np.sqrt(M/r**3) # angular velocity, give higher order PN expansion later
+    angular_freq = np.sqrt(M/b**3) # angular velocity, give higher order PN expansion later
+    angular_freq = 0.0001
 
-    N = 300
-    num_orbits = 1
-    T = (2 * np.pi / angular_freq) * num_orbits
+    N = 200
+    # num_orbits = 0.001
+    # T = (2 * np.pi / angular_freq) * num_orbits
+    T = 1.2
     dt = T / N
     t = np.linspace(0, T, N)
     
@@ -521,117 +524,114 @@ if __name__ == "__main__":
     order = 2
 
     # Define trajectory of the two binaries
-    r1 = np.array([r * np.cos(omega * t), r * np.sin(omega * t), 0 * t]).T
-    r2 = np.array([r * np.cos(omega * t + np.pi), r * np.sin(omega * t + np.pi), 0 * t]).T
+    rs_1 = np.array([b * np.cos(angular_freq * t), b * np.sin(angular_freq * t), 0 * t]).T
+    rs_2 = np.array([b * np.cos(angular_freq * t + np.pi), b * np.sin(angular_freq * t + np.pi), 0 * t]).T
 
     # Get velocities of the two binaries
-    v1 = np.array([-r * omega * np.sin(omega * t), r * omega * np.cos(omega * t), 0 * t]).T
-    v2 = np.array([-r * omega * np.sin(omega * t + np.pi), r * omega * np.cos(omega * t + np.pi), 0 * t]).T
+    vs_1 = np.array([-b * angular_freq * np.sin(angular_freq * t), b * angular_freq * np.cos(angular_freq * t), 0 * t]).T
+    vs_2 = np.array([-b * angular_freq * np.sin(angular_freq * t + np.pi), b * angular_freq * np.cos(angular_freq * t + np.pi), 0 * t]).T
 
     # Calculate relative position and velocity of binaries
-    r12 = r1 - r2
-    n12 = r12 / r
-    R12 = np.linalg.norm(r12, axis=1)
-    v12 = v1 - v2
-    V12 = np.linalg.norm(v12, axis=1)
+    rs_12 = (rs_1 - rs_2)
+    ns_12 = rs_12 / b
+    Rs_12 = np.linalg.norm(rs_12, axis=1)
+    vs_12 = vs_1 - vs_2
+    Vs_12 = np.linalg.norm(vs_12, axis=1)
     
     from numpy.linalg import norm as mag
 
     def g00(Param,Coord):
-            
-        r3 = Param[0]                                               # Position vector of orbiting particle
+        
+        # Note, r1 and r2 are position vectors of the particle with relative to the two black holes
+        # Note x 2, I could be misinterpereting this in the forumla, later try it when it is absolute position
+        # v1, v2 are the velocities of the two black holes relaative to the origin.
+        
+        x = Param[0]                                                # Position vector of orbiting particle
         m1, m2, S1, S2 = Param[1], Param[2], Param[9], Param[10]    # Masses and spins of binary BHs
-        r1, r2, r12 = Param[3], Param[4], Param[5]                  # Position vectors of binary BHs
+        r1, r2, r12 = Param[3], Param[4], Param[5]                  # Position vectors of particles relative to BHs
+        R1, R2, R12 = mag(r1), mag(r2), mag(r12)
         v1, v2, v12 = Param[6], Param[7], Param[8]                  # Velocities of binary BHs
-        n12 = r12/mag(r12)                                          # Unit vector pointing from m1 to m2
+        V1, V2, V3 = mag(v1), mag(v2), mag(v12)
+        n1, n2 = r1/R1, r2/R2
+        n12 = r12/R12                                               # Unit vector pointing from m1 to m2
         
-        # r1 should actually be displacement from body 1 to particle
-        r1 = r3 - r1
-        r2 = r3 - r2
-        n1, n2 = r1/mag(r1), r2/mag(r2)
         
-        term1 = -1 + 2*m1/mag(r1) + 2*m2/mag(r2)  - 2*m1**2/mag(r2)**2 - 2* m2**2/mag(r1)**2
-        term2 = m1/mag(r1) * (4*mag(v1)**2-np.dot(n1,v1)**2) + m2/mag(r2) * (4*mag(v2)**2-np.dot(n2,v2))
-        term3a = -m1*m2*(2/(mag(r1)*mag(r2)) + mag(r1)/(2*mag(r12)**3)-mag(r1)**2 / (2*mag(r2)*mag(r12)**3)+ 5 / (2*mag(r1)*mag(r12)))
-        term3b = -m2*m1*(2/(mag(r1)*mag(r2)) + mag(r2)/(2*mag(r12)**3)-mag(r2)**2 / (2*mag(r1)*mag(r12)**3)+ 5 / (2*mag(r2)*mag(r12)))
-        term4 = 4*m1*m2/(3*mag(r12)**2) * np.dot(n12, v12) + 4*m2*m1/(3*mag(r12)**2) * np.dot(n12, v12)
-        term5 = 4/mag(r1)**2 * np.dot(v1, np.cross(S1, n1)) + 4/mag(r2)**2 * np.dot(v2, np.cross(S2, n2))
+        term1 = -1 + 2*m1/R1 + 2*m2/R2  - 2*m1**2/R2**2 - 2* m2**2/R1**2
+        term2 = m1/R1 * (4*V1**2-np.dot(n1,v1)**2) + m2/R2 * (4*V2**2-np.dot(n2,v2))
+        term3a = -m1*m2*(2/(R1*R2) + R1/(2*R12**3)-R1**2 / (2*R2*R12**3)+ 5 / (2*R1*R12))
+        term3b = -m2*m1*(2/(R1*R2) + R2/(2*R12**3)-R2**2 / (2*R1*R12**3)+ 5 / (2*R2*R12))
+        term4 = 4*m1*m2/(3*R12**2) * np.dot(n12, v12) + 4*m2*m1/(3*R12**2) * np.dot(n12, v12)
+        term5 = 4/R1**2 * np.dot(v1, np.cross(S1, n1)) + 4/R2**2 * np.dot(v2, np.cross(S2, n2))
         
         return term1 + term2 + term3a + term3b + term4 + term5
 
 
     def g11(Param,Coord):
-        r3 = Param[0]
+        x = Param[0]
         m1, m2 = Param[1], Param[2]
         r1, r2 = Param[3], Param[4]
         
-        r1 = mag(r3 - r1)
-        r2 = mag(r3 - r2)
+        R1, R2 = mag(r1), mag(r2)
         
-        return (1 + 2*m1/r1 + 2*m2/r2)
+        return (1 + 2*m1/R1 + 2*m2/R2)
 
 
     def g22(Param,Coord):
-        r3 = Param[0]
+        x = Param[0]
         m1, m2 = Param[1], Param[2]
         r1, r2 = Param[3], Param[4]
         
-        r1 = mag(r3 - r1)
-        r2 = mag(r3 - r2)
+        R1, R2 = mag(r1), mag(r2)
         
-        return (1 + 2*m1/r1 + 2*m2/r2)
+        return (1 + 2*m1/R1 + 2*m2/R2)
         
     def g33(Param,Coord):
-        r3 = Param[0]
+        x = Param[0]
         m1, m2 = Param[1], Param[2]
         r1, r2 = Param[3], Param[4]
         
-        r1 = mag(r3 - r1)
-        r2 = mag(r3 - r2)
+        R1, R2 = mag(r1), mag(r2)
         
-        return (1 + 2*m1/r1 + 2*m2/r2)
+        return (1 + 2*m1/R1 + 2*m2/R2)
 
     # Off-diagonal components of the metric
     def g01(Param,Coord):
-        r3 = Param[0]
+        x = Param[0]
         m1, m2, S1, S2 = Param[1], Param[2], Param[9], Param[10]    # Masses and spins of binary BHs
         r1, r2, r12 = Param[3], Param[4], Param[5]                  # Position vectors of binary BHs
+        R1, R2, R12 = mag(r1), mag(r2), mag(r12)
         v1, v2, v12 = Param[6], Param[7], Param[8]                  # Velocities of binary BHs
-        r1 = r3 - r1
-        r2 = r3 - r2
         n1, n2, n12 = r1/mag(r1), r2/mag(r2), r12/mag(r12)
         
-        term1 = -(4*m1/mag(r1)) * v1[0] - (4*m2/mag(r2)) * v2[0]
-        term2 = -(2/mag(r1)**2) * np.cross(S1, n1)[0] - (2/mag(r2)**2) * np.cross(S2, n2)[0]
-        
+        term1 = -(4*m1/R1) * v1[0] - (4*m2/R2) * v2[0]
+        term2 = -(2/R1**2) * np.cross(S1, n1)[0] - (2/R2**2) * np.cross(S2, n2)[0]
+                
         return term1 + term2
         
     def g02(Param,Coord):
-        r3 = Param[0]
+        x = Param[0]
         m1, m2, S1, S2 = Param[1], Param[2], Param[9], Param[10]    # Masses and spins of binary BHs
         r1, r2, r12 = Param[3], Param[4], Param[5]                  # Position vectors of binary BHs
+        R1, R2, R12 = mag(r1), mag(r2), mag(r12)
         v1, v2, v12 = Param[6], Param[7], Param[8]                  # Velocities of binary BHs
-        r1 = r3 - r1
-        r2 = r3 - r2
         n1, n2, n12 = r1/mag(r1), r2/mag(r2), r12/mag(r12)
-
-        term1 = -(4*m1/mag(r1)) * v1[1] - (4*m2/mag(r2)) * v2[1]
-        term2 = -(2/mag(r1)**2) * np.cross(S1, n1)[1] - (2/mag(r2)**2) * np.cross(S2, n2)[1]
         
+        term1 = -(4*m1/R1) * v1[1] - (4*m2/R2) * v2[1]
+        term2 = -(2/R1**2) * np.cross(S1, n1)[1] - (2/R2**2) * np.cross(S2, n2)[1]
+                
         return term1 + term2
 
     def g03(Param,Coord):
-        r3 = Param[0]
+        x = Param[0]
         m1, m2, S1, S2 = Param[1], Param[2], Param[9], Param[10]    # Masses and spins of binary BHs
         r1, r2, r12 = Param[3], Param[4], Param[5]                  # Position vectors of binary BHs
+        R1, R2, R12 = mag(r1), mag(r2), mag(r12)
         v1, v2, v12 = Param[6], Param[7], Param[8]                  # Velocities of binary BHs
-        r1 = r3 - r1
-        r2 = r3 - r2
         n1, n2, n12 = r1/mag(r1), r2/mag(r2), r12/mag(r12)
-
-        term1 = -(4*m1/mag(r1)) * v1[2] - (4*m2/mag(r2)) * v2[2]
-        term2 = -(2/mag(r1)**2) * np.cross(S1, n1)[2] - (2/mag(r2)**2) * np.cross(S2, n2)[2]
         
+        term1 = -(4*m1/R1) * v1[2] - (4*m2/R2) * v2[2]
+        term2 = -(2/R1**2) * np.cross(S1, n1)[2] - (2/R2**2) * np.cross(S2, n2)[2]
+                
         return term1 + term2
         
     def g12(Param,Coord):
@@ -642,46 +642,62 @@ if __name__ == "__main__":
 
     def g23(Param,Coord):
         return 0
+    
+    def Newtonian_orbit(rs_1, rs_2, m1, m2, q0, p0, dt, N):
+        x = q0[1:]
+        v = p0[1:]
+        pos = np.zeros((N, 3))
+        pos[0] = x
+        for ii in range(N):
+            r1 = x - rs_1[ii]
+            r2 = x - rs_2[ii]
+            a = - G * m1 * r1 / mag(r1)**3 - G * m2 * r2 / mag(r2)**3
+            v += a * dt
+            x += v * dt
+            pos[ii] = x
+        return pos
+        
 
     # Initial values - Coords = [t, x, y, z]
-    q0 = [0., 0.0, 0.0, 0.]
+    q0 = [0.0,0.0, 0.0, 0.]
     p0 = [1.0,0.0,0.0,0.0]
 
+    
     # Parameter values
-    r3_0 = q0[1:]
-    m1 = M
-    m2 = M - m1
-    r1_0 = r1[0,:]
-    r2_0 = r2[0,:]
-    r12_0 = r12[0,:]
-    v1_0 = v1[0,:]
-    v2_0 = v2[0,:]
-    v12_0 = v12[0,:]
-    S1 = np.array([0.0,0.0,0])
-    S2 = np.array([0.0,0.0,0])
+    x_0 = q0[1:]              # Initial postion of particle
+    m1 = 0
+    m2 = M
+    r1_0 = x_0 - rs_1[0,:]    # Initial position of particle at x_0 relative to BH1
+    r2_0 = x_0 - rs_2[0,:]    # Initial position of particle at x_0 relative to BH2
+    r12_0 = rs_12[0,:]        # Relative positions of BHs at t = 0
+    v1_0 = vs_1[0,:]          # Initial velocity of particle at x_0 relative to BH1
+    v2_0 = vs_2[0,:]
+    v12_0 = vs_12[0,:]
+    S1 = np.array([0.0,0.0,0.0])
+    S2 = np.array([0.0,0.0,0.0])
 
-    Param = [r3_0, m1, m2, r1_0, r2_0, r12_0, v1_0, v2_0, v12_0, S1, S2]
+    Param = [x_0, m1, m2, r1_0, r2_0, r12_0, v1_0, v2_0, v12_0, S1, S2]
     
     # Define function to update the parameters in "param"
     def update_param(Param, result, index):
         
         # Update the position of the particle, based on integrators input
 
-        r3_curr = np.array(result[0,1:])
+        x_curr = np.array(result[0,1:])
         
         # Update the positions and velocities of binaries, based on stored array of values calculated beforehand
-        global r1, r2, r12, v1, v2, v12
-        r1_curr = r1[index, :]
-        r2_curr = r2[index, :]
-        r12_curr = r12[index, :]
-        v1_curr = v1[index, :]
-        v2_curr = v2[index, :]
-        v12_curr = v12[index, :]
+        global rs_1, rs_2, rs_12, vs_1, vs_2, vs_12
+        r1_curr = rs_1[index, :]
+        r2_curr = rs_2[index, :]
+        r12_curr = rs_12[index, :]
+        v1_curr = vs_1[index, :]
+        v2_curr = vs_2[index, :]
+        v12_curr = vs_12[index, :]
         
         # Update this infromation in the parameter array
-        Param[0] = r3_curr
-        Param[3] = r1_curr
-        Param[4] = r2_curr
+        Param[0] = x_curr
+        Param[3] = x_curr - r1_curr
+        Param[4] = x_curr - r2_curr
         Param[5] = r12_curr
         Param[6] = v1_curr
         Param[7] = v2_curr
@@ -702,25 +718,83 @@ if __name__ == "__main__":
     
     # 3D plot
     from mpl_toolkits.mplot3d import Axes3D
-    
-    fig = plt.figure()
-    ax = fig.add_subplot(111, projection='3d')
-    ax.plot(x,y,z, label="Particle")
-    ax.set_title("Particle Trajectory near BBH using 1.5PN Approximation")
-    ax.set_xlabel("x / (c^2 / GM)")
-    ax.set_ylabel("y / (c^2 / GM)")
-    ax.set_zlabel("z / (c^2 / GM)")
-    
-    
-    ax.plot(r1[:,0], r1[:,1], r1[:,2], label='BH1', color="blue")
-    ax.plot(r2[:,0], r2[:,1], r2[:,2], label='BH2', color="red")
+    def plot_traj(x, y, z, rs_1, rs_2):
+        fig = plt.figure()
+        ax = fig.add_subplot(111, projection='3d')
+        ax.plot(x,y,z, label="Particle")
+        ax.set_title("Particle Trajectory near BBH using 1.5PN Approximation")
+        ax.set_xlabel("x / (c^2 / GM)")
+        ax.set_ylabel("y / (c^2 / GM)")
+        ax.set_zlabel("z / (c^2 / GM)")
+        
 
-    ax.legend()
-    ax.set_xlim(-2,2)
-    ax.set_ylim(-2, 2)
-    ax.set_zlim(-2, 2)
+        ax.plot(rs_1[:,0], rs_1[:,1], rs_1[:,2], label='BH1', color="blue")
+        ax.plot(rs_2[:,0], rs_2[:,1], rs_2[:,2], label='BH2', color="red")
+
+        ax.legend()
+        # ax.set_xlim(-200,200)
+        # ax.set_ylim(-200, 200)
+        # ax.set_zlim(-200, 200)
+        
+        plt.show()
     
+    from matplotlib.animation import FuncAnimation
+    from matplotlib.animation import FFMpegWriter
+    from IPython.display import HTML
+    import os.path
+    
+    def animate_trajectories(x,y,z,rs_1,rs_2, a=2*b, save_fig=False):
+
+        # Create the figure and axes
+        fig, ax = plt.subplots()
+        
+        ax.set_xlim(-a, a)
+        ax.set_ylim(-a, a)
+
+        # Plot two primary masses (initial position)
+        mass1, = ax.plot(rs_1[0,0], rs_1[0,1], 'o', color='blue', markersize=15, label="mass 1")
+        mass2, = ax.plot(rs_2[0,0], rs_2[0,1], 'o', color='black', markersize=20, label="mass 2")
+
+        # Plot initial position of test particle
+        particle, = ax.plot(x[0], y[0], 'o', color='red', markersize=5, label="Particle")
+        particle_trail, = ax.plot(x[0], y[0], '-', color='red', markersize=1)
+
+        # Function to update the positions
+        def update(i):
+            mass1.set_data(rs_1[i, 0], rs_1[i, 1])
+            mass2.set_data(rs_2[i, 0], rs_2[i, 1])
+            particle.set_data(x[i], y[i])
+            particle_trail.set_data(x[:i], y[:i])
+        
+
+        # Create the animation
+        ani = FuncAnimation(fig, update, frames=range(0, len(x), len(x)//100), interval=200)
+
+        plt.legend()
+        
+        fig.suptitle("1.5PN binary")
+        if save_fig:
+            # saving to m4 using ffmpeg writer            
+            writervideo = FFMpegWriter(fps=60)
+            save_fig = f"{save_fig}x.mp4" if os.path.isfile(f"./{save_fig}.mp4") else f"{save_fig}.mp4"
+            ani.save(save_fig, writer=writervideo)
+            plt.close()
+    
+        # return ani
+    
+    plot_traj(x, y, z, rs_1, rs_2)
+    
+    pos = Newtonian_orbit(rs_1, rs_2, m1, m2, q0, p0, dt, N)
+    x = pos[:,0]
+    y = pos[:,1]
+    z = pos[:,2]
+    
+    plot_traj(x,y, z, rs_1, rs_2)
     plt.show()
+    print(pos)
+    # ani = animate_trajectories(x,y,z,rs_1,rs_2, save_fig=f"animations/m1={m1}_m2={m2}_q0={q0}_p0={p0}_S1={S1}_S2={S2}")
+    # ani = animate_trajectories(x,y,z,rs_1,rs_2, save_fig=f"animations/angfreq=0_N={N}_T={T}_m1={m1}_m2={m2}_q0={q0}")
+
 
 
 
