@@ -79,73 +79,77 @@ import numpy
 from IPython.display import clear_output, display
 
 class dual:
-  def __init__(self, first, second):
-    self.f = first
-    self.s = second
+    def __init__(self, first, second):
+        self.f = first
+        self.s = second
 
-  def __mul__(self,other):
-    if isinstance(other,dual):
-      return dual(self.f*other.f, self.s*other.f+self.f*other.s)
-    else:
-      return dual(self.f*other, self.s*other)
+    def __mul__(self,other):
+        if isinstance(other,dual):
+            return dual(self.f*other.f, self.s*other.f+self.f*other.s)
+        else:
+            return dual(self.f*other, self.s*other)
 
-  def __rmul__(self,other):
-    if isinstance(other,dual):
-      return dual(self.f*other.f, self.s*other.f+self.f*other.s)
-    else:
-      return dual(self.f*other, self.s*other)
+    def __rmul__(self,other):
+        if isinstance(other,dual):
+            return dual(self.f*other.f, self.s*other.f+self.f*other.s)
+        else:
+            return dual(self.f*other, self.s*other)
 
-  def __add__(self,other):
-    if isinstance(other,dual):
-      return dual(self.f+other.f, self.s+other.s)
-    else:
-      return dual(self.f+other,self.s)
+    def __add__(self,other):
+        if isinstance(other,dual):
+            return dual(self.f+other.f, self.s+other.s)
+        else:
+            return dual(self.f+other,self.s)
 
-  def __radd__(self,other):
-    if isinstance(other,dual):
-      return dual(self.f+other.f, self.s+other.s)
-    else:
-      return dual(self.f+other,self.s)
+    def __radd__(self,other):
+        if isinstance(other,dual):
+            return dual(self.f+other.f, self.s+other.s)
+        else:
+            return dual(self.f+other,self.s)
 
-  def __sub__(self,other):
-    if isinstance(other,dual):
-      return dual(self.f-other.f, self.s-other.s)
-    else:
-      return dual(self.f-other,self.s)
+    def __sub__(self,other):
+        if isinstance(other,dual):
+            return dual(self.f-other.f, self.s-other.s)
+        else:
+            return dual(self.f-other,self.s)
 
-  def __rsub__(self, other):
-    return dual(other, 0) - self
+    def __rsub__(self, other):
+        return dual(other, 0) - self
 
-  def __truediv__(self,other):
-    ''' when the first component of the divisor is not 0 '''
-    if isinstance(other,dual):
-      return dual(self.f/other.f, (self.s*other.f-self.f*other.s)/(other.f**2.))
-    else:
-      return dual(self.f/other, self.s/other)
+    def __truediv__(self,other):
+        ''' when the first component of the divisor is not 0 '''
+        if isinstance(other,dual):
+            return dual(self.f/other.f, (self.s*other.f-self.f*other.s)/(other.f**2.))
+        else:
+            return dual(self.f/other, self.s/other)
 
-  def __rtruediv__(self, other):
-    return dual(other, 0).__truediv__(self)
+    def __rtruediv__(self, other):
+        return dual(other, 0).__truediv__(self)
 
-  def __neg__(self):
-      return dual(-self.f, -self.s)
+    def __neg__(self):
+        return dual(-self.f, -self.s)
 
-  def __pow__(self, power):
-    return dual(self.f**power,self.s * power * self.f**(power - 1))
+    def __pow__(self, power):
+        return dual(self.f**power,self.s * power * self.f**(power - 1))
+    
+    def sqrt(self):
+        # return dual(self ** 0.5, self.s * 0.5 * self.f**(-0.5))
+        return pow(self, 0.5)
 
-  def sin(self):
-    return dual(numpy.sin(self.f),self.s*numpy.cos(self.f))
+    def sin(self):
+        return dual(numpy.sin(self.f),self.s*numpy.cos(self.f))
 
-  def cos(self):
-    return dual(numpy.cos(self.f),-self.s*numpy.sin(self.f))
+    def cos(self):
+        return dual(numpy.cos(self.f),-self.s*numpy.sin(self.f))
 
-  def tan(self):
-    return sin(self)/cos(self)
+    def tan(self):
+        return sin(self)/cos(self)
 
-  def log(self):
-    return dual(numpy.log(self.f),self.s/self.f)
+    def log(self):
+        return dual(numpy.log(self.f),self.s/self.f)
 
-  def exp(self):
-    return dual(numpy.exp(self.f),self.s*numpy.exp(self.f))
+    def exp(self):
+        return dual(numpy.exp(self.f),self.s*numpy.exp(self.f))
 
 def dif(func,x):
     funcdual = func(dual(x,1.))
@@ -295,102 +299,113 @@ def dm(Param,Coord,metric,wrt):
 
 ################### Automatic Coordinate Transformation ###################
 
-def CoordTrans0(Param, Coord):
+# def CoordTrans0(Param, Coord):
 
-    M = Param[0]
-    a = Param[1]
-    t = Coord[0]
+#     M = Param[0]
+#     a = Param[1]
+#     t = Coord[0]
     
-    return t
+#     return t
         
-def CoordTrans1(Param, Coord):
+# def CoordTrans1(Param, Coord):
 
-    M = Param[0]
-    a = Param[1]
-    r = Coord[1]
-    theta = Coord[2]
-    phi = Coord[3]
+#     M = Param[0]
+#     a = Param[1]
+#     r = Coord[1]
+#     theta = Coord[2]
+#     phi = Coord[3]
     
-    x = r*sin(theta)*cos(phi)
+#     x = r*sin(theta)*cos(phi)
 
-    return x
+#     return x
 
-def CoordTrans2(Param, Coord):
+# def CoordTrans2(Param, Coord):
 
-    M = Param[0]
-    a = Param[1]
-    r = Coord[1]
-    theta = Coord[2]
-    phi = Coord[3]
+#     M = Param[0]
+#     a = Param[1]
+#     r = Coord[1]
+#     theta = Coord[2]
+#     phi = Coord[3]
     
-    y = r*sin(theta)*sin(phi)
+#     y = r*sin(theta)*sin(phi)
 
-    return y
+#     return y
 
-def CoordTrans3(Param, Coord):
+# def CoordTrans3(Param, Coord):
 
-    M = Param[0]
-    a = Param[1]
-    r = Coord[1]
-    theta = Coord[2]
+#     M = Param[0]
+#     a = Param[1]
+#     r = Coord[1]
+#     theta = Coord[2]
     
-    z = r*cos(theta)
+#     z = r*cos(theta)
 
-    return z
+#     return z
 
-def AutoJacob(Param,Coord,i,wrt):
+# def AutoJacob(Param,Coord,i,wrt):
     
-    point_d = Coord[wrt]
+#     point_d = Coord[wrt]
 
-    point_0 = dual(Coord[0],0)
-    point_1 = dual(Coord[1],0)
-    point_2 = dual(Coord[2],0)
-    point_3 = dual(Coord[3],0)
+#     point_0 = dual(Coord[0],0)
+#     point_1 = dual(Coord[1],0)
+#     point_2 = dual(Coord[2],0)
+#     point_3 = dual(Coord[3],0)
 
-    if i == 0:
-        if wrt == 0:
-            return dif(lambda p:CoordTrans0(Param,[p,point_1,point_2,point_3]),point_d)
-        elif wrt == 1:
-            return dif(lambda p:CoordTrans0(Param,[point_0,p,point_2,point_3]),point_d)
-        elif wrt == 2:
-            return dif(lambda p:CoordTrans0(Param,[point_0,point_1,p,point_3]),point_d)
-        elif wrt == 3:
-            return dif(lambda p:CoordTrans0(Param,[point_0,point_1,point_2,p]),point_d)
+#     if i == 0:
+#         if wrt == 0:
+#             return dif(lambda p:CoordTrans0(Param,[p,point_1,point_2,point_3]),point_d)
+#         elif wrt == 1:
+#             return dif(lambda p:CoordTrans0(Param,[point_0,p,point_2,point_3]),point_d)
+#         elif wrt == 2:
+#             return dif(lambda p:CoordTrans0(Param,[point_0,point_1,p,point_3]),point_d)
+#         elif wrt == 3:
+#             return dif(lambda p:CoordTrans0(Param,[point_0,point_1,point_2,p]),point_d)
 
-    if i == 1:
-        if wrt == 0:
-            return dif(lambda p:CoordTrans1(Param,[p,point_1,point_2,point_3]),point_d)
-        elif wrt == 1:
-            return dif(lambda p:CoordTrans1(Param,[point_0,p,point_2,point_3]),point_d)
-        elif wrt == 2:
-            return dif(lambda p:CoordTrans1(Param,[point_0,point_1,p,point_3]),point_d)
-        elif wrt == 3:
-            return dif(lambda p:CoordTrans1(Param,[point_0,point_1,point_2,p]),point_d)
+#     if i == 1:
+#         if wrt == 0:
+#             return dif(lambda p:CoordTrans1(Param,[p,point_1,point_2,point_3]),point_d)
+#         elif wrt == 1:
+#             return dif(lambda p:CoordTrans1(Param,[point_0,p,point_2,point_3]),point_d)
+#         elif wrt == 2:
+#             return dif(lambda p:CoordTrans1(Param,[point_0,point_1,p,point_3]),point_d)
+#         elif wrt == 3:
+#             return dif(lambda p:CoordTrans1(Param,[point_0,point_1,point_2,p]),point_d)
 
-    if i == 2:
-        if wrt == 0:
-            return dif(lambda p:CoordTrans2(Param,[p,point_1,point_2,point_3]),point_d)
-        elif wrt == 1:
-            return dif(lambda p:CoordTrans2(Param,[point_0,p,point_2,point_3]),point_d)
-        elif wrt == 2:
-            return dif(lambda p:CoordTrans2(Param,[point_0,point_1,p,point_3]),point_d)
-        elif wrt == 3:
-            return dif(lambda p:CoordTrans2(Param,[point_0,point_1,point_2,p]),point_d)
+#     if i == 2:
+#         if wrt == 0:
+#             return dif(lambda p:CoordTrans2(Param,[p,point_1,point_2,point_3]),point_d)
+#         elif wrt == 1:
+#             return dif(lambda p:CoordTrans2(Param,[point_0,p,point_2,point_3]),point_d)
+#         elif wrt == 2:
+#             return dif(lambda p:CoordTrans2(Param,[point_0,point_1,p,point_3]),point_d)
+#         elif wrt == 3:
+#             return dif(lambda p:CoordTrans2(Param,[point_0,point_1,point_2,p]),point_d)
 
-    if i == 3:
-        if wrt == 0:
-            return dif(lambda p:CoordTrans3(Param,[p,point_1,point_2,point_3]),point_d)
-        elif wrt == 1:
-            return dif(lambda p:CoordTrans3(Param,[point_0,p,point_2,point_3]),point_d)
-        elif wrt == 2:
-            return dif(lambda p:CoordTrans3(Param,[point_0,point_1,p,point_3]),point_d)
-        elif wrt == 3:
-            return dif(lambda p:CoordTrans3(Param,[point_0,point_1,point_2,p]),point_d)
+#     if i == 3:
+#         if wrt == 0:
+#             return dif(lambda p:CoordTrans3(Param,[p,point_1,point_2,point_3]),point_d)
+#         elif wrt == 1:
+#             return dif(lambda p:CoordTrans3(Param,[point_0,p,point_2,point_3]),point_d)
+#         elif wrt == 2:
+#             return dif(lambda p:CoordTrans3(Param,[point_0,point_1,p,point_3]),point_d)
+#         elif wrt == 3:
+#             return dif(lambda p:CoordTrans3(Param,[point_0,point_1,point_2,p]),point_d)
     
         
 ################### Integrator ###################
 
+# Hamilton's equations:
+# H(p,q) = 0.5 * g^(ab) * p_a * p_b - Hamiltonian for geodesic in spacetime
+# dq^a / dL = del H / del p_a, dp^a / dL = - del H / del q^a (L is lambda, proper time parameter)
+# So for the Hamiltonian given we get the equations
+# dq^a / dL = g^(ab) p_b
+# dp^a / dL = - 0.5 * p_c * p_b * del g^(cb) / del q^a
+# Gives us equations of motion
+
+
+
 def Hamil_inside(q,p,Param,wrt):
+    # p_c * p_b * del g^(cb) / del q^a
     return p[0]*p[0]*dm(Param,q,'g00',wrt) +  p[1]*p[1]*dm(Param,q,'g11',wrt) +  p[2]*p[2]*dm(Param,q,'g22',wrt) +  p[3]*p[3]*dm(Param,q,'g33',wrt) +  2*p[0]*p[1]*dm(Param,q,'g01',wrt) +  2*p[0]*p[2]*dm(Param,q,'g02',wrt) + 2*p[0]*p[3]*dm(Param,q,'g03',wrt) +  2*p[1]*p[2]*dm(Param,q,'g12',wrt) +  2*p[1]*p[3]*dm(Param,q,'g13',wrt) + 2*p[2]*p[3]*dm(Param,q,'g23',wrt)
 
 def phiHA(delta,omega,q1,p1,q2,p2,Param):
@@ -401,6 +416,8 @@ def phiHA(delta,omega,q1,p1,q2,p2,Param):
     dq1H_p1_3 =  0.5*(Hamil_inside(q1,p2,Param,3))
 
     p1_update_array = numpy.array([dq1H_p1_0,dq1H_p1_1,dq1H_p1_2,dq1H_p1_3])
+    # dp^a / dL = - 0.5 * p_c * p_b * del g^(cb) / del q^a
+    # p_a(t+dt) = p_a(t) + dt * dp^a / dL
     p1_updated = p1 - delta*p1_update_array
 
     dp2H_q2_0 = g00(Param,q1)*p2[0] + g01(Param,q1)*p2[1] + g02(Param,q1)*p2[2] + g03(Param,q1)*p2[3]
@@ -408,12 +425,14 @@ def phiHA(delta,omega,q1,p1,q2,p2,Param):
     dp2H_q2_2 = g02(Param,q1)*p2[0] + g12(Param,q1)*p2[1] + g22(Param,q1)*p2[2] + g23(Param,q1)*p2[3]
     dp2H_q2_3 = g03(Param,q1)*p2[0] + g13(Param,q1)*p2[1] + g23(Param,q1)*p2[2] + g33(Param,q1)*p2[3]
 
+    # dq^a / dL = g^(ab) p_b
     q2_update_array = numpy.array([dp2H_q2_0,dp2H_q2_1,dp2H_q2_2,dp2H_q2_3])
     q2_updated = q2 + delta*q2_update_array
 
     return (q2_updated, p1_updated)
 
 def phiHB(delta,omega,q1,p1,q2,p2,Param):
+    # Same as phiHA, just with second phase space (p1, q2), instead of (q1,p2)
     ''' q1=(t1,r1,theta1,phi1), p1=(pt1,pr1,ptheta1,pphi1), q2=(t2,r2,theta2,phi2), p2=(pt2,pr2,ptheta2,pphi2) '''
     dq2H_p2_0 = 0.5*(Hamil_inside(q2,p1,Param,0))
     dq2H_p2_1 = 0.5*(Hamil_inside(q2,p1,Param,1))
@@ -434,6 +453,7 @@ def phiHB(delta,omega,q1,p1,q2,p2,Param):
     return (q1_updated, p2_updated)
 
 def phiHC(delta,omega,q1,p1,q2,p2,Param):
+    # Essentially averging between the two phase spaces, maintaining conserved quantities
     q1 = numpy.array(q1)
     q2 = numpy.array(q2)
     p1 = numpy.array(p1)
@@ -502,20 +522,28 @@ def geodesic_integrator(N,delta,omega,q0,p0,Param,order=2, update_parameters=Fal
 
 if __name__ == "__main__":
     
-    # Assume cirular orbits a = - omega^2 x, with omega = v/r = sqrt(M/r^3)
-    G = 1
-    M = 100
-    b = 5                          # Inital seperation radii of the two black holes
+    
+    G = c = 1                        # Use geometrized units
+    M = 1                            # Choose unit scale 1M = 1 solar mass ~ 2x30^30kg
+    
+    # Define SI unit conversions
+    L_0 = 1482                       # M ~ 1482m in these units
+    T_0 = 4.45e11                    # M ~ 4.45e11 s
+    M_0 = 2e30                       # M ~ 2e30 kg
+    
+    # 1Au = 149,597,870.7 km ~ 1.1e8 L_0 [m]
+    b = 1e8                          # Inital seperation radii of the two black holes
 
     angular_freq = np.sqrt(M/b**3) # angular velocity, give higher order PN expansion later
-    angular_freq = 0.0001
+    # angular_freq = 0.00000001
 
-    N = 200
-    # num_orbits = 0.001
-    # T = (2 * np.pi / angular_freq) * num_orbits
-    T = 1.2
+    num_orbits = 0.0003512
+    T = (2 * np.pi / angular_freq) * num_orbits
+    # N = int(1000 * num_orbits)
+    N = 100
     dt = T / N
     t = np.linspace(0, T, N)
+    print(N)
     
     # Simulation parameters
 
@@ -524,6 +552,7 @@ if __name__ == "__main__":
     order = 2
 
     # Define trajectory of the two binaries
+    # Assume cirular orbits a = - omega^2 x, with omega = v/r = sqrt(M/r^3)
     rs_1 = np.array([b * np.cos(angular_freq * t), b * np.sin(angular_freq * t), 0 * t]).T
     rs_2 = np.array([b * np.cos(angular_freq * t + np.pi), b * np.sin(angular_freq * t + np.pi), 0 * t]).T
 
@@ -538,7 +567,12 @@ if __name__ == "__main__":
     vs_12 = vs_1 - vs_2
     Vs_12 = np.linalg.norm(vs_12, axis=1)
     
-    from numpy.linalg import norm as mag
+    def mag(vec):
+        if isinstance(vec[0], dual):
+            return (vec[0]*vec[0] + vec[1]*vec[1] + vec[2]*vec[2]).sqrt()
+        else:
+            return np.linalg.norm(vec)
+
 
     def g00(Param,Coord):
         
@@ -546,9 +580,13 @@ if __name__ == "__main__":
         # Note x 2, I could be misinterpereting this in the forumla, later try it when it is absolute position
         # v1, v2 are the velocities of the two black holes relaative to the origin.
         
-        x = Param[0]                                                # Position vector of orbiting particle
+        pos = Param[0]                                                # Position vector of orbiting particle
+        
+        t, x, y, z = Coord[0], Coord[1], Coord[2], Coord[3]
+        pos = np.array([x, y, z])
+        
         m1, m2, S1, S2 = Param[1], Param[2], Param[9], Param[10]    # Masses and spins of binary BHs
-        r1, r2, r12 = Param[3], Param[4], Param[5]                  # Position vectors of particles relative to BHs
+        r1, r2, r12 = pos - Param[3], pos - Param[4], Param[5]      # Position vectors of binary BHs
         R1, R2, R12 = mag(r1), mag(r2), mag(r12)
         v1, v2, v12 = Param[6], Param[7], Param[8]                  # Velocities of binary BHs
         V1, V2, V3 = mag(v1), mag(v2), mag(v12)
@@ -567,9 +605,11 @@ if __name__ == "__main__":
 
 
     def g11(Param,Coord):
-        x = Param[0]
+        t, x, y, z = Coord[0], Coord[1], Coord[2], Coord[3]
+        pos = np.array([x, y, z])
+        # pos = Param[0]
         m1, m2 = Param[1], Param[2]
-        r1, r2 = Param[3], Param[4]
+        r1, r2, r12 = pos - Param[3], pos - Param[4], Param[5]      # Position vectors of binary BHs
         
         R1, R2 = mag(r1), mag(r2)
         
@@ -577,18 +617,23 @@ if __name__ == "__main__":
 
 
     def g22(Param,Coord):
-        x = Param[0]
+        t, x, y, z = Coord[0], Coord[1], Coord[2], Coord[3]
+        pos = np.array([x, y, z])
+        # pos = Param[0]
+
         m1, m2 = Param[1], Param[2]
-        r1, r2 = Param[3], Param[4]
+        r1, r2, r12 = pos - Param[3], pos - Param[4], Param[5]      # Position vectors of binary BHs
         
         R1, R2 = mag(r1), mag(r2)
         
         return (1 + 2*m1/R1 + 2*m2/R2)
         
     def g33(Param,Coord):
-        x = Param[0]
+        t, x, y, z = Coord[0], Coord[1], Coord[2], Coord[3]
+        pos = np.array([x, y, z])        
+        # pos = Param[0]
         m1, m2 = Param[1], Param[2]
-        r1, r2 = Param[3], Param[4]
+        r1, r2, r12 = pos - Param[3], pos - Param[4], Param[5]      # Position vectors of binary BHs
         
         R1, R2 = mag(r1), mag(r2)
         
@@ -596,9 +641,11 @@ if __name__ == "__main__":
 
     # Off-diagonal components of the metric
     def g01(Param,Coord):
-        x = Param[0]
+        t, x, y, z = Coord[0], Coord[1], Coord[2], Coord[3]
+        pos = np.array([x, y, z])
+        # pos = Param[0]
         m1, m2, S1, S2 = Param[1], Param[2], Param[9], Param[10]    # Masses and spins of binary BHs
-        r1, r2, r12 = Param[3], Param[4], Param[5]                  # Position vectors of binary BHs
+        r1, r2, r12 = pos - Param[3], pos - Param[4], Param[5]      # Position vectors of binary BHs
         R1, R2, R12 = mag(r1), mag(r2), mag(r12)
         v1, v2, v12 = Param[6], Param[7], Param[8]                  # Velocities of binary BHs
         n1, n2, n12 = r1/mag(r1), r2/mag(r2), r12/mag(r12)
@@ -609,9 +656,11 @@ if __name__ == "__main__":
         return term1 + term2
         
     def g02(Param,Coord):
-        x = Param[0]
+        t, x, y, z = Coord[0], Coord[1], Coord[2], Coord[3]
+        pos = np.array([x, y, z])
+        # pos = Param[0]
         m1, m2, S1, S2 = Param[1], Param[2], Param[9], Param[10]    # Masses and spins of binary BHs
-        r1, r2, r12 = Param[3], Param[4], Param[5]                  # Position vectors of binary BHs
+        r1, r2, r12 = pos - Param[3], pos - Param[4], Param[5]      # Position vectors of binary BHs
         R1, R2, R12 = mag(r1), mag(r2), mag(r12)
         v1, v2, v12 = Param[6], Param[7], Param[8]                  # Velocities of binary BHs
         n1, n2, n12 = r1/mag(r1), r2/mag(r2), r12/mag(r12)
@@ -622,13 +671,16 @@ if __name__ == "__main__":
         return term1 + term2
 
     def g03(Param,Coord):
-        x = Param[0]
+        t, x, y, z = Coord[0], Coord[1], Coord[2], Coord[3]
+        pos = np.array([x, y, z])   
+        # pos = Param[0]
+
         m1, m2, S1, S2 = Param[1], Param[2], Param[9], Param[10]    # Masses and spins of binary BHs
-        r1, r2, r12 = Param[3], Param[4], Param[5]                  # Position vectors of binary BHs
+        r1, r2, r12 = pos - Param[3], pos - Param[4], Param[5]      # Position vectors of binary BHs
         R1, R2, R12 = mag(r1), mag(r2), mag(r12)
         v1, v2, v12 = Param[6], Param[7], Param[8]                  # Velocities of binary BHs
         n1, n2, n12 = r1/mag(r1), r2/mag(r2), r12/mag(r12)
-        
+
         term1 = -(4*m1/R1) * v1[2] - (4*m2/R2) * v2[2]
         term2 = -(2/R1**2) * np.cross(S1, n1)[2] - (2/R2**2) * np.cross(S2, n2)[2]
                 
@@ -659,16 +711,18 @@ if __name__ == "__main__":
         
 
     # Initial values - Coords = [t, x, y, z]
-    q0 = [0.0,0.0, 0.0, 0.]
+    q0 = [0.0,0.0,0.0,0.0]
     p0 = [1.0,0.0,0.0,0.0]
 
     
     # Parameter values
     x_0 = q0[1:]              # Initial postion of particle
-    m1 = 0
-    m2 = M
-    r1_0 = x_0 - rs_1[0,:]    # Initial position of particle at x_0 relative to BH1
-    r2_0 = x_0 - rs_2[0,:]    # Initial position of particle at x_0 relative to BH2
+    m1 = M
+    m2 = 0
+    # r1_0 = x_0 - rs_1[0,:]    # Initial position of particle at x_0 relative to BH1
+    # r2_0 = x_0 - rs_2[0,:]    # Initial position of particle at x_0 relative to BH2
+    r1_0 = rs_1[0,:]    # Initial position of particle at x_0 relative to BH1
+    r2_0 = rs_2[0,:]    # Initial position of particle at x_0 relative to BH2
     r12_0 = rs_12[0,:]        # Relative positions of BHs at t = 0
     v1_0 = vs_1[0,:]          # Initial velocity of particle at x_0 relative to BH1
     v2_0 = vs_2[0,:]
@@ -696,8 +750,10 @@ if __name__ == "__main__":
         
         # Update this infromation in the parameter array
         Param[0] = x_curr
-        Param[3] = x_curr - r1_curr
-        Param[4] = x_curr - r2_curr
+        # Param[3] = x_curr - r1_curr
+        # Param[4] = x_curr - r2_curr
+        Param[3] = r1_curr
+        Param[4] = r2_curr
         Param[5] = r12_curr
         Param[6] = v1_curr
         Param[7] = v2_curr
@@ -711,10 +767,16 @@ if __name__ == "__main__":
 
     # Get the position and momentum of the particle in the first phase space
     sol = np.array(sol[1:])
+    
     qs = sol[:,0,:]
     ps = sol[:,1,:]
     
     x, y, z = qs[:,1], qs[:,2], qs[:,3]
+    
+    # for i in range(len(x)):
+    #     x[i] = x[i].f
+    #     y[i] = y[i].f
+    #     z[i] = z[i].f
     
     # 3D plot
     from mpl_toolkits.mplot3d import Axes3D
@@ -791,7 +853,7 @@ if __name__ == "__main__":
     
     plot_traj(x,y, z, rs_1, rs_2)
     plt.show()
-    print(pos)
+    # print(pos)
     # ani = animate_trajectories(x,y,z,rs_1,rs_2, save_fig=f"animations/m1={m1}_m2={m2}_q0={q0}_p0={p0}_S1={S1}_S2={S2}")
     # ani = animate_trajectories(x,y,z,rs_1,rs_2, save_fig=f"animations/angfreq=0_N={N}_T={T}_m1={m1}_m2={m2}_q0={q0}")
 
