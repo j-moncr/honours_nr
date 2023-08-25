@@ -6,6 +6,15 @@ from matplotlib.animation import FFMpegWriter
 from IPython.display import HTML
 import os.path
 
+def name_file(filename, iteration=0):
+    """If filename already exists, add a number for each time same file name is written.
+        For example if test.mp4, test1.mp4, and test2.mp4 exist, return test3.mp4"""
+    new_filename = f"{filename}_{iteration}.mp4"
+    if os.path.isfile(new_filename):
+        new_filename = name_file(f"{filename}", iteration=iteration+1)
+    return new_filename
+    
+    
 
 # 3D trajectory plotting
 def plot_traj(x, y, z, rs_1, rs_2):
@@ -54,15 +63,15 @@ def animate_trajectories(x,y,z,rs_1,rs_2, a=None, save_fig=False):
     
 
     # Create the animation
-    ani = FuncAnimation(fig, update, frames=range(0, len(x), len(x)//100), interval=200)
+    ani = FuncAnimation(fig, update, frames=range(0, len(x), len(x)//min(len(x), 300)), interval=200)
 
     plt.legend()
     
     fig.suptitle("1.5PN binary")
     if save_fig:
         # saving to m4 using ffmpeg writer            
-        writervideo = FFMpegWriter(fps=60)
-        save_fig = f"{save_fig}x.mp4" if os.path.isfile(f"./{save_fig}.mp4") else f"{save_fig}.mp4"
+        writervideo = FFMpegWriter(fps=24)
+        save_fig = name_file(save_fig)
         ani.save(save_fig, writer=writervideo)
         plt.close()
 

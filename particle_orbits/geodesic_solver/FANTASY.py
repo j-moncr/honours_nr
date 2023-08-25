@@ -80,6 +80,7 @@ from IPython.display import clear_output, display
 
 from geodesic_metrics import update_param, g00, g01, g02, g03, g11, g12, g13, g22, g23, g33, mag
 from geodesic_utilities import dual, dif
+from tqdm import tqdm
 
 # class dual:
 #     def __init__(self, first, second):
@@ -506,7 +507,9 @@ def geodesic_integrator(N,delta,omega,q0,p0,Param,order=2, update_parameters=Fal
     result_list = [[q1,p1,q2,p2]]
     result = (q1,p1,q2,p2)
 
-    for count, timestep in enumerate(range(N)):
+    print(f"Delta {delta}")
+
+    for count, timestep in enumerate(tqdm(range(N))):
         if order == 2:
             updated_array = updator(delta,omega,result[0],result[1],result[2],result[3],Param)
         elif order == 4:
@@ -525,12 +528,14 @@ def geodesic_integrator(N,delta,omega,q0,p0,Param,order=2, update_parameters=Fal
         if np.linalg.norm(pos) > 3 * np.linalg.norm(Param[3]):
             print("Particle ejected")
             print(f"Final position: {pos}")
+            print(f"Time taken: N={count} out of N={N}")
+            print(f"This corresonds to about {count*delta:.3}T_0")
             print("Ending program")
             return result_list[:-1]
-        
-        if not count%1000:
-            clear_output(wait=True)
-            display('On iteration number '+str(count) + ' with delta ' + str(delta))
+
+        # if not count%100:
+        #     clear_output(wait=True)
+        #     display(f"On iteration number: {count} / {N} with delta {delta}")
 
     return result_list
 
