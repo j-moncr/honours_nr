@@ -29,14 +29,14 @@ def g00(Param,Coord):
     n12 = r12/R12                                               # Unit vector pointing from m1 to m2
     
     
-    term1 = -1 + 2*m1/R1 + 2*m2/R2  - 2*m1**2/R2**2 - 2* m2**2/R1**2
+    term1 = 2*m1/R1 + 2*m2/R2  - 2*m1**2/R2**2 - 2* m2**2/R1**2
     term2 = m1/R1 * (4*V1**2-np.dot(n1,v1)**2) + m2/R2 * (4*V2**2-np.dot(n2,v2))
     term3a = -m1*m2*(2/(R1*R2) + R1/(2*R12**3)-R1**2 / (2*R2*R12**3)+ 5 / (2*R1*R12))
     term3b = -m2*m1*(2/(R1*R2) + R2/(2*R12**3)-R2**2 / (2*R1*R12**3)+ 5 / (2*R2*R12))
     term4 = 4*m1*m2/(3*R12**2) * np.dot(n12, v12) + 4*m2*m1/(3*R12**2) * np.dot(n12, v12)
     term5 = 4/R1**2 * np.dot(v1, np.cross(S1, n1)) + 4/R2**2 * np.dot(v2, np.cross(S2, n2))
     
-    return term1 + term2 + term3a + term3b + term4 + term5
+    return -1 - (term1 + term2 + term3a + term3b + term4 + term5)
 
 
 def g11(Param,Coord):
@@ -88,7 +88,7 @@ def g01(Param,Coord):
     term1 = -(4*m1/R1) * v1[0] - (4*m2/R2) * v2[0]
     term2 = -(2/R1**2) * np.cross(S1, n1)[0] - (2/R2**2) * np.cross(S2, n2)[0]
             
-    return term1 + term2
+    return (term1 + term2)
     
 def g02(Param,Coord):
     t, x, y, z = Coord[0], Coord[1], Coord[2], Coord[3]
@@ -103,7 +103,7 @@ def g02(Param,Coord):
     term1 = -(4*m1/R1) * v1[1] - (4*m2/R2) * v2[1]
     term2 = -(2/R1**2) * np.cross(S1, n1)[1] - (2/R2**2) * np.cross(S2, n2)[1]
             
-    return term1 + term2
+    return (term1 + term2)
 
 def g03(Param,Coord):
     t, x, y, z = Coord[0], Coord[1], Coord[2], Coord[3]
@@ -119,7 +119,7 @@ def g03(Param,Coord):
     term1 = -(4*m1/R1) * v1[2] - (4*m2/R2) * v2[2]
     term2 = -(2/R1**2) * np.cross(S1, n1)[2] - (2/R2**2) * np.cross(S2, n2)[2]
             
-    return term1 + term2
+    return (term1 + term2)
     
 def g12(Param,Coord):
     return 0
@@ -145,6 +145,14 @@ def Newtonian_orbit(rs_1, rs_2, m1, m2, q0, p0, dt, N):
         pos[ii] = x
     return pos
 
+def evaluate_constants(q, p, Param):
+    """Calculate the value of Hamiltonian, which should remain constant for the program runtime."""
+    term_1 = g00(Param, q) * p[0] * p[0] + 2*g01(Param,q) * p[0] * p[1] + 2*g02(Param,q) * p[0] * p[2] + 2*g03(Param,q) * p[0] * p[3]
+    term_2 = g11(Param,q) * p[1] * p[1] + g22(Param,q) * p[2] * p[2] + g33(Param,q) * p[3] * p[3]
+    term_3 = 2*g12(Param,q) * p[1] * p[2] + 2*g13(Param,q) * p[1] * p[3] + 2*g23(Param,q) * p[2] * p[3]
+    
+    return term_1 + term_2 + term_3
+    
 # Define function to update the parameters in "param"
 def update_param(Param, result, index, rs_1, rs_2, rs_12, vs_1, vs_2, vs_12):
     # Need addition arguments rs_1, rs_2, rs_12, vs_1, vs_2, vs_12
