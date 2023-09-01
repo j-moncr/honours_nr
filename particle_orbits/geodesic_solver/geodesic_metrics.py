@@ -1,5 +1,6 @@
 import numpy as np
 from geodesic_utilities import dual
+from scipy.integrate import solve_ivp
 
 
 def mag(vec):
@@ -8,6 +9,12 @@ def mag(vec):
     else:
         return np.linalg.norm(vec)
 
+
+    """
+    
+    Near zone metric from 1.5PN approximation, from arXiv:gr-qc/0509116v2
+    
+    """
 
 def g00(Param,Coord):
     
@@ -36,7 +43,8 @@ def g00(Param,Coord):
     term4 = 4*m1*m2/(3*R12**2) * np.dot(n12, v12) + 4*m2*m1/(3*R12**2) * np.dot(n12, v12)
     term5 = 4/R1**2 * np.dot(v1, np.cross(S1, n1)) + 4/R2**2 * np.dot(v2, np.cross(S2, n2))
     
-    return -1 - (term1 + term2 + term3a + term3b + term4 + term5)
+    # Not sure why negative sign needs to be added for simulation to match Neewtonian
+    return + 1 - (term1 + term2 + term3a + term3b + term4 + term5)
 
 
 def g11(Param,Coord):
@@ -181,3 +189,107 @@ def update_param(Param, result, index, rs_1, rs_2, rs_12, vs_1, vs_2, vs_12):
     Param[8] = v12_curr
     
     return Param
+
+########################################################
+################# Inner zone metric ####################
+########################################################
+
+
+##############################################################
+################# Black hole trajectories ####################
+##############################################################
+G = c = 1
+
+# "Gravitational Radiation from Post-Newtonian Sources and Inspiralling Compact Binaries" by Luc Blanchet
+# Lowest order ODE for period and eccentricity evolution, ignores spin interactions and higher order terms.
+
+def chirp_mass(M1, M2):
+    return (M1*M2)**(3/5) / (M1 + M2)**(1/5)
+
+def dy_dt(t, y, M1, M2):
+    """Orbital period and eccentricity evolution differential equations"""
+    Porb, e = y[0], y[1]
+    
+    # Orbital period decay due to gravitational wave radiation
+    dPorb_dt = -192*np.pi/(5*c**5) * (2*np.pi*G/Porb)**(5/3) * chirp_mass(M1, M2)**(5/3) * (1 + 73/24*e**2 + 37/96*e**4) / (1 - e**2)**(7/2)
+    
+    # Eccentricity decay due to gravitational wave radiation
+    de_dt = -(608*np.pi)/(15*c**5) * (e)/(Porb) * chirp_mass(M1, M2)**(5/3) * (1 + 121/304*e**2) / (1 - e**2)**(5/2)
+    
+    dy_dt = [dPorb_dt, de_dt]
+    
+    return dy_dt
+
+def solve_orbital_evolution(M1, M2, Porb0, e0, tmax, N):
+    """Solve the ODE for orbital evolution"""
+    t = np.linspace(0, tmax, N)
+    y0 = [Porb0, e0]
+    sol = solve_ivp(dy_dt, [0, tmax], y0, args=(M1, M2), t_eval=t)
+    return sol
+
+def get_orbital_evolution(M1, M2, Porb0, e0, tmax, N):
+    # Return two arrays r1 and r2, which contain the positions of the two black holes at each time step
+    t = np.linspace(0, tmax, N)
+    sol = solve_orbital_evolution(M1, M2, Porb0, e0, tmax, N)
+    Porb, e = sol.y[0], sol.y[1]
+
+    # Kepler's third law
+    mu1, mu2 = G*M2**3/(M1+M2)**2, G*M1**3/(M1+M2)**2
+    a1, a2 = (mu1/(4*np.pi**2 * Porb**2))**(1/3), (mu2/(4*np.pi**2 * Porb**2))**(1/3)
+    # Definition of eccentricty is e = c/a, where c is the distance between the foci and a is the semi-major axis
+    c1, c2 = e*a1, e*a2
+    
+    # Semi-minor axis
+    b1, b2 = np.sqrt(a1**2 - c1**2), np.sqrt(a2**2 - c2**2)
+    
+    x1, y1 = a1 * np.cos(2*np.pi / Porb * t), b1 * np.sin(2*np.pi / Porb * t)
+    x2, y2 = - a2 * np.cos(2*np.pi / Porb * t), - b2 * np.sin(2*np.pi / Porb * t)
+    
+    rs_1 = np.array([x1, y1, np.zeros_like(x1)]).T
+    rs_2 = np.array([x2, y2, np.zeros_like(x2)]).T
+        
+    return rs_1, rs_2
+
+def get_orbital_velocity(rs_1, rs_2, tmax, N):
+    # Differentiate positions to get velocity
+    dt = tmax/N
+    vs_1 = np.gradient(rs_1, dt, axis=0)
+    vs_2 = np.gradient(rs_2, dt, axis=0)
+    
+    return vs_1, vs_2
+
+if __name__ == "__main__":
+    
+    import matplotlib.pyplot as plt
+    
+    # G and c in SI units
+    c_SI = 3e8
+    G_SI = 6.67e-11
+    
+    # Set time scale (in seconds), determines length and mass scales through dimensional analysis
+    T_0 = 3.14e7                # T_0 [s], 1 year is ~ pi x 10^7 seconds
+    L_0 = c_SI * T_0            # 3e8 * T_0 [m] ~ 0.002 * T_0 [AU]
+    M_0 = (c_SI**3 / G_SI) * T_0   # 4.05e35 * T_0 [kg] ~ 2e5 * T_0[solar masses]
+    
+    AU_in_natunits = 1 / (0.002 * T_0)
+    SOLARMASS_in_natunits = 1 / (2e5 * T_0)
+    
+    b = AU_in_natunits * 0.001
+    M = SOLARMASS_in_natunits * 1
+    M1, M2 = 1/3*M, 2/3*M
+    Porb0 = (2 * np.pi / np.sqrt(M/b**3))
+    e0 = 0.99   # 0<=e<1
+    
+    num_orb = 300
+    t_max = num_orb * Porb0
+    N = 10000
+    
+    rs_1, rs_2 = get_orbital_evolution(M/2, M*3, Porb0, e0, t_max, N)
+    vs_1, vs_2 = get_orbital_velocity(rs_1, rs_2, t_max, N)
+
+    plt.plot(rs_1[:1000,0], rs_1[:1000,1], label="Particle 1, start")
+    plt.plot(rs_1[-1000:,0], rs_1[-1000:,1], label="Particle 1, finish")
+    plt.plot(rs_2[:,0], rs_2[:,1], label="Particle 2")
+    plt.legend()
+    plt.show()
+    

@@ -244,8 +244,8 @@ def geodesic_integrator(N,delta,omega,q0,p0,Param,order=2,update_parameters=Fals
         
         # Test constants of integration, to asses numerical accuracy
         if test_accuracy:
-            print(f"$g_00={g00(Param, result[0])}$")
-            print(f"$g_11={g11(Param, result[0])}$")
+            # print(f"$g_00={g00(Param, result[0])}$")
+            # print(f"$g_11={g11(Param, result[0])}$")
             hamiltonian_list.append(evaluate_constants(result[0], result[1], Param))
         
         # Update the parameters
@@ -267,4 +267,4 @@ def geodesic_integrator(N,delta,omega,q0,p0,Param,order=2,update_parameters=Fals
     if test_accuracy:
         return result_list, np.array(hamiltonian_list)
     else:
-        result_list
+        return result_list
