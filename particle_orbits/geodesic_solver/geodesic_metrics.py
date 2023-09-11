@@ -97,6 +97,9 @@ def g01(Param,Coord):
     term2 = -(2/R1**2) * np.cross(S1, n1)[0] - (2/R2**2) * np.cross(S2, n2)[0]
             
     return (term1 + term2)
+
+def g10(Param, Coord):
+    return g01(Param, Coord)
     
 def g02(Param,Coord):
     t, x, y, z = Coord[0], Coord[1], Coord[2], Coord[3]
@@ -113,6 +116,9 @@ def g02(Param,Coord):
             
     return (term1 + term2)
 
+def g20(Param,Coord):
+    return g02(Param, Coord)
+
 def g03(Param,Coord):
     t, x, y, z = Coord[0], Coord[1], Coord[2], Coord[3]
     pos = np.array([x, y, z])   
@@ -128,14 +134,26 @@ def g03(Param,Coord):
     term2 = -(2/R1**2) * np.cross(S1, n1)[2] - (2/R2**2) * np.cross(S2, n2)[2]
             
     return (term1 + term2)
+
+def g30(Param,Coord):
+    return g03(Param, Coord)
     
 def g12(Param,Coord):
+    return 0
+
+def g21(Param,Coord):
     return 0
 
 def g13(Param,Coord):
     return 0
 
+def g31(Param,Coord):
+    return 0
+
 def g23(Param,Coord):
+    return 0
+
+def g32(Param,Coord):
     return 0
 
 def Newtonian_orbit(rs_1, rs_2, m1, m2, q0, p0, dt, N):
@@ -225,12 +243,16 @@ def solve_orbital_evolution(M1, M2, Porb0, e0, tmax, N):
     t = np.linspace(0, tmax, N)
     y0 = [Porb0, e0]
     sol = solve_ivp(dy_dt, [0, tmax], y0, args=(M1, M2), t_eval=t)
-    return sol
+    if len(sol.y[0]) != len(t):
+        print("Warning: solution not evaluated at all t")
+        t_evaluated = t[:len(sol.y[0])]
+        print(f"Only evaluated at until t = {t_evaluated[-1]} / {t[-1]}")
+        t = t_evaluated
+    return sol, t
 
 def get_orbital_evolution(M1, M2, Porb0, e0, tmax, N):
     # Return two arrays r1 and r2, which contain the positions of the two black holes at each time step
-    t = np.linspace(0, tmax, N)
-    sol = solve_orbital_evolution(M1, M2, Porb0, e0, tmax, N)
+    sol, t = solve_orbital_evolution(M1, M2, Porb0, e0, tmax, N)
     Porb, e = sol.y[0], sol.y[1]
 
     # Kepler's third law
@@ -247,8 +269,16 @@ def get_orbital_evolution(M1, M2, Porb0, e0, tmax, N):
     
     rs_1 = np.array([x1, y1, np.zeros_like(x1)]).T
     rs_2 = np.array([x2, y2, np.zeros_like(x2)]).T
-        
+
     return rs_1, rs_2
+
+# if __name__ == "__main__":
+#     import matplotlib.pyplot as plt
+#     print("Running orbital evolution test")
+#     rs = get_orbital_evolution(1, 1, np.sqrt(1/0.001), 0., 1, 10000)
+    
+#     plt.plot(rs[0][:,0], rs[0][:,1])
+#     plt.show()
 
 def get_orbital_velocity(rs_1, rs_2, tmax, N):
     # Differentiate positions to get velocity
@@ -274,21 +304,23 @@ if __name__ == "__main__":
     AU_in_natunits = 1 / (0.002 * T_0)
     SOLARMASS_in_natunits = 1 / (2e5 * T_0)
     
-    b = AU_in_natunits * 0.001
+    b = AU_in_natunits * 1.e-7
     M = SOLARMASS_in_natunits * 1
     M1, M2 = 1/3*M, 2/3*M
     Porb0 = (2 * np.pi / np.sqrt(M/b**3))
-    e0 = 0.99   # 0<=e<1
+    e0 = 0.0   # 0 <= e < 1
     
-    num_orb = 300
+    num_orb = 3
     t_max = num_orb * Porb0
-    N = 10000
+    N = 1000
     
-    rs_1, rs_2 = get_orbital_evolution(M/2, M*3, Porb0, e0, t_max, N)
+    rs_1, rs_2 = get_orbital_evolution(M1, M2, Porb0, e0, t_max, N)
     vs_1, vs_2 = get_orbital_velocity(rs_1, rs_2, t_max, N)
 
-    plt.plot(rs_1[:1000,0], rs_1[:1000,1], label="Particle 1, start")
-    plt.plot(rs_1[-1000:,0], rs_1[-1000:,1], label="Particle 1, finish")
+    # plt.plot(rs_1[:1000,0], rs_1[:1000,1], label="Particle 1, start")
+    # plt.plot(rs_1[-1000:,0], rs_1[-1000:,1], label="Particle 1, finish")
+    # plt.plot(rs_2[:,0], rs_2[:,1], label="Particle 2")
+    plt.plot(rs_1[:,0], rs_1[:,1], label="Particle 1")
     plt.plot(rs_2[:,0], rs_2[:,1], label="Particle 2")
     plt.legend()
     plt.show()

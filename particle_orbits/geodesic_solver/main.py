@@ -45,7 +45,7 @@ def run_simulation(**kwargs):
     
     # Simulation runtime
     num_orbits = kwargs.get("num_orbits", 1)
-    N = kwargs.get("N", 100)                                # Number of timesteps of simulation
+    N = kwargs.get("N", 35)                                # Number of timesteps of simulation
     T = num_orbits * Porb0
     dt = T / N
     delta = dt
@@ -87,11 +87,13 @@ def run_simulation(**kwargs):
     # Spin of Black holes
     chi1, chi2 = kwargs.get("chi1",0.0), kwargs.get("chi2",0.0)                                 # Magnitudes of spin
     S1, S2 = kwargs.get("S1",np.array([0.,0.,1.])), kwargs.get("S2",np.array([0.,0.,1.]))       # Diections of spin
-    S1, S2 = chi1 * M**2 * c_SI * 100 * S1 / mag(S1), chi2 * M**2 * c_SI * 100 * S2 / mag(S2)   # Convert to natural units
+    S1, S2 = ((chi * M**2 * S / mag(S) if mag(S) != 0 else np.array([0.,0.,0.])) for chi, S in zip([chi1, chi2], [S1,S2]))
+    # S1, S2 = chi1 * M**2 * c_SI * 100 * S1 / mag(S1), chi2 * M**2 * c_SI * 100 * S2 / mag(S2)   # Convert to natural units
 
     Param = [x_0, m1, m2, r1_0, r2_0, r12_0, v1_0, v2_0, v12_0, S1, S2]
     
-    sol = geodesic_integrator(N,delta,omega,q0,p0,Param,order,rs_1=rs_1,rs_2=rs_2,rs_12=rs_12,vs_1=vs_1,vs_2=vs_2,vs_12=vs_12,update_parameters=True)
+    test_accuracy = kwargs.get("test_accuracy", False)
+    sol = geodesic_integrator(N,delta,omega,q0,p0,Param,order,rs_1=rs_1,rs_2=rs_2,rs_12=rs_12,vs_1=vs_1,vs_2=vs_2,vs_12=vs_12,update_parameters=True, test_accuracy=test_accuracy)
     
     # Get the position and momentum of the particle in the first phase space
     sol = np.array(sol[1:])
@@ -121,7 +123,7 @@ if __name__ == "__main__":
     x, y, z, rs_1, rs_2, vs_1, vs_2, vs_12, Param, sol = run_simulation()
     
     # plot_traj(x, y, z, rs_1, rs_2)
-    animate_trajectories(x,y,z,rs_1,rs_2, save_fig=f"test_znaming", no_parent="True")
+    animate_trajectories(x,y,z,rs_1,rs_2, save_fig=f"test_zballs", no_parent="True")
 
     # Set time scale (in seconds), determines length and mass scales through dimensional analysis
     T_0 = 3.14e8
@@ -137,7 +139,7 @@ if __name__ == "__main__":
     e0 = 0.6                                       # Initial eccentricity, e0=0 => circular, c0->1 => highly elliptical
 
     num_orbits = 1
-    N = 150
+    N = 3
 
     q0 = [0.0,a0/2,-a0/2,0.0]                          # Initial position of particle
     p0 = [1.0,-1e-6,0.00,0.0]                           # Initial velocity of particle
@@ -148,8 +150,8 @@ if __name__ == "__main__":
     c_SI, G_SI = 3e8, 6.67e-11
     S1, S2 = chi1 * M**2 * c_SI * 100 * S1 / mag(S1), chi2 * M**2 * c_SI * 100 * S2 / mag(S2)
     
-    # x1, y1, z1, rs_1_1, rs_2_1, vs_1_1, vs_2_1, vs_12_1, Param_1, sol_1 = run_simulation(T_0=T_0, a0=a0, M1=M1, M2=M2, e0=e0, num_orbits=num_orbits, N=N, q0=q0, p0=p0, chi1=chi1, chi2=chi2, S1=S1, S2=S2)
-    
+    x1, y1, z1, rs_1_1, rs_2_1, vs_1_1, vs_2_1, vs_12_1, Param_1, sol_1 = run_simulation(test_accuracy=False, T_0=T_0, a0=a0, M1=M1, M2=M2, e0=e0, num_orbits=num_orbits, N=N, q0=q0, p0=p0, chi1=chi1, chi2=chi2, S1=S1, S2=S2)
+    animate_trajectories(x1,y1,z1,rs_1_1,rs_2_1, save_fig=f"test_znaming_optional", no_parent="True")
     # plot_traj(x1, y1, z1, rs_1_1, rs_2_1)
 
 

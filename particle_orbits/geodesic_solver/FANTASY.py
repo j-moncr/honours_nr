@@ -3,7 +3,10 @@ from scipy import special
 import numpy
 from IPython.display import clear_output, display
 
-from geodesic_metrics import update_param, g00, g01, g02, g03, g11, g12, g13, g22, g23, g33, mag, evaluate_constants
+from geodesic_metrics import (update_param, 
+                              g00, g01, g02, g03, g11, g12, g13, g22, g23, g33, 
+                              g10, g20, g30, g21, g31, g32,
+                              mag, evaluate_constants)
 from geodesic_utilities import dual, dif
 from tqdm import tqdm
 
@@ -17,106 +20,141 @@ def dm(Param,Coord,metric,wrt):
     point_1 = dual(Coord[1],0)
     point_2 = dual(Coord[2],0)
     point_3 = dual(Coord[3],0)
+    
+    # If differentiating the metric
+    if metric[0] == 'g' and metric[1] in ['0','1','2','3'] and metric[2] in ['0','1','2','3']:
+        i, j = metric[1], metric[2]
+    
+        if wrt == 0:
+            return dif(lambda p:eval(f"g{i}{j}")(Param,[p,point_1,point_2,point_3]),point_d)
+        elif wrt == 1:
+            return dif(lambda p:eval(f"g{i}{j}")(Param,[point_0,p,point_2,point_3]),point_d)
+        elif wrt == 2:
+            return dif(lambda p:eval(f"g{i}{j}")(Param,[point_0,point_1,p,point_3]),point_d)
+        elif wrt == 3:
+            return dif(lambda p:eval(f"g{i}{j}")(Param,[point_0,point_1,point_2,p]),point_d)
+    # If differentiating the connection coefficients
+    elif metric[:6] == 'gammas':
+        a, b, c = metric[6], metric[7], metric[8]
+        
+        if wrt == 0:
+            return dif(lambda p:eval(f"gammas{a}{b}{c}")(Param,[p,point_1,point_2,point_3]),point_d)
+        elif wrt == 1:
+            return dif(lambda p:eval(f"gammas{a}{b}{c}")(Param,[point_0,p,point_2,point_3]),point_d)
+        elif wrt == 2:
+            return dif(lambda p:eval(f"gammas{a}{b}{c}")(Param,[point_0,point_1,p,point_3]),point_d)
+        elif wrt == 3:
+            return dif(lambda p:eval(f"gammas{a}{b}{c}")(Param,[point_0,point_1,point_2,p]),point_d)
+        
 
-    if metric == 'g00':
-        if wrt == 0:
-            return dif(lambda p:g00(Param,[p,point_1,point_2,point_3]),point_d)
-        elif wrt == 1:
-            return dif(lambda p:g00(Param,[point_0,p,point_2,point_3]),point_d)
-        elif wrt == 2:
-            return dif(lambda p:g00(Param,[point_0,point_1,p,point_3]),point_d)
-        elif wrt == 3:
-            return dif(lambda p:g00(Param,[point_0,point_1,point_2,p]),point_d)
-    elif metric == 'g11':
-        if wrt == 0:
-            return dif(lambda p:g11(Param,[p,point_1,point_2,point_3]),point_d)
-        elif wrt == 1:
-            return dif(lambda p:g11(Param,[point_0,p,point_2,point_3]),point_d)
-        elif wrt == 2:
-            return dif(lambda p:g11(Param,[point_0,point_1,p,point_3]),point_d)
-        elif wrt == 3:
-            return dif(lambda p:g11(Param,[point_0,point_1,point_2,p]),point_d)
-    elif metric == 'g22':
-        if wrt == 0:
-            return dif(lambda p:g22(Param,[p,point_1,point_2,point_3]),point_d)
-        elif wrt == 1:
-            return dif(lambda p:g22(Param,[point_0,p,point_2,point_3]),point_d)
-        elif wrt == 2:
-            return dif(lambda p:g22(Param,[point_0,point_1,p,point_3]),point_d)
-        elif wrt == 3:
-            return dif(lambda p:g22(Param,[point_0,point_1,point_2,p]),point_d)
-    elif metric == 'g33':
-        if wrt == 0:
-            return dif(lambda p:g33(Param,[p,point_1,point_2,point_3]),point_d)
-        elif wrt == 1:
-            return dif(lambda p:g33(Param,[point_0,p,point_2,point_3]),point_d)
-        elif wrt == 2:
-            return dif(lambda p:g33(Param,[point_0,point_1,p,point_3]),point_d)
-        elif wrt == 3:
-            return dif(lambda p:g33(Param,[point_0,point_1,point_2,p]),point_d)
-    elif metric == 'g44':
-        if wrt == 0:
-            return dif(lambda p:g44(Param,[p,point_1,point_2,point_3]),point_d)
-        elif wrt == 1:
-            return dif(lambda p:g44(Param,[point_0,p,point_2,point_3]),point_d)
-        elif wrt == 2:
-            return dif(lambda p:g44(Param,[point_0,point_1,p,point_3]),point_d)
-        elif wrt == 3:
-            return dif(lambda p:g44(Param,[point_0,point_1,point_2,p]),point_d)
-    elif metric == 'g01':
-        if wrt == 0:
-            return dif(lambda p:g01(Param,[p,point_1,point_2,point_3]),point_d)
-        elif wrt == 1:
-            return dif(lambda p:g01(Param,[point_0,p,point_2,point_3]),point_d)
-        elif wrt == 2:
-            return dif(lambda p:g01(Param,[point_0,point_1,p,point_3]),point_d)
-        elif wrt == 3:
-            return dif(lambda p:g01(Param,[point_0,point_1,point_2,p]),point_d)
-    elif metric == 'g02':
-        if wrt == 0:
-            return dif(lambda p:g02(Param,[p,point_1,point_2,point_3]),point_d)
-        elif wrt == 1:
-            return dif(lambda p:g02(Param,[point_0,p,point_2,point_3]),point_d)
-        elif wrt == 2:
-            return dif(lambda p:g02(Param,[point_0,point_1,p,point_3]),point_d)
-        elif wrt == 3:
-            return dif(lambda p:g02(Param,[point_0,point_1,point_2,p]),point_d)
-    elif metric == 'g03':
-        if wrt == 0:
-            return dif(lambda p:g03(Param,[p,point_1,point_2,point_3]),point_d)
-        elif wrt == 1:
-            return dif(lambda p:g03(Param,[point_0,p,point_2,point_3]),point_d)
-        elif wrt == 2:
-            return dif(lambda p:g03(Param,[point_0,point_1,p,point_3]),point_d)
-        elif wrt == 3:
-            return dif(lambda p:g03(Param,[point_0,point_1,point_2,p]),point_d)
-    elif metric == 'g12':
-        if wrt == 0:
-            return dif(lambda p:g12(Param,[p,point_1,point_2,point_3]),point_d)
-        elif wrt == 1:
-            return dif(lambda p:g12(Param,[point_0,p,point_2,point_3]),point_d)
-        elif wrt == 2:
-            return dif(lambda p:g12(Param,[point_0,point_1,p,point_3]),point_d)
-        elif wrt == 3:
-            return dif(lambda p:g12(Param,[point_0,point_1,point_2,p]),point_d)
-    elif metric == 'g13':
-        if wrt == 0:
-            return dif(lambda p:g13(Param,[p,point_1,point_2,point_3]),point_d)
-        elif wrt == 1:
-            return dif(lambda p:g13(Param,[point_0,p,point_2,point_3]),point_d)
-        elif wrt == 2:
-            return dif(lambda p:g13(Param,[point_0,point_1,p,point_3]),point_d)
-        elif wrt == 3:
-            return dif(lambda p:g13(Param,[point_0,point_1,point_2,p]),point_d)
-    elif metric == 'g23':
-        if wrt == 0:
-            return dif(lambda p:g23(Param,[p,point_1,point_2,point_3]),point_d)
-        elif wrt == 1:
-            return dif(lambda p:g23(Param,[point_0,p,point_2,point_3]),point_d)
-        elif wrt == 2:
-            return dif(lambda p:g23(Param,[point_0,point_1,p,point_3]),point_d)
-        elif wrt == 3:
-            return dif(lambda p:g23(Param,[point_0,point_1,point_2,p]),point_d)
+    # if metric == 'g00':
+    #     if wrt == 0:
+    #         return dif(lambda p:g00(Param,[p,point_1,point_2,point_3]),point_d)
+    #     elif wrt == 1:
+    #         return dif(lambda p:g00(Param,[point_0,p,point_2,point_3]),point_d)
+    #     elif wrt == 2:
+    #         return dif(lambda p:g00(Param,[point_0,point_1,p,point_3]),point_d)
+    #     elif wrt == 3:
+    #         return dif(lambda p:g00(Param,[point_0,point_1,point_2,p]),point_d)
+    # elif metric == 'g11':
+    #     if wrt == 0:
+    #         return dif(lambda p:g11(Param,[p,point_1,point_2,point_3]),point_d)
+    #     elif wrt == 1:
+    #         return dif(lambda p:g11(Param,[point_0,p,point_2,point_3]),point_d)
+    #     elif wrt == 2:
+    #         return dif(lambda p:g11(Param,[point_0,point_1,p,point_3]),point_d)
+    #     elif wrt == 3:
+    #         return dif(lambda p:g11(Param,[point_0,point_1,point_2,p]),point_d)
+    # elif metric == 'g22':
+    #     if wrt == 0:
+    #         return dif(lambda p:g22(Param,[p,point_1,point_2,point_3]),point_d)
+    #     elif wrt == 1:
+    #         return dif(lambda p:g22(Param,[point_0,p,point_2,point_3]),point_d)
+    #     elif wrt == 2:
+    #         return dif(lambda p:g22(Param,[point_0,point_1,p,point_3]),point_d)
+    #     elif wrt == 3:
+    #         return dif(lambda p:g22(Param,[point_0,point_1,point_2,p]),point_d)
+    # elif metric == 'g33':
+    #     if wrt == 0:
+    #         return dif(lambda p:g33(Param,[p,point_1,point_2,point_3]),point_d)
+    #     elif wrt == 1:
+    #         return dif(lambda p:g33(Param,[point_0,p,point_2,point_3]),point_d)
+    #     elif wrt == 2:
+    #         return dif(lambda p:g33(Param,[point_0,point_1,p,point_3]),point_d)
+    #     elif wrt == 3:
+    #         return dif(lambda p:g33(Param,[point_0,point_1,point_2,p]),point_d)
+    # elif metric == 'g44':
+    #     if wrt == 0:
+    #         return dif(lambda p:g44(Param,[p,point_1,point_2,point_3]),point_d)
+    #     elif wrt == 1:
+    #         return dif(lambda p:g44(Param,[point_0,p,point_2,point_3]),point_d)
+    #     elif wrt == 2:
+    #         return dif(lambda p:g44(Param,[point_0,point_1,p,point_3]),point_d)
+    #     elif wrt == 3:
+    #         return dif(lambda p:g44(Param,[point_0,point_1,point_2,p]),point_d)
+    # elif metric == 'g01':
+    #     if wrt == 0:
+    #         return dif(lambda p:g01(Param,[p,point_1,point_2,point_3]),point_d)
+    #     elif wrt == 1:
+    #         return dif(lambda p:g01(Param,[point_0,p,point_2,point_3]),point_d)
+    #     elif wrt == 2:
+    #         return dif(lambda p:g01(Param,[point_0,point_1,p,point_3]),point_d)
+    #     elif wrt == 3:
+    #         return dif(lambda p:g01(Param,[point_0,point_1,point_2,p]),point_d)
+    # elif metric == 'g10':
+    #     if wrt == 0:
+    #         return dif(lambda p:g10(Param,[p,point_1,point_2,point_3]),point_d)
+    #     elif wrt == 1:
+    #         return dif(lambda p:g10(Param,[point_0,p,point_2,point_3]),point_d)
+    #     elif wrt == 2:
+    #         return dif(lambda p:g10(Param,[point_0,point_1,p,point_3]),point_d)
+    #     elif wrt == 3:
+    #         return dif(lambda p:g10(Param,[point_0,point_1,point_2,p]),point_d)
+    # elif metric == 'g02':
+    #     if wrt == 0:
+    #         return dif(lambda p:g02(Param,[p,point_1,point_2,point_3]),point_d)
+    #     elif wrt == 1:
+    #         return dif(lambda p:g02(Param,[point_0,p,point_2,point_3]),point_d)
+    #     elif wrt == 2:
+    #         return dif(lambda p:g02(Param,[point_0,point_1,p,point_3]),point_d)
+    #     elif wrt == 3:
+    #         return dif(lambda p:g02(Param,[point_0,point_1,point_2,p]),point_d)
+    # elif metric == 'g03':
+    #     if wrt == 0:
+    #         return dif(lambda p:g03(Param,[p,point_1,point_2,point_3]),point_d)
+    #     elif wrt == 1:
+    #         return dif(lambda p:g03(Param,[point_0,p,point_2,point_3]),point_d)
+    #     elif wrt == 2:
+    #         return dif(lambda p:g03(Param,[point_0,point_1,p,point_3]),point_d)
+    #     elif wrt == 3:
+    #         return dif(lambda p:g03(Param,[point_0,point_1,point_2,p]),point_d)
+    # elif metric == 'g12':
+    #     if wrt == 0:
+    #         return dif(lambda p:g12(Param,[p,point_1,point_2,point_3]),point_d)
+    #     elif wrt == 1:
+    #         return dif(lambda p:g12(Param,[point_0,p,point_2,point_3]),point_d)
+    #     elif wrt == 2:
+    #         return dif(lambda p:g12(Param,[point_0,point_1,p,point_3]),point_d)
+    #     elif wrt == 3:
+    #         return dif(lambda p:g12(Param,[point_0,point_1,point_2,p]),point_d)
+    # elif metric == 'g13':
+    #     if wrt == 0:
+    #         return dif(lambda p:g13(Param,[p,point_1,point_2,point_3]),point_d)
+    #     elif wrt == 1:
+    #         return dif(lambda p:g13(Param,[point_0,p,point_2,point_3]),point_d)
+    #     elif wrt == 2:
+    #         return dif(lambda p:g13(Param,[point_0,point_1,p,point_3]),point_d)
+    #     elif wrt == 3:
+    #         return dif(lambda p:g13(Param,[point_0,point_1,point_2,p]),point_d)
+    # elif metric == 'g23':
+    #     if wrt == 0:
+    #         return dif(lambda p:g23(Param,[p,point_1,point_2,point_3]),point_d)
+    #     elif wrt == 1:
+    #         return dif(lambda p:g23(Param,[point_0,p,point_2,point_3]),point_d)
+    #     elif wrt == 2:
+    #         return dif(lambda p:g23(Param,[point_0,point_1,p,point_3]),point_d)
+    #     elif wrt == 3:
+    #         return dif(lambda p:g23(Param,[point_0,point_1,point_2,p]),point_d)
         
 ################### Integrator ###################
 """
@@ -215,8 +253,137 @@ def updator_4(delta,omega,q1,p1,q2,p2,Param):
 
     return step3
 
+# def connection_coefficients(Param, Coords):
+    
+#     """Calculate connection coefficients at a given point in spacetime.
+
+#     Returns:
+#         gammas: 4x4x4 tensor of connection coefficients.
+#     """
+    
+#     # This highly likely won't work, or will be terribily inefficient. May need the explicit formula I calculated
+#     g_inv = np.linalg.inv(np.array([[g00(Param, Coords), g01(Param, Coords), g02(Param, Coords), g03(Param, Coords)],
+#                                     [g01(Param, Coords), g11(Param, Coords), g12(Param, Coords), g13(Param, Coords)],
+#                                     [g02(Param, Coords), g12(Param, Coords), g22(Param, Coords), g23(Param, Coords)],
+#                                     [g03(Param, Coords), g13(Param, Coords), g23(Param, Coords), g33(Param, Coords)]]))
+    
+#     gammas = np.zeros((4, 4, 4))
+    
+#     for alpha in range(4):
+#         for mu in range(4):
+#             for nu in range(4):
+#                 if mu > nu:
+#                     # By symmetry of Christoffel symbols
+#                     gammas[alpha][mu][nu] = gammas[alpha][nu][mu]
+#                 else:
+#                     gamma = 0
+#                     for rho in range(4):
+#                         gamma += 0.5 * g_inv[alpha][rho] * (dm(Param, Coords, f'g{rho}{mu}', nu) + dm(Param, Coords, f'g{rho}{nu}', mu) - dm(Param, Coords, f'g{mu}{nu}', rho))
+#                     gammas[alpha][mu][nu] = gamma
+
+                    # def eval(f"gammas{alpha}{mu}{nu}(Param, Coords)"):
+                    #     return gammas[alpha][mu][nu]
+#     print(gammas)
+    
+#     return gammas
+
+# def gammas(Param, Coords, alpha, mu, nu):
+#     """
+#     Calculate a specific connection coefficient at a given point in spacetime.
+
+#     Returns:
+#         gamma: The connection coefficient for the given indices.
+#     """
+    
+#     # Ensure metric functions can handle dual numbers as input
+#     g = {
+#         '00': g00(Param, Coords),
+#         '01': g01(Param, Coords),
+#         '02': g02(Param, Coords),
+#         '03': g03(Param, Coords),
+#         '11': g11(Param, Coords),
+#         '12': g12(Param, Coords),
+#         '13': g13(Param, Coords),
+#         '22': g22(Param, Coords),
+#         '23': g23(Param, Coords),
+#         '33': g33(Param, Coords)
+#     }
+
+#     # Compute the inverse metric using dual number arithmetic
+#     g_matrix = np.array([[g['00'], g['01'], g['02'], g['03']],
+#                          [g['01'], g['11'], g['12'], g['13']],
+#                          [g['02'], g['12'], g['22'], g['23']],
+#                          [g['03'], g['13'], g['23'], g['33']]])
+
+#     g_inv = np.linalg.inv(g_matrix)
+
+#     # Compute the specific connection coefficient using dual number arithmetic
+#     gamma = 0
+#     for rho in range(4):
+#         gamma += 0.5 * g_inv[alpha, rho] * (dm(Param, Coords, f'g{rho}{mu}', nu) + 
+#                                            dm(Param, Coords, f'g{rho}{nu}', mu) - 
+#                                            dm(Param, Coords, f'g{mu}{nu}', rho))
+    
+#     return gamma
+
+
+
+# def Riemann_tensor(Param, Coords):
+#     """Calculate the Riemann tensor at a given point in spacetime."""
+#     # if gammas is None:
+#     #     gammas = connection_coefficient(Param, Coords)
+
+#     Riemann = np.zeros((4, 4, 4, 4))
+    
+#     # Calculate only the 20 independent components
+#     for rho in range(4):
+#         for sigma in range(rho, 4):  # Only compute for sigma >= rho due to symmetry
+#             for mu in range(4):
+#                 for nu in range(mu, 4):  # Only compute for nu >= mu due to antisymmetry
+#                     for lam in range(4):  # Replacing lambda with lam
+#                         Riemann[rho][sigma][mu][nu] += dm(Param, Coords, f'gammas{rho}{nu}{sigma}', mu) - dm(Param, Coords, f'gammas{rho}{mu}{sigma}', nu) + gammas[rho][mu][lam] * gammas[lam][nu][sigma] - gammas[rho][nu][lam] * gammas[lam][mu][sigma]
+#                     if mu != nu:
+#                         Riemann[rho][sigma][nu][mu] = -Riemann[rho][sigma][mu][nu]
+#                     if rho != sigma:
+#                         Riemann[sigma][rho][mu][nu] = -Riemann[rho][sigma][mu][nu]
+#                         Riemann[sigma][rho][nu][mu] = Riemann[rho][sigma][mu][nu]
+#     print(Riemann)
+#     return Riemann
+
+
+# def kretschmann_scalar(Param, Coords, Riemann=None):
+#     """Calculate the Kretschmann scalar at a given point in spacetime."""
+#     if Riemann is None:
+#         Riemann = Riemann_tensor(Param, Coords)
+    
+#     K = 0
+#     for alpha in range(4):
+#         for beta in range(4):
+#             for mu in range(4):
+#                 for nu in range(4):
+#                     K += Riemann[alpha][beta][mu][nu] * Riemann[alpha][beta][mu][nu]
+                    
+#     return K
+
+
+
 def geodesic_integrator(N,delta,omega,q0,p0,Param,order=2,update_parameters=False,test_accuracy=False, **kwargs):
-    # update_rate is the number of iterations between updates to the metric
+    """Integrate the geodesic equations of motion.
+
+    Args:
+        N (int): Number of iterations to perform.
+        delta (float): Step size.
+        omega (int): Scalar parameterizing the strength of coupling of the copies of the phase space. Set to 1 in most cases, see paper.
+        q0 (list): Initial position.
+        p0 (list): Initial momentum, in the form [pt, pr, ptheta, pphi].
+        Param (list): Parameters of black holes, Param = [x_0, m1, m2, r1_0, r2_0, r12_0, v1_0, v2_0, v12_0, S1, S2].
+        order (int, optional): Order of integration, either 2 or 4. Defaults to 2.
+        update_parameters (bool, optional): For dynamic spacetime, the metric parameters change. Defaults to False.
+        test_accuracy (bool, optional): Perform . Defaults to False.
+
+    Returns:
+        result_list: List of the positions and momenta at each iteration and for each phase space.
+    """    
     
     rs_1, rs_2, rs_12, vs_1, vs_2, vs_12 = kwargs["rs_1"], kwargs["rs_2"], kwargs["rs_12"], kwargs["vs_1"], kwargs["vs_2"], kwargs["vs_12"]  
     
@@ -228,8 +395,10 @@ def geodesic_integrator(N,delta,omega,q0,p0,Param,order=2,update_parameters=Fals
     result_list = [[q1,p1,q2,p2]]
     result = (q1,p1,q2,p2)
     
-    if test_accuracy:
-        hamiltonian_list = []
+    # if test_accuracy:
+    #     # hamiltonian_list = []
+    #     K_list = []
+        
 
     print(f"Delta {delta}")
 
@@ -242,11 +411,13 @@ def geodesic_integrator(N,delta,omega,q0,p0,Param,order=2,update_parameters=Fals
         result = updated_array
         result_list += [result]
         
-        # Test constants of integration, to asses numerical accuracy
-        if test_accuracy:
-            # print(f"$g_00={g00(Param, result[0])}$")
-            # print(f"$g_11={g11(Param, result[0])}$")
-            hamiltonian_list.append(evaluate_constants(result[0], result[1], Param))
+        # # Test constants of integration, to asses numerical accuracy
+        # if test_accuracy:
+        #     # print(f"$g_00={g00(Param, result[0])}$")
+        #     # print(f"$g_11={g11(Param, result[0])}$")
+        #     # hamiltonian_list.append(evaluate_constants(result[0], result[1], Param))
+        #     K_list.append(kretschmann_scalar(Param, result[0]))
+        #     print(f"Kretschmann scalar: {K_list[-1]}")
         
         # Update the parameters
         if update_parameters:
@@ -263,8 +434,44 @@ def geodesic_integrator(N,delta,omega,q0,p0,Param,order=2,update_parameters=Fals
             print("Ending program")
             # return result_list[:-1]
             break
+    return result_list
+    # if test_accuracy:
+    #     # return result_list, np.array(hamiltonian_list)
+    #     return result_list, np.array(K_list)
 
-    if test_accuracy:
-        return result_list, np.array(hamiltonian_list)
-    else:
-        return result_list
+    # else:
+    #     return result_list
+    
+
+    """
+    
+    Calculate connection coefficients and Ricci tensor
+    
+    """
+    
+
+                
+    
+    # term1 = np.array([dm(Param, Coords, 'g00', 0), dm(Param, Coords, 'g00', 1), dm(Param, Coords, 'g00', 2), dm(Param, Coords, 'g00', 3)])
+    
+    
+    # term2 = np.array([dm(Param, Coords, 'g01', 0), dm(Param, Coords, 'g01', 1), dm(Param, Coords, 'g01', 2), dm(Param, Coords, 'g01', 3)])
+    
+    # term3 = np.array([dm(Param, Coords, 'g02', 0), dm(Param, Coords, 'g02', 1), dm(Param, Coords, 'g02', 2), dm(Param, Coords, 'g02', 3)])
+    
+    # term4 = np.array([dm(Param, Coords, 'g03', 0), dm(Param, Coords, 'g03', 1), dm(Param, Coords, 'g03', 2), dm(Param, Coords, 'g03', 3)])
+    
+    # term5 = np.array([dm(Param, Coords, 'g11', 0), dm(Param, Coords, 'g11', 1), dm(Param, Coords, 'g11', 2), dm(Param, Coords, 'g11', 3)])
+    
+    # term6 = np.array([dm(Param, Coords, 'g12', 0), dm(Param, Coords, 'g12', 1), dm(Param, Coords, 'g12', 2), dm(Param, Coords, 'g12', 3)])
+    
+    # term7 = np.array([dm(Param, Coords, 'g13', 0), dm(Param, Coords, 'g13', 1), dm(Param, Coords, 'g13', 2), dm(Param, Coords, 'g13', 3)])
+    
+    # term8 = np.array([dm(Param, Coords, 'g22', 0), dm(Param, Coords, 'g22', 1), dm(Param, Coords, 'g22', 2), dm(Param, Coords, 'g22', 3)])
+    
+    # term9 = np.array([dm(Param, Coords, 'g23', 0), dm(Param, Coords, 'g23', 1), dm(Param, Coords, 'g23', 2), dm(Param, Coords, 'g23', 3)])
+    
+    # term10 = np.array([dm(Param, Coords, 'g33', 0), dm(Param, Coords, 'g33', 1), dm(Param, Coords, 'g33', 2), dm(Param, Coords, 'g33', 3)])
+    
+    # return 0.5 * g_inv * (term1 + term2 + term3 + term4 - term5 - term6 - term7 - term8 - term9 - term10)
+    

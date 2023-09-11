@@ -18,23 +18,26 @@ def name_file(filename, iteration=0, no_parent=False):
         new_filename = name_file(f"{filename}", iteration=iteration+1)
     
     return new_filename
-
-
-if __name__ == "__main__":
-    print(name_file("test", no_parent=True))
-    
     
 
 # 3D trajectory plotting
-def plot_traj(x, y, z, rs_1, rs_2, **kwargs):
-    fig = plt.figure()
-    ax = fig.add_subplot(111, projection='3d')
-    ax.plot(x,y,z, label="Particle")
-    ax.set_title("Particle Trajectory near BBH using 1.5PN Approximation")
-    ax.set_xlabel("x / (c^2 / GM)")
-    ax.set_ylabel("y / (c^2 / GM)")
-    ax.set_zlabel("z / (c^2 / GM)")
-    
+def plot_traj(x, y, z, rs_1, rs_2, proj="2D"):
+    if proj == "3D":
+        fig = plt.figure()
+        ax = fig.add_subplot(111, projection='3d')
+        ax.plot(x,y,z, label="Particle")
+        plt.plot(rs_1[:,0], rs_1[:,1], rs_1[:,2], label='BH1', color="blue")
+        plt.plot(rs_2[:,0], rs_2[:,1], rs_2[:,2], label='BH2', color="red")
+        ax.set_title("Particle Trajectory near BBH using 1.5PN Approximation")
+        ax.set_xlabel("x / L_0")
+        ax.set_ylabel("y / L_0")
+        ax.set_zlabel("z / L_0")
+    elif proj == "2D":
+        fig, ax = plt.subplots()
+        ax.plot(x, y, label="Particle")
+        ax.set_title("Particle Trajectory near BBH using 1.5PN Approximation")
+        ax.set_xlabel("x / L_0")
+        ax.set_ylabel("y / L_0")    
     # M1, M2, a1, a2, b = kwargs.get("m1", 1), kwargs["m2"], kwargs["a1"], kwargs["a2"], kwargs["b"]
     # M1, M2, a1, a2, b = kwargs.get("m1", 1), kwargs.get("m2", 1), kwargs.get("a1", 1), kwargs.get("a2", 1), kwargs.get("b", 1)
     
@@ -68,41 +71,124 @@ def plot_traj(x, y, z, rs_1, rs_2, **kwargs):
     
     plt.show()
 
-def animate_trajectories(x,y,z,rs_1,rs_2, a=None, save_fig=False, no_parent=False):
-
+def animate_trajectories(x, y, z, rs_1, rs_2, a=None,save_fig=False,no_parent=False,title="1.5PN", proj="2D"):
     # Create the figure and axes
-    fig, ax = plt.subplots()
+    fig = plt.figure()
     
+    if proj=="3D":
+        ax = fig.add_subplot(111, projection='3d')
+        ax.set_zlabel("z / L_0")
+        
+    else:
+        ax = fig.add_subplot(111)
+    
+    ax.set_xlabel("x / L_0")
+    ax.set_ylabel("y / L_0")
+
     if a:
-        ax.set_xlim(-a, a)
-        ax.set_ylim(-a, a)
+        a_x, a_y, a_z = a[0], a[1], a[2]
+        ax.set_xlim(-a_x, a_x)
+        ax.set_ylim(-a_y, a_y)
+        if proj=="3D":
+            ax.set_zlim(-a_z, a_z)
 
     # Plot two primary masses (initial position)
-    mass1, = ax.plot(rs_1[0,0], rs_1[0,1], 'o', color='blue', markersize=15, label="mass 1")
-    mass2, = ax.plot(rs_2[0,0], rs_2[0,1], 'o', color='black', markersize=20, label="mass 2")
+    if proj=="3D":
+        # mass1, = ax.plot(rs_1[0:1, 0], rs_1[0:1, 1], rs_1[0:1, 2], 'o', color='blue', markersize=15, label="mass 1")
+        # mass2, = ax.plot(rs_2[0:1, 0], rs_2[0:1, 1], rs_2[0:1, 2], 'o', color='black', markersize=20, label="mass 2")
+        # particle, = ax.plot(x[0:1], y[0:1], z[0:1], 'o', color='red', markersize=5, label="Particle")
+        mass1 = ax.scatter(rs_1[0,0], rs_1[0,1], c='blue', s=150, label="mass 1", depthshade=False)
+        mass2 = ax.scatter(rs_2[0,0], rs_2[0,1], c='black', s=200, label="mass 2", depthshade=False)
+        particle = ax.scatter(x[0], y[0], z[0], c='red', s=50, label="Particle", depthshade=False)
+        particle_trail, = ax.plot(x[0:1], y[0:1], z[0:1], '-', color='red', markersize=1)
 
-    # Plot initial position of test particle
-    particle, = ax.plot(x[0], y[0], 'o', color='red', markersize=5, label="Particle")
-    particle_trail, = ax.plot(x[0], y[0], '-', color='red', markersize=1)
+    else:
+        mass1, = ax.plot(rs_1[0, 0], rs_1[0, 1], 'o', color='blue', markersize=15, label="mass 1")
+        mass2, = ax.plot(rs_2[0, 0], rs_2[0, 1], 'o', color='black', markersize=20, label="mass 2")
+        particle, = ax.plot(x[0], y[0], 'o', color='red', markersize=5, label="Particle")
+        particle_trail, = ax.plot(x[0], y[0], '-', color='red', markersize=1)
 
     # Function to update the positions
     def update(i):
-        mass1.set_data(rs_1[i, 0], rs_1[i, 1])
-        mass2.set_data(rs_2[i, 0], rs_2[i, 1])
-        particle.set_data(x[i], y[i])
-        particle_trail.set_data(x[:i], y[:i])
-    
+        if proj=="3D":
+            # mass1.set_data(rs_1[i, 0], rs_1[i, 1])
+            # mass1.set_3d_properties([rs_1[i, 2]])
+            
+            # mass2.set_data(rs_2[i, 0], rs_2[i, 1])
+            # mass2.set_3d_properties([rs_2[i, 2]])
+            
+            # particle.set_data(x[i], y[i])
+            # particle.set_3d_properties([z[i]])
+            
+            particle_trail.set_data(x[:i], y[:i])
+            particle_trail.set_3d_properties(z[:i])
+            mass1._offsets3d = ([rs_1[i, 0]], [rs_1[i, 1]], [rs_1[i, 2]])
+            mass2._offsets3d = ([rs_2[i, 0]], [rs_2[i, 1]], [rs_2[i, 2]])
+            particle._offsets3d = ([x[i]], [y[i]], [z[i]])
+
+        else:
+            mass1.set_data(rs_1[i, 0], rs_1[i, 1])
+            mass2.set_data(rs_2[i, 0], rs_2[i, 1])
+            particle.set_data(x[i], y[i])
+            particle_trail.set_data(x[:i], y[:i])
 
     # Create the animation
-    ani = FuncAnimation(fig, update, frames=range(0, len(x), len(x)//min(len(x), 300)), interval=200)
+    ani = FuncAnimation(fig, update, frames=range(0, len(x), len(x) // min(len(x), 300)), interval=200)
 
     plt.legend()
     
-    fig.suptitle("1.5PN binary")
+    fig.suptitle(title)
     if save_fig:
-        # saving to m4 using ffmpeg writer            
+        # saving to mp4 using ffmpeg writer            
         writervideo = FFMpegWriter(fps=24)
-        save_fig = name_file(save_fig, no_parent=no_parent)
+        save_fig = name_file(title, no_parent=no_parent)
         ani.save(save_fig, writer=writervideo)
-        plt.close()
+    plt.show()
+
+
+# if __name__ == "__main__":
+#     x = np.zeros(100)
+#     y = np.zeros(100)
+#     z = np.zeros(100)
+#     rs_1 = np.zeros((100, 3))
+#     rs_2 = np.zeros((100, 3))
+#     animate_trajectories(x, y, z, rs_1, rs_2, save_fig="test", proj="3D", no_parent=True)
+
+# def animate_trajectories(x,y,z,rs_1,rs_2, a=None, save_fig=False, no_parent=False):
+
+#     # Create the figure and axes
+#     fig, ax = plt.subplots()
+    
+#     if a:
+#         ax.set_xlim(-a, a)
+#         ax.set_ylim(-a, a)
+
+#     # Plot two primary masses (initial position)
+#     mass1, = ax.plot(rs_1[0,0], rs_1[0,1], 'o', color='blue', markersize=15, label="mass 1")
+#     mass2, = ax.plot(rs_2[0,0], rs_2[0,1], 'o', color='black', markersize=20, label="mass 2")
+
+#     # Plot initial position of test particle
+#     particle, = ax.plot(x[0], y[0], 'o', color='red', markersize=5, label="Particle")
+#     particle_trail, = ax.plot(x[0], y[0], '-', color='red', markersize=1)
+
+#     # Function to update the positions
+#     def update(i):
+#         mass1.set_data(rs_1[i, 0], rs_1[i, 1])
+#         mass2.set_data(rs_2[i, 0], rs_2[i, 1])
+#         particle.set_data(x[i], y[i])
+#         particle_trail.set_data(x[:i], y[:i])
+    
+
+#     # Create the animation
+#     ani = FuncAnimation(fig, update, frames=range(0, len(x), len(x)//min(len(x), 300)), interval=200)
+
+#     plt.legend()
+    
+#     fig.suptitle("1.5PN binary")
+#     if save_fig:
+#         # saving to m4 using ffmpeg writer            
+#         writervideo = FFMpegWriter(fps=24)
+#         save_fig = name_file(save_fig, no_parent=no_parent)
+#         ani.save(save_fig, writer=writervideo)
+#         plt.close()
 
