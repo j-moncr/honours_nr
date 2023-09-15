@@ -28,7 +28,7 @@ def run_simulation(**kwargs):
     # Units
     c_SI, G_SI = 3e8, 6.67e-11              # Speed of light and gravitational constant in SI units
     T_0 = kwargs.get("T_0", 3.14e7)         # T_0 [s], 1 year is ~ pi x 10^7 seconds
-    L_0 = c_SI * T_0                        # 3e8 * T_0 [m] ~ 0.002 * T_0 [AU]
+    L_0 = c_SI * T_0                        # 3e8 * T_0 [m] ~ 0.002 * T_0 [AU], 1LY
     M_0 = (c_SI**3 / G_SI) * T_0            # 4.05e35 * T_0 [kg] ~ 2e5 * T_0[solar masses]
     AU_in_natunits = 1 / (0.002 * T_0)      # 1AU = 149,597,870.7 km ~ 1.1e8 L_0 [m]
     SOLARMASS_in_natunits = 1 / (2e5 * T_0) # 1 solar mass = 2e30 kg ~ 2e5 M_0 [kg]
@@ -40,7 +40,7 @@ def run_simulation(**kwargs):
     M = M1 + M2                                             # Total mass of binary
     
     # Initial orbital period and eccentricity
-    Porb0 = (2 * np.pi / np.sqrt(M/a0**3))
+    Porb0 = 2 * np.pi * np.sqrt(a0**3 / M)
     e0 = kwargs.get("e0", 0.0)                              # Initial eccentricity, e0=0 => circular, c0->1 => highly elliptical
     
     # Simulation runtime
@@ -93,7 +93,10 @@ def run_simulation(**kwargs):
     Param = [x_0, m1, m2, r1_0, r2_0, r12_0, v1_0, v2_0, v12_0, S1, S2]
     
     test_accuracy = kwargs.get("test_accuracy", False)
-    sol = geodesic_integrator(N,delta,omega,q0,p0,Param,order,rs_1=rs_1,rs_2=rs_2,rs_12=rs_12,vs_1=vs_1,vs_2=vs_2,vs_12=vs_12,update_parameters=True, test_accuracy=test_accuracy)
+    if test_accuracy:
+        sol, param_storage = geodesic_integrator(N,delta,omega,q0,p0,Param,order,rs_1=rs_1,rs_2=rs_2,rs_12=rs_12,vs_1=vs_1,vs_2=vs_2,vs_12=vs_12,update_parameters=True, test_accuracy=test_accuracy)
+    else:
+        sol = geodesic_integrator(N,delta,omega,q0,p0,Param,order,rs_1=rs_1,rs_2=rs_2,rs_12=rs_12,vs_1=vs_1,vs_2=vs_2,vs_12=vs_12,update_parameters=True, test_accuracy=test_accuracy)
     
     # Get the position and momentum of the particle in the first phase space
     sol = np.array(sol[1:])
@@ -103,6 +106,8 @@ def run_simulation(**kwargs):
     
     x, y, z = qs[:,1], qs[:,2], qs[:,3]
     
+    if test_accuracy:
+        return x, y, z, rs_1, rs_2, vs_1, vs_2, vs_12, Param, sol, param_storage
     return x, y, z, rs_1, rs_2, vs_1, vs_2, vs_12, Param, sol
 
 def simulate_Newtonian(rs_1, rs_2, m1, m2, q0, p0, dt, N):
@@ -113,45 +118,46 @@ def simulate_Newtonian(rs_1, rs_2, m1, m2, q0, p0, dt, N):
     
     return x_newton, y_newton, z_newton
 
-
 if __name__ == "__main__":
+    print()
     
     ########################################
     ########## Run the simulation ##########
     ########################################
     
-    x, y, z, rs_1, rs_2, vs_1, vs_2, vs_12, Param, sol = run_simulation()
+    x, y, z, rs_1, rs_2, vs_1, vs_2, vs_12, Param, sol, param_storage = run_simulation(test_accuracy=True)
     
-    # plot_traj(x, y, z, rs_1, rs_2)
-    animate_trajectories(x,y,z,rs_1,rs_2, save_fig=f"test_zballs", no_parent="True")
+    print(param_storage)
+    # # plot_traj(x, y, z, rs_1, rs_2)
+    # animate_trajectories(x,y,z,rs_1,rs_2, save_fig=f"test_zballs", no_parent="True")
 
-    # Set time scale (in seconds), determines length and mass scales through dimensional analysis
-    T_0 = 3.14e8
+    # # Set time scale (in seconds), determines length and mass scales through dimensional analysis
+    # T_0 = 3.14e8
 
-    # Relevant length and mass scales in geometric units
-    AU_in_natunits = 1 / (0.002 * T_0)
-    SOLARMASS_in_natunits = 1 / (2e5 * T_0)
+    # # Relevant length and mass scales in geometric units
+    # AU_in_natunits = 1 / (0.002 * T_0)
+    # SOLARMASS_in_natunits = 1 / (2e5 * T_0)
     
-    a0 = AU_in_natunits * 0.1
-    M = SOLARMASS_in_natunits * 10
+    # a0 = AU_in_natunits * 0.1
+    # M = SOLARMASS_in_natunits * 10
 
-    M1, M2 = 1/5*M, 1/2*M                          # Masses of each BH in binary
-    e0 = 0.6                                       # Initial eccentricity, e0=0 => circular, c0->1 => highly elliptical
+    # M1, M2 = 1/5*M, 1/2*M                          # Masses of each BH in binary
+    # e0 = 0.6                                       # Initial eccentricity, e0=0 => circular, c0->1 => highly elliptical
 
-    num_orbits = 1
-    N = 3
+    # num_orbits = 1
+    # N = 3
 
-    q0 = [0.0,a0/2,-a0/2,0.0]                          # Initial position of particle
-    p0 = [1.0,-1e-6,0.00,0.0]                           # Initial velocity of particle
+    # q0 = [0.0,a0/2,-a0/2,0.0]                          # Initial position of particle
+    # p0 = [1.0,-1e-6,0.00,0.0]                           # Initial velocity of particle
 
-    # Spin
-    chi1, chi2 = -1.0, 1.0
-    S1, S2 = np.array([1,-1,2]), np.array([-1,-2,3])
-    c_SI, G_SI = 3e8, 6.67e-11
-    S1, S2 = chi1 * M**2 * c_SI * 100 * S1 / mag(S1), chi2 * M**2 * c_SI * 100 * S2 / mag(S2)
+    # # Spin
+    # chi1, chi2 = -1.0, 1.0
+    # S1, S2 = np.array([1,-1,2]), np.array([-1,-2,3])
+    # c_SI, G_SI = 3e8, 6.67e-11
+    # S1, S2 = chi1 * M**2 * c_SI * 100 * S1 / mag(S1), chi2 * M**2 * c_SI * 100 * S2 / mag(S2)
     
-    x1, y1, z1, rs_1_1, rs_2_1, vs_1_1, vs_2_1, vs_12_1, Param_1, sol_1 = run_simulation(test_accuracy=False, T_0=T_0, a0=a0, M1=M1, M2=M2, e0=e0, num_orbits=num_orbits, N=N, q0=q0, p0=p0, chi1=chi1, chi2=chi2, S1=S1, S2=S2)
-    animate_trajectories(x1,y1,z1,rs_1_1,rs_2_1, save_fig=f"test_znaming_optional", no_parent="True")
+    # x1, y1, z1, rs_1_1, rs_2_1, vs_1_1, vs_2_1, vs_12_1, Param_1, sol_1 = run_simulation(test_accuracy=False, T_0=T_0, a0=a0, M1=M1, M2=M2, e0=e0, num_orbits=num_orbits, N=N, q0=q0, p0=p0, chi1=chi1, chi2=chi2, S1=S1, S2=S2)
+    # animate_trajectories(x1,y1,z1,rs_1_1,rs_2_1, save_fig=f"test_znaming_optional", no_parent="True")
     # plot_traj(x1, y1, z1, rs_1_1, rs_2_1)
 
 

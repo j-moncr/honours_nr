@@ -33,18 +33,18 @@ def dm(Param,Coord,metric,wrt):
             return dif(lambda p:eval(f"g{i}{j}")(Param,[point_0,point_1,p,point_3]),point_d)
         elif wrt == 3:
             return dif(lambda p:eval(f"g{i}{j}")(Param,[point_0,point_1,point_2,p]),point_d)
-    # If differentiating the connection coefficients
-    elif metric[:6] == 'gammas':
-        a, b, c = metric[6], metric[7], metric[8]
+    # # If differentiating the connection coefficients
+    # elif metric[:6] == 'gammas':
+    #     a, b, c = metric[6], metric[7], metric[8]
         
-        if wrt == 0:
-            return dif(lambda p:eval(f"gammas{a}{b}{c}")(Param,[p,point_1,point_2,point_3]),point_d)
-        elif wrt == 1:
-            return dif(lambda p:eval(f"gammas{a}{b}{c}")(Param,[point_0,p,point_2,point_3]),point_d)
-        elif wrt == 2:
-            return dif(lambda p:eval(f"gammas{a}{b}{c}")(Param,[point_0,point_1,p,point_3]),point_d)
-        elif wrt == 3:
-            return dif(lambda p:eval(f"gammas{a}{b}{c}")(Param,[point_0,point_1,point_2,p]),point_d)
+    #     if wrt == 0:
+    #         return dif(lambda p:eval(f"gammas{a}{b}{c}")(Param,[p,point_1,point_2,point_3]),point_d)
+    #     elif wrt == 1:
+    #         return dif(lambda p:eval(f"gammas{a}{b}{c}")(Param,[point_0,p,point_2,point_3]),point_d)
+    #     elif wrt == 2:
+    #         return dif(lambda p:eval(f"gammas{a}{b}{c}")(Param,[point_0,point_1,p,point_3]),point_d)
+    #     elif wrt == 3:
+    #         return dif(lambda p:eval(f"gammas{a}{b}{c}")(Param,[point_0,point_1,point_2,p]),point_d)
         
 
     # if metric == 'g00':
@@ -253,6 +253,32 @@ def updator_4(delta,omega,q1,p1,q2,p2,Param):
 
     return step3
 
+# def compute_tensor(Param, Coords):
+#     """Compute the Kretschmann scalar at a given point in spacetime."""
+#     # Param = [x_0, m1, m2, r1_0, r2_0, r12_0, v1_0, v2_0, v12_0, S1, S2]
+#     x, m1, m2, r1, r2, r12, v1, v2, v12, S1, S2 = Param
+    
+#     # Parameters needed to define tensor
+#     # params = [t_val, a0_val, ω_val, m1_val, m2_val, x_val, y_val, z_val, dxdt_val, dydt_val, dzdt_val, S1x, S1y, S1z, S2x, S2y, S2z]
+    
+#     t_val, x_val, y_val, z_val = Coords
+#     # dxdt_val, dydt_val, dzdt_val = Coords[4], Coords[5], Coords[6]
+#     a0_val = np.linalg.norm(r1)
+#     ω_val = np.cross(r1, v1)[0] / (a0_val ** 2)
+    
+    
+    
+#     # Compute the Christoffel symbols
+#     gammas = compute_christoffel(Param, Coords)
+
+#     # Compute the Riemann tensor
+#     Riemann = riemann(gammas)
+
+#     # Compute the Kretschmann scalar
+#     K = compute_kretschmann(Riemann)
+
+#     return K
+
 # def connection_coefficients(Param, Coords):
     
 #     """Calculate connection coefficients at a given point in spacetime.
@@ -394,13 +420,11 @@ def geodesic_integrator(N,delta,omega,q0,p0,Param,order=2,update_parameters=Fals
 
     result_list = [[q1,p1,q2,p2]]
     result = (q1,p1,q2,p2)
-    
-    # if test_accuracy:
-    #     # hamiltonian_list = []
-    #     K_list = []
-        
 
     print(f"Delta {delta}")
+    
+    if test_accuracy:
+        parameter_store = []
 
     for count, timestep in enumerate(tqdm(range(N))):
         if order == 2:
@@ -411,19 +435,36 @@ def geodesic_integrator(N,delta,omega,q0,p0,Param,order=2,update_parameters=Fals
         result = updated_array
         result_list += [result]
         
-        # # Test constants of integration, to asses numerical accuracy
-        # if test_accuracy:
-        #     # print(f"$g_00={g00(Param, result[0])}$")
-        #     # print(f"$g_11={g11(Param, result[0])}$")
-        #     # hamiltonian_list.append(evaluate_constants(result[0], result[1], Param))
-        #     K_list.append(kretschmann_scalar(Param, result[0]))
-        #     print(f"Kretschmann scalar: {K_list[-1]}")
+        pos = Param[0]
+
+        
+        # Store the parameter values for future testing
+        if test_accuracy:
+            x, m1, m2, r1, r2, r12, v1, v2, v12, S1, S2 = Param
+            m1_val, m2_val = m1, m2
+            S1x, S1y, S1z = S1
+            S2x, S2y, S2z = S2
+    
+            x_val, y_val, z_val = pos
+            t_val = count * delta
+            
+            if count == 0:
+                dxdt_val, dydt_val, dzdt_val = 0, 0, 0
+            else:
+                dxdt_val, dydt_val, dzdt_val = (pos - parameter_store[-1][5:8]) / delta
+            
+            # Assume that trajectory of BHs can be described instantaneously by a circular motion of radius a0 and angular frequency ω_val
+            a0_val = np.linalg.norm(r1)
+            ω_val = np.cross(r1, v1)[0] / (a0_val ** 2)
+            
+            paramaters = [t_val, a0_val, ω_val, m1_val, m2_val, x_val, y_val, z_val, dxdt_val, dydt_val, dzdt_val, S1x, S1y, S1z, S2x, S2y, S2z]
+            parameter_store += [paramaters]
+        
         
         # Update the parameters
         if update_parameters:
             Param = update_param(Param, result, count, rs_1, rs_2, rs_12, vs_1, vs_2, vs_12)
 
-        pos = Param[0]
         
         # Condition to end program once particle is ejected
         if np.linalg.norm(pos) > 3 * np.linalg.norm(Param[3]):
@@ -434,44 +475,6 @@ def geodesic_integrator(N,delta,omega,q0,p0,Param,order=2,update_parameters=Fals
             print("Ending program")
             # return result_list[:-1]
             break
+    if test_accuracy:
+        return result_list, parameter_store
     return result_list
-    # if test_accuracy:
-    #     # return result_list, np.array(hamiltonian_list)
-    #     return result_list, np.array(K_list)
-
-    # else:
-    #     return result_list
-    
-
-    """
-    
-    Calculate connection coefficients and Ricci tensor
-    
-    """
-    
-
-                
-    
-    # term1 = np.array([dm(Param, Coords, 'g00', 0), dm(Param, Coords, 'g00', 1), dm(Param, Coords, 'g00', 2), dm(Param, Coords, 'g00', 3)])
-    
-    
-    # term2 = np.array([dm(Param, Coords, 'g01', 0), dm(Param, Coords, 'g01', 1), dm(Param, Coords, 'g01', 2), dm(Param, Coords, 'g01', 3)])
-    
-    # term3 = np.array([dm(Param, Coords, 'g02', 0), dm(Param, Coords, 'g02', 1), dm(Param, Coords, 'g02', 2), dm(Param, Coords, 'g02', 3)])
-    
-    # term4 = np.array([dm(Param, Coords, 'g03', 0), dm(Param, Coords, 'g03', 1), dm(Param, Coords, 'g03', 2), dm(Param, Coords, 'g03', 3)])
-    
-    # term5 = np.array([dm(Param, Coords, 'g11', 0), dm(Param, Coords, 'g11', 1), dm(Param, Coords, 'g11', 2), dm(Param, Coords, 'g11', 3)])
-    
-    # term6 = np.array([dm(Param, Coords, 'g12', 0), dm(Param, Coords, 'g12', 1), dm(Param, Coords, 'g12', 2), dm(Param, Coords, 'g12', 3)])
-    
-    # term7 = np.array([dm(Param, Coords, 'g13', 0), dm(Param, Coords, 'g13', 1), dm(Param, Coords, 'g13', 2), dm(Param, Coords, 'g13', 3)])
-    
-    # term8 = np.array([dm(Param, Coords, 'g22', 0), dm(Param, Coords, 'g22', 1), dm(Param, Coords, 'g22', 2), dm(Param, Coords, 'g22', 3)])
-    
-    # term9 = np.array([dm(Param, Coords, 'g23', 0), dm(Param, Coords, 'g23', 1), dm(Param, Coords, 'g23', 2), dm(Param, Coords, 'g23', 3)])
-    
-    # term10 = np.array([dm(Param, Coords, 'g33', 0), dm(Param, Coords, 'g33', 1), dm(Param, Coords, 'g33', 2), dm(Param, Coords, 'g33', 3)])
-    
-    # return 0.5 * g_inv * (term1 + term2 + term3 + term4 - term5 - term6 - term7 - term8 - term9 - term10)
-    

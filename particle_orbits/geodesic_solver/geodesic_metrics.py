@@ -250,14 +250,15 @@ def solve_orbital_evolution(M1, M2, Porb0, e0, tmax, N):
         t = t_evaluated
     return sol, t
 
-def get_orbital_evolution(M1, M2, Porb0, e0, tmax, N):
+def get_orbital_evolution(M1, M2, Porb0, e0, tmax, N, G=1):
     # Return two arrays r1 and r2, which contain the positions of the two black holes at each time step
     sol, t = solve_orbital_evolution(M1, M2, Porb0, e0, tmax, N)
     Porb, e = sol.y[0], sol.y[1]
 
-    # Kepler's third law
+    # Kepler's third law, with formula from:
+    # https://physics.stackexchange.com/questions/382847/keplers-3rd-law-applied-to-binary-systems-how-can-the-two-orbits-have-differen
     mu1, mu2 = G*M2**3/(M1+M2)**2, G*M1**3/(M1+M2)**2
-    a1, a2 = (mu1/(4*np.pi**2 * Porb**2))**(1/3), (mu2/(4*np.pi**2 * Porb**2))**(1/3)
+    a1, a2 = (mu1 * Porb**2 / (4*np.pi**2))**(1/3), (mu2 * Porb**2 /(4*np.pi**2))**(1/3)    # Is this correct????
     # Definition of eccentricty is e = c/a, where c is the distance between the foci and a is the semi-major axis
     c1, c2 = e*a1, e*a2
     
