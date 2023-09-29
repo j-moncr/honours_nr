@@ -44,14 +44,15 @@ n12 = n1 - n2
 
 # Metric components
 
-g00 = 1 - (2*m1/r1 + 2*m2/r2 - 2*m1**2/r2**2 - 2*m1**2/r2**2 + 
+# Whys does the negative of correct formula work? Investigate - to do with coordinates?
+g00 = -1 - (2*m1/r1 + 2*m2/r2 - 2*m1**2/r2**2 - 2*m2**2/r1**2 + 
           m1/r1 * (4*v1.norm()**2 - (n1.dot(v1))**2) + 
           m2/r2 * (4*v2.norm()**2 - (n2.dot(v2))**2) + 
           -m1*m2*(2/(r1*r2) + r2/(2*r12**3) - r1**2/(r2*r12**3) + 5/(2*r1*r12)) - 
-          m2*m1*(2/(r1*r2) + r2/(2*r12**3) - r2**2/(2*r2*r12**3) + 5/(2*r2*r2)) + 
+          m2*m1*(2/(r1*r2) + r1/(2*r12**3) - r2**2/(2*r1*r12**3) + 5/(2*r2*r12)) + 
           4*m1*m2/(3*r12**2)*n12.dot(v12) + 
           4*m2*m1/(3*r12**2)*n12.dot(v12) + 
-          4/r12**2*v1.dot(S1.cross(n1)) + 
+          4/r1**2*v1.dot(S1.cross(n1)) + 
           4/r2**2*v2.dot(S2.cross(n2)))
 
 g01 = -(4*m1/r1*v1[0] + 4*m2/r2*v2[0] + 2/r1**2*S1.cross(n1)[0] + 2/r2**2*S2.cross(n2)[0])
@@ -79,55 +80,71 @@ g_metric = sp.Matrix([
 # Metric components g01, g02, g03, g11, g22, g33
 # Other metric components were previously defined or are zero
 
-# Partial derivatives of g01
-g01_dt = g01.diff(t)
-g01_dx = g01.diff(x)
-g01_dy = g01.diff(y)
-g01_dz = g01.diff(z)
+# # Partial derivatives of g0
+# g00_dt = g00.diff(t)
+# g00_dx = g00.diff(x)
+# g00_dy = g00.diff(y)
+# g00_dz = g00.diff(z)
 
-# Partial derivatives of g02
-g02_dt = g02.diff(t)
-g02_dx = g02.diff(x)
-g02_dy = g02.diff(y)
-g02_dz = g02.diff(z)
+# # Partial derivatives of g01
+# g01_dt = g01.diff(t)
+# g01_dx = g01.diff(x)
+# g01_dy = g01.diff(y)
+# g01_dz = g01.diff(z)
 
-# Partial derivatives of g03
-g03_dt = g03.diff(t)
-g03_dx = g03.diff(x)
-g03_dy = g03.diff(y)
-g03_dz = g03.diff(z)
+# # Partial derivatives of g02
+# g02_dt = g02.diff(t)
+# g02_dx = g02.diff(x)
+# g02_dy = g02.diff(y)
+# g02_dz = g02.diff(z)
 
-# Partial derivatives of g11
-g11_dt = g11.diff(t)
-g11_dx = g11.diff(x)
-g11_dy = g11.diff(y)
-g11_dz = g11.diff(z)
+# # Partial derivatives of g03
+# g03_dt = g03.diff(t)
+# g03_dx = g03.diff(x)
+# g03_dy = g03.diff(y)
+# g03_dz = g03.diff(z)
 
-# Partial derivatives of g22 (same as g11 due to the symmetry of the problem)
-g22_dt = g11_dt
-g22_dx = g11_dx
-g22_dy = g11_dy
-g22_dz = g11_dz
+# # Partial derivatives of g11
+# g11_dt = g11.diff(t)
+# g11_dx = g11.diff(x)
+# g11_dy = g11.diff(y)
+# g11_dz = g11.diff(z)
 
-# Partial derivatives of g33 (same as g11 due to the symmetry of the problem)
-g33_dt = g11_dt
-g33_dx = g11_dx
-g33_dy = g11_dy
-g33_dz = g11_dz
+# # Partial derivatives of g22 (same as g11 due to the symmetry of the problem)
+# g22_dt = g11_dt
+# g22_dx = g11_dx
+# g22_dy = g11_dy
+# g22_dz = g11_dz
 
-# Partial derivatives of all metric components
-# g_derivs[i, j, k] = \partial g_{ij} / \partial x^k
-g_derivs = sp.Array([[[0,0,0,0],[g01_dt, g01_dx, g01_dy, g01_dz],[g02_dt, g02_dx, g02_dy, g02_dz],[g03_dt, g03_dx, g03_dy, g03_dz]],
-                      [[g01_dt, g01_dx, g01_dy, g01_dz],[g11_dt, g11_dx, g11_dy, g11_dz],[0,0,0,0],[0,0,0,0]],
-                      [[g02_dt, g02_dx, g02_dy, g02_dz],[0,0,0,0],[g22_dt, g22_dx, g22_dy, g22_dz],[0,0,0,0]],
-                      [[g03_dt, g03_dx, g03_dy, g03_dz],[0,0,0,0],[0,0,0,0],[g33_dt, g33_dx, g33_dy, g33_dz]]])
+# # Partial derivatives of g33 (same as g11 due to the symmetry of the problem)
+# g33_dt = g11_dt
+# g33_dx = g11_dx
+# g33_dy = g11_dy
+# g33_dz = g11_dz
 
+# # Partial derivatives of all metric components
+# # g_derivs[i, j, k] = \partial g_{ij} / \partial x^k
+# g_derivs_old = sp.Array([[[g00_dt, g00_dx, g00_dy, g00_dz],[g01_dt, g01_dx, g01_dy, g01_dz],[g02_dt, g02_dx, g02_dy, g02_dz],[g03_dt, g03_dx, g03_dy, g03_dz]],
+#                       [[g01_dt, g01_dx, g01_dy, g01_dz],[g11_dt, g11_dx, g11_dy, g11_dz],[0,0,0,0],[0,0,0,0]],
+#                       [[g02_dt, g02_dx, g02_dy, g02_dz],[0,0,0,0],[g22_dt, g22_dx, g22_dy, g22_dz],[0,0,0,0]],
+#                       [[g03_dt, g03_dx, g03_dy, g03_dz],[0,0,0,0],[0,0,0,0],[g33_dt, g33_dx, g33_dy, g33_dz]]])
+
+# # Alternative way to calculate partial derivatives of metric components
+# # g_derivs_old = g_derivs.copy()
+coords = [t, x, y, z]
+N = len(coords)
+g_derivs = [[[0 for k in range(N)] for j in range(N)] for i in range(N)]
+for i in range(N):
+    for j in range(N):
+        for k in range(N):
+            g_derivs[i][j][k] = g_metric[i,j].diff(coords[k])
 
 # Create numerical function based of the previous symbollic calculations in order to calculate the numerical value # of the Christoffel symbols and (pseudo-)tensors given known parameters and variable values.
 
 # Convert the symbolic metric tensor into a numerical function
 dxdt, dydt, dzdt = x.diff(t), y.diff(t), z.diff(t)
-g_numeric = sp.lambdify((t, a0, ω, m1, m2, x, y, z, dxdt, dydt, dzdt, S1x, S1y, S1z, S2x, S2y, S2z), g_metric, "numpy")
+param_symbols = (t, a0, ω, m1, m2, x, y, z, dxdt, dydt, dzdt, S1x, S1y, S1z, S2x, S2y, S2z)
+g_numeric = sp.lambdify((param_symbols), g_metric, "numpy")
 
 g_derivs_numeric = sp.lambdify((t, a0, ω, m1, m2, x, y, z, dxdt, dydt, dzdt, S1x, S1y, S1z, S2x, S2y, S2z), g_derivs, "numpy")
 
@@ -168,15 +185,15 @@ def compute_christoffel(t_val, a0_val, ω_val, m1_val, m2_val, x_val, y_val, z_v
     g_derivs_num = np.array(g_derivs_numeric(t_val, a0_val, ω_val, m1_val, m2_val, x_val, y_val, z_val, dxdt_val, dydt_val, dzdt_val, S1x, S1y, S1z, S2x, S2y, S2z))
     
     # Compute the Christoffel symbols using the numerical inverse metric
-    Gamma_num = np.zeros((4, 4, 4))
+    Gamma_num = np.zeros((N, N, N))
     for i in range(4):
         for j in range(4):
             for k in range(4):
                 if j <= k:  # Use the symmetry of the Christoffel symbols
-                    Gamma_num[i, j, k] = 0.5 * sum(g_inv_num[i, l] * 
+                    Gamma_num[i, j, k] = 0.5 * sum([g_inv_num[i, l] * 
                                                    (g_derivs_num[l, j, k] + 
                                                     g_derivs_num[l, k, j] -
-                                                    g_derivs_num[j, k, l]) for l in range(4))
+                                                    g_derivs_num[j, k, l]) for l in range(4)])
                     Gamma_num[i, k, j] = Gamma_num[i, j, k]
                     
     return Gamma_num
@@ -185,7 +202,7 @@ def compute_christoffel(t_val, a0_val, ω_val, m1_val, m2_val, x_val, y_val, z_v
 # Calculate Christoffel symbols, Riemann and Ricci tensors, Ricci and Kretschmann scalars, and Landau-Liftschitz psuedo tensor #
 ################################################################################################################################
 
-def compute_partial_christoffel(t_val, a0_val, ω_val, m1_val, m2_val, x_val, y_val, z_val, dxdt_val, dydt_val, dzdt_val, S1x, S1y, S1z, S2x, S2y, S2z, delta=1e-5):
+def compute_partial_christoffel(t_val, a0_val, ω_val, m1_val, m2_val, x_val, y_val, z_val, dxdt_val, dydt_val, dzdt_val, S1x, S1y, S1z, S2x, S2y, S2z, delta=1e-6):
     """
     Compute the partial derivatives of the Christoffel symbols with respect to the spacetime coordinates.
     
@@ -207,7 +224,7 @@ def compute_partial_christoffel(t_val, a0_val, ω_val, m1_val, m2_val, x_val, y_
     
     # Calculate the base Christoffel symbols
     base_Gamma = compute_christoffel(*params)
-    
+            
     # Initialize the array to store the derivatives
     partials = np.zeros((4, 4, 4, 4))
     
@@ -215,7 +232,7 @@ def compute_partial_christoffel(t_val, a0_val, ω_val, m1_val, m2_val, x_val, y_
     for i, param in enumerate(params):
         # Create a copy of the parameters and perturb the i-th parameter, if it is a coordinate
         if i in coord_index:
-          # Use two point finite difference scheme for coordinates
+            # Use two point finite difference scheme for coordinates
             perturbed_params_adv = params.copy()  # Perturbed parameters for forward difference
             perturbed_params_ret = params.copy()  # Perturbed parameters for backward difference
             perturbed_params_adv[i] += delta
@@ -245,37 +262,20 @@ def compute_riemann_tensor(gammas, partial_gammas, g_inv):
     """
     
     riemann = np.zeros((4, 4, 4, 4))
-    
-    # for alpha in range(4):
-    #     for beta in range(4):
-    #         for gamma in range(4):
-    #             for delta in range(4):
-    #                 riemann[alpha, beta, gamma, delta] = (
-    #                     partials[alpha, gamma, delta, beta] - 
-    #                     partials[alpha, gamma, beta, delta]
-    #                 )
-                    
-    #                 for mu in range(4):
-    #                     riemann[alpha, beta, gamma, delta] += (
-    #                         g_inv[alpha, mu] * (
-    #                             partials[mu, beta, gamma, delta] -
-    #                             partials[mu, beta, delta, gamma]
-    #                         )
-    #                     )
     for alpha in range(4):
-        for beta in range(4):
-            for gamma in range(4):
-                for delta in range(4):
-                    riemann[alpha, beta, gamma, delta] = (
-                        partial_gammas[alpha, beta, delta, gamma] - 
-                        partial_gammas[alpha, beta, gamma, delta]
-                    )
-                    
-                    for nu in range(4):
-                        riemann[alpha, beta, gamma, delta] += (
-                            gammas[nu, beta, delta] * gammas[alpha, nu, gamma] -
-                            gammas[nu, beta, gamma] * gammas[alpha, nu, delta]
-                        )
+      for beta in range(4):
+          for gamma in range(4):
+              for delta in range(4):
+                  riemann[alpha, beta, gamma, delta] = (
+                      partial_gammas[alpha, beta, delta, gamma] - 
+                      partial_gammas[alpha, beta, gamma, delta]
+                  )
+                  
+                  for nu in range(4):
+                      riemann[alpha, beta, gamma, delta] += (
+                          gammas[nu, beta, delta] * gammas[alpha, nu, gamma] -
+                          gammas[nu, beta, gamma] * gammas[alpha, nu, delta]
+                      )
     
     return riemann
 
@@ -289,14 +289,8 @@ def compute_ricci_tensor(riemann):
     Returns:
     - A 4x4 numpy array representing the Ricci tensor.
     """
-    
-    ricci = np.zeros((4, 4))
-    
-    for mu in range(4):
-        for nu in range(4):
-            ricci[mu, nu] = sum(riemann[alpha, mu, alpha, nu] for alpha in range(4))
             
-    return ricci
+    return np.einsum('rarb->ab', riemann)
 
 def compute_ricci_scalar(ricci_tensor, g_inv):
     """
@@ -309,18 +303,14 @@ def compute_ricci_scalar(ricci_tensor, g_inv):
     Returns:
     - Ricci scalar value.
     """
-    # R = 0
-    # for mu in range(4):
-    #     for nu in range(4):
-    #         R += g_inv[mu, nu] * ricci_tensor[mu, nu]
     
-    # return np.sum(g_inv * ricci_tensor)
-    # return R
     return np.einsum('ab,ab', g_inv, ricci_tensor)
 
 def compute_kretschmann(riemann_tensor, g_inv):
     """
     Compute the Kretschmann scalar from the Riemann tensor and the inverse metric tensor.
+    riemann_tensor = R^a_{bcd}, K = R^{abcd}R_{abcd} = R^a_{bcd}R_a^{bcd}
+                                  = R^a_{bcd} g_{ae} g^{bf} g^{cg} g^{dh} R^e_{fgh}
     
     Parameters:
     - riemann_tensor: Riemann curvature tensor (4x4x4x4 numpy array).
@@ -329,14 +319,8 @@ def compute_kretschmann(riemann_tensor, g_inv):
     Returns:
     - Kretschmann scalar.
     """
-    
-    # Raise the indices of the Riemann tensor
-    riemann_raised = np.einsum('abcd,bf,cg,dh->afgh', riemann_tensor, g_inv, g_inv, g_inv)
-    
-    # Compute the Kretschmann scalar by contracting the Riemann tensor with itself
-    K = np.einsum('abcd,abcd->', riemann_raised, riemann_tensor)
-    
-    return K
+    g_metric = np.linalg.inv(g_inv)
+    return np.einsum('abcd,ae,bf,cg,dh,efgh', riemann_tensor, g_metric, g_inv, g_inv, g_inv, riemann_tensor)
 
 def compute_landau_lifshitz(Gamma, g_inv):
     """
@@ -358,12 +342,10 @@ def compute_landau_lifshitz(Gamma, g_inv):
                 for m in range(4):
                     for n in range(4):
                         for p in range(4):
-                            t[i, k] += (g_inv[i, l] * g_inv[k, m] * (2 * Gamma[n, l, m] * Gamma[p, n, p] - Gamma[n, l, p] * Gamma[p, m, n] - Gamma[n, l, n] * Gamma[p, m, p]) +
+                            t[i, k] += ((g_inv[i, l] * g_inv[k, m] - g_inv[i,k] * g_inv[l,m])* (2 * Gamma[n, l, m] * Gamma[p, n, p] - Gamma[n, l, p] * Gamma[p, m, n] - Gamma[n, l, n] * Gamma[p, m, p]) +
                                         g_inv[i, l] * g_inv[m, n] * (Gamma[k, l, p] * Gamma[p, m, n] + Gamma[k, m, n] * Gamma[p, l, p] - Gamma[k, n, p] * Gamma[p, l, m] - Gamma[k, l, m] * Gamma[p, n, p]) +
                                         g_inv[k, l] * g_inv[m, n] * (Gamma[i, l, p] * Gamma[p, m, n] + Gamma[i, m, n] * Gamma[p, l, p] - Gamma[i, n, p] * Gamma[p, l, m] - Gamma[i, l, m] * Gamma[p, n, p]) +
                                         g_inv[l, m] * g_inv[n, p] * (Gamma[i, l, n] * Gamma[k, m, p] - Gamma[i, l, m] * Gamma[k, n, p]))
-    
-    t *= 1 / (16 * np.pi)
     
     return t
 
@@ -383,9 +365,20 @@ def calculate_tensors(parameters):
 
     K = compute_kretschmann(riemann_tensor, g_inv)
     
-    return g_metric, g_inv, Gamma, Gamma_partials, riemann_tensor, ricci_tensor, ricci_scalar, K
+    t = compute_landau_lifshitz(Gamma, g_inv)
+    
+    return g_metric, g_inv, Gamma, Gamma_partials, riemann_tensor, ricci_tensor, ricci_scalar, K, t
 
 def evaluate_scalars(param_array):
+    """Calculate a list of Kretschmann scalars and Ricci scalars for a given array of parameters.
+
+    Args:
+        param_array (list): List contaning all parameters at each timestep
+
+    Returns:
+        Ks: List of Krechsmann scalars
+        Rs: List of Ricci scalars
+    """
     Ks = []
     Rs = []
 
@@ -433,33 +426,22 @@ def plot_scalars(param_array, save_fig=False):
 
 if __name__ == "__main__":
     # Test function
-    t_val = 3.13
-    a0_val, ω_val = 1, 0.01
-    m1_val, m2_val = 2, 3
-    x_val, y_val, z_val = 0.001, 0.3, -0.2
-    dxdt_val, dydt_val, dzdt_val = 0.01, -0.02, 0.04
-    S1x, S1y, S1z, S2x, S2y, S2z = 1, -1, 0, 0, 0, 1
+    t_val = 0
+    a0_val, ω_val = 0.001, 0
+    m1_val, m2_val = 0.5, 0
+    x_val, y_val, z_val = 10.000, 0.0, -0.0
+    dxdt_val, dydt_val, dzdt_val = 0.00, 0.00, 0.00
+    S1x, S1y, S1z, S2x, S2y, S2z = 0, 0, 0, 0, 0, 0
     test_values = (t_val, a0_val, ω_val, m1_val, m2_val, x_val, y_val, z_val, dxdt_val, dydt_val, dzdt_val, S1x, S1y, S1z, S2x, S2y, S2z)
-    g_metric, g_inv, Gamma, Gamma_partials, riemann_tensor, ricci_tensor_test, ricci_scalar_test, K_test = calculate_tensors(test_values)
-    print(K_test)
-    # g_test = g_numeric(*test_values)
-    # Gamma_test = compute_christoffel(*test_values)
-    # Gamma_test_partials = compute_partial_christoffel(*test_values)
+    g_test, g_inv_test, Gamma_test, Gamma_partials, riemann_test, ricci_tensor_test, ricci_scalar_test, K_test, LL_test = calculate_tensors(test_values)
     
-    # riemann_test = riemann(Gamma_test_partials, np.linalg.inv(g_numeric(*test_values)))
-    # ricci_tensor_test = ricci_tensor(riemann_test)
-    # ricci_scalar_test = ricci_scalar(ricci_tensor_test, np.linalg.inv(g_test))
-    
-    # g_inv_test = np.linalg.inv(g_test)
-    
-    # K_test = compute_kretschmann(riemann_test, g_inv_test)
-    
-    # print("g =\n", g_test)
-    # print("Gamma =\n", Gamma_test)
-    # print("Riemann =\n", riemann_test)
-    # print("Ricci tensor =\n", ricci_tensor_test)
-    # print("Ricci scalar =\n", ricci_scalar_test)
-    # print("Kretschmann =\n", K_test)
-    # print("Landau-Lifshitz =\n", compute_landau_lifshitz(Gamma_test, g_inv_test))
+    print("g =\n", g_test)
+    print("Gamma =\n", Gamma_test)
+    print("Gamma_partial =\n", Gamma_partials)
+    print("Riemann =\n", riemann_test)
+    print("Ricci tensor =\n", ricci_tensor_test)
+    print("Ricci scalar =\n", ricci_scalar_test)
+    print("Kretschmann =\n", K_test)
+    print("Landau-Lifshitz =\n", compute_landau_lifshitz(Gamma_test, g_inv_test))
     
     

@@ -168,77 +168,407 @@ where I expect reconnection to occur.
 
 # Assuming you've already computed the LL tensor for each point in spacetime
 # Let's say LL_tensor[i, j] gives the LL tensor at the point (xv[i,j], yv[i,j])
-# The shape of LL_tensor should be (N, N, 4, 4)
+
+import numpy as np
+import matplotlib.pyplot as plt
+import sys
+
+
 if __name__ == "__main__":
-    t_val = 0
+    t_val = 100
     a0_val, ω_val = 1, 0.01
-    m1_val, m2_val = 1, 1
+    m1_val, m2_val = 1e3, 1e3
     x_val, y_val, z_val = 0, 0, 0
-    dxdt_val, dydt_val, dzdt_val = 0.2, -0.1, 0
-    S1x, S1y, S1z, S2x, S2y, S2z = 0, 0, 1, 0, 0, 1
+    dxdt_val, dydt_val, dzdt_val = 0.0, 0.0, 0.0
+    S1x, S1y, S1z, S2x, S2y, S2z = 0, 0, 5, 0, 0, 4
     test_values = (t_val, a0_val, ω_val, m1_val, m2_val, x_val, y_val, z_val, dxdt_val, dydt_val, dzdt_val, S1x, S1y, S1z, S2x, S2y, S2z)
-    g_metric, g_inv, Gamma, Gamma_partials, riemann_tensor, ricci_tensor_test, ricci_scalar_test, K_test = calculate_tensors(test_values)
+    g_metric, g_inv, Gamma, Gamma_partials, riemann_tensor, ricci_tensor_test, ricci_scalar_test, K_test, LL_test = calculate_tensors(test_values)
     LL_tensor = compute_landau_lifshitz(Gamma, g_inv)
     
+    animate = True
+    calculate_flux = False
+    
     # Parameters for grid
-    Nx, Ny, Nz = 12, 12, 3
+    Nx, Ny = 15, 15
     x_min, x_max = -2, 2
     y_min, y_max = -2, 2
-    z_min, z_max = 2, 2
-
     xs = np.linspace(x_min, x_max, Nx)
     ys = np.linspace(y_min, y_max, Ny)
-    zs = np.linspace(z_min, z_max, Nz)
-    xv, yv, zv = np.meshgrid(xs, ys, zs)
-    # z_val = 0
+    xv, yv = np.meshgrid(xs, ys)
+    z_val = 0
+    
+    if animate:
+        energy_flux_x = np.load("energy_flux_x.npy")
+        energy_flux_y = np.load("energy_flux_y.npy")
 
-    energy_flux_x = np.zeros((Nx, Ny, Nz))
-    energy_flux_y = np.zeros((Nx, Ny, Nz))
-    energy_flux_z = np.zeros((Nx, Ny, Nz))
+        fig, ax = plt.subplots(figsize=(10, 8))  # Increase figure size
+        
+        from matplotlib.animation import FuncAnimation
+        
+        min_mag, max_mag = 0,0
+        for num in range(len(energy_flux_x)):
+            magnitude = np.sqrt(energy_flux_x[num,:,:]**2 + energy_flux_y[num,:,:]**2)
+            min_mag = min(min_mag, np.min(magnitude))
+            max_mag = max(max_mag, np.max(magnitude))
+        
+        # Create the initial contour plot and colorbar outside the update function
+        norm_factor = np.sqrt(energy_flux_x[0,:,:]**2 + energy_flux_y[0,:,:]**2)
+        magnitude = norm_factor
+        log_magnitude = np.log1p(magnitude)
+        log_magnitude = np.nan_to_num(log_magnitude, nan=np.nanmean(log_magnitude), posinf=np.nanmax(log_magnitude), neginf=np.nanmin(log_magnitude))
+        dummy_cont = ax.contourf(xv, yv, log_magnitude, cmap='viridis')
+        cbar = plt.colorbar(dummy_cont, ax=ax)
+        cbar.set_label('Logarithm of Magnitude of Energy Flux', fontsize=14)
+        cbar.ax.tick_params(labelsize=12)
+        
+        # Adjust levels for contour plot
+        min_log_magnitude = np.min(log_magnitude)
+        max_log_magnitude = np.max(log_magnitude)
+        if min_log_magnitude == max_log_magnitude:
+            levels = [min_log_magnitude, min_log_magnitude + 1]
+        else:
+            levels = np.linspace(min_log_magnitude, max_log_magnitude, 50)
+        
+        # This function will be called on each animation frame to update the streamplot
+        def update(num):
+            ax.clear()
+            
+            # Update the data values of the filled contour
+            norm_factor = np.sqrt(energy_flux_x[num,:,:]**2 + energy_flux_y[num,:,:]**2)
+            magnitude = norm_factor
+            log_magnitude = np.log1p(magnitude)
+            log_magnitude = np.nan_to_num(log_magnitude, nan=np.nanmean(log_magnitude), posinf=np.nanmax(log_magnitude), neginf=np.nanmin(log_magnitude))
+            
+            
+            # for coll, level in zip(cont.collections, log_magnitude.flat):
+            #     coll.set_array(level)
+        
+
+            norm_factor = np.sqrt(energy_flux_x[num,:,:]**2 + energy_flux_y[num,:,:]**2)
+            magnitude = norm_factor
+
+            # # Normalize magnitude for coloring
+            # norm = plt.Normalize(min_mag, max_mag)
+            # colors = plt.cm.viridis(norm(magnitude))
+            # # Take the logarithm of the magnitude for visualization
+            # log_magnitude = np.log1p(magnitude)
+            # log_magnitude = np.nan_to_num(log_magnitude, nan=np.nanmean(log_magnitude), posinf=np.nanmax(log_magnitude), neginf=np.nanmin(log_magnitude))
+
+
+            cont = ax.contourf(xv, yv, log_magnitude, levels=levels, cmap='viridis')  # Use viridis colormap
+            strm = ax.streamplot(xv, yv, energy_flux_x[num,:,:], energy_flux_y[num,:,:], density=1.5, color='k', linewidth=1, arrowsize=1.5)
+
+            # # Plotting streamlines with aesthetic adjustments
+            # strm = ax.streamplot(xv, yv, energy_flux_x[num,:,:], energy_flux_y[num,:,:], color='k', density=1, linewidth=1, arrowsize=1.5)
+
+        # Create the animation
+        ani = FuncAnimation(fig, update, frames=len(energy_flux_x), repeat=False)
+
+        ax.set_xlim(x_min, x_max)
+        ax.set_ylim(y_min, y_max)
+        ax.set_xlabel('X', fontsize=14)
+        ax.set_ylabel('Y', fontsize=14)
+        ax.set_title('2D Gravitational Energy Flux on Log Scale', fontsize=16)
+        ax.tick_params(axis='both', which='major', labelsize=12)
+        ax.grid(True, linestyle='--', linewidth=0.5, alpha=0.7)  # Add gridlines
+
+        plt.tight_layout()
+        
+        ani.save('energy_flux_animation_res.mp4', writer='ffmpeg', fps=9, dpi=300)
+        
+        plt.show()
+        
+    elif calculate_flux:
+        num_values = 50
+        
+        xs = np.linspace(x_min, x_max, Nx)
+        ys = np.linspace(y_min, y_max, Ny)
+        xv, yv = np.meshgrid(xs, ys)
+        z_val = 0
+
+        energy_flux_x = np.zeros((Nx, Ny))
+        energy_flux_y = np.zeros((Nx, Ny))
+        norm_factor = np.zeros((Nx, Ny))
+
+        xs = np.linspace(x_min, x_max, Nx)
+        ys = np.linspace(y_min, y_max, Ny)
+        xv, yv = np.meshgrid(xs, ys)
+        z_val = 0
+            
+        energy_flux_x = np.zeros((num_values, Nx, Ny))
+        energy_flux_y = np.zeros((num_values, Nx, Ny))
+        norm_factor = np.zeros((num_values, Nx, Ny))
+        a0_vals = 1.5 - np.arange(1, num_values+1) * 0.025  # Decrement the radius value on each frame
+        theta_vals = np.linspace(0, 4*np.pi, num_values)
+        
+        for i in range(Nx):
+            for j in range(Ny):
+                for num in range(num_values):
+                    a0_val = a0_vals[num]
+                    x_val = np.cos(theta_vals[num])*xv[i, j] - np.sin(theta_vals[num])*yv[i, j]
+                    y_val = np.sin(theta_vals[num])*xv[i, j] + np.cos(theta_vals[num])*yv[i, j]
+                    z_val = 0
+                    
+                    test_values = (t_val, a0_val, ω_val, m1_val, m2_val, x_val, y_val, z_val, dxdt_val, dydt_val, dzdt_val, S1x, S1y, S1z, S2x, S2y, S2z)
+                    g_metric, g_inv, Gamma, Gamma_partials, riemann_tensor, ricci_tensor_test, ricci_scalar_test, K_test, ll_tensor = calculate_tensors(test_values)
+                    
+                    norm_factor[num, i, j] = np.sqrt(ll_tensor[0,1]**2+ll_tensor[0,2]**2+ll_tensor[0,3]**2)  # Excluded z component
+                    energy_flux_x[num, i, j] = ll_tensor[0, 1]
+                    energy_flux_y[num, i, j] = ll_tensor[0, 2]
+
+        np.save("energy_flux_x.npy", energy_flux_x)
+        np.save("energy_flux_y.npy", energy_flux_y)
+
+    plt.show()
+    
+    sys.exit()
+        
+        
+    
+    # Parameters for grid
+    Nx, Ny, Nz = 15, 15, 6
+    x_min, x_max = -2, 2
+    y_min, y_max = -2, 2
+    z_min, z_max = -2, 2
+    
+    proj = "2D"
+    
+    if proj == "2D":
+        xs = np.linspace(x_min, x_max, Nx)
+        ys = np.linspace(y_min, y_max, Ny)
+        xv, yv = np.meshgrid(xs, ys)
+        z_val = 0
+        
+        energy_flux_x = np.zeros((Nx, Ny))
+        energy_flux_y = np.zeros((Nx, Ny))
+        norm_factor = np.zeros((Nx, Ny))
+        
+    elif proj == "3D":
+        xs = np.linspace(x_min, x_max, Nx)
+        ys = np.linspace(y_min, y_max, Ny)
+        zs = np.linspace(z_min, z_max, Nz)
+        xv, yv, zv = np.meshgrid(xs, ys, zs)
+        
+        energy_flux_x = np.zeros((Nx, Ny, Nz))
+        energy_flux_y = np.zeros((Nx, Ny, Nz))
+        energy_flux_z = np.zeros((Nx, Ny, Nz))
+        norm_factor = np.zeros((Nx, Ny, Nz))
 
     for i in range(Nx):
         for j in range(Ny):
-            for k in range(Nz):
-                x_val, y_val, z_val = xv[i, j, k], yv[i, j, k], zv[i, j, k]
+            if proj == "2D":
+                x_val, y_val, z_val = xv[i, j], yv[i, j], 0
                 test_values = (t_val, a0_val, ω_val, m1_val, m2_val, x_val, y_val, z_val, dxdt_val, dydt_val, dzdt_val, S1x, S1y, S1z, S2x, S2y, S2z)
-                g_metric, g_inv, Gamma, Gamma_partials, riemann_tensor, ricci_tensor_test, ricci_scalar_test, K_test = calculate_tensors(test_values)
-                
+                g_metric, g_inv, Gamma, Gamma_partials, riemann_tensor, ricci_tensor_test, ricci_scalar_test, K_test, LL_test = calculate_tensors(test_values)
                 ll_tensor = compute_landau_lifshitz(Gamma, g_inv)
+                norm_factor[i,j] = np.sqrt(ll_tensor[0,1]**2+ll_tensor[0,2]**2+ll_tensor[0,3]**2)  # Excluded z component
+                energy_flux_x[i, j] = ll_tensor[0, 1]
+                energy_flux_y[i, j] = ll_tensor[0, 2]
                 
-                norm_factor = 2.5 * np.sqrt(ll_tensor[0,1]**2+ll_tensor[0,2]**2+ll_tensor[0,3]**2)
-                
-                energy_flux_x[i, j, k] = ll_tensor[0, 1] / norm_factor
-                energy_flux_y[i, j, k] = ll_tensor[0, 2] / norm_factor
-                energy_flux_z[i, j, k] = ll_tensor[0, 3] / norm_factor
+            elif proj == "3D":
+                for k in range(Nz):
+                    x_val, y_val, z_val = xv[i, j, k], yv[i, j, k], zv[i, j, k]
+                    test_values = (t_val, a0_val, ω_val, m1_val, m2_val, x_val, y_val, z_val, dxdt_val, dydt_val, dzdt_val, S1x, S1y, S1z, S2x, S2y, S2z)
+                    g_metric, g_inv, Gamma, Gamma_partials, riemann_tensor, ricci_tensor_test, ricci_scalar_test, K_test, LL_test = calculate_tensors(test_values)
+                    
+                    ll_tensor = compute_landau_lifshitz(Gamma, g_inv)
+                    norm_factor[i,j,k] = np.sqrt(ll_tensor[0,1]**2+ll_tensor[0,2]**2+ll_tensor[0,3]**2)
+                    
+                    energy_flux_x[i, j, k] = ll_tensor[0, 1]
+                    energy_flux_y[i, j, k] = ll_tensor[0, 2]
+                    energy_flux_z[i, j, k] = ll_tensor[0, 3]
 
-    # magnitude = np.sqrt(energy_flux_x**2 + energy_flux_y**2 + energy_flux_z**2)
-    # norm = plt.Normalize(np.min(magnitude.ravel), np.max(magnitude.ravel))
+    # Compute the magnitude of the energy flux
+    magnitude = norm_factor
 
-    fig = plt.figure()
-    ax = fig.add_subplot(111, projection='3d')
-    # quiver = ax.quiver(xv, yv, zv, energy_flux_x, energy_flux_y, energy_flux_z, 
-    #                 length=0.1, normalize=True, colors=plt.cm.viridis(norm(magnitude)))
-    quiver = ax.quiver(xv, yv, zv, energy_flux_x, energy_flux_y, energy_flux_z)
-    ax.set_xlabel('X')
-    ax.set_ylabel('Y')
-    ax.set_zlabel('Z')
-    ax.set_title('3D Gravitational Energy Flux')
+    # Normalize magnitude for coloring
+    norm = plt.Normalize(np.min(magnitude), np.max(magnitude))
+    colors = plt.cm.viridis(norm(magnitude))
 
-    # # Create a colorbar for the quiver plot
-    # mappable = plt.cm.ScalarMappable(norm=norm, cmap=plt.cm.viridis)
-    # mappable.set_array(magnitude)
-    # cbar = plt.colorbar(mappable, ax=ax)
-    # cbar.set_label('Magnitude of Energy Flux')
+    if proj == "2D":
+        fig, ax = plt.subplots(figsize=(10, 8))  # Increase figure size
 
-    plt.show()
-    plt.quiver(xv, yv, energy_flux_x, energy_flux_y, scale=None, scale_units='inches')
-    plt.xlabel('x')
-    plt.ylabel('y')
-    plt.title('Gravitational Energy Flux')
-    plt.grid(True)
-    # plt.colorbar(label='Magnitude of Energy Flux')
-    plt.axis('equal')
-    # plt.show()
+        # Take the logarithm of the magnitude for visualization
+        log_magnitude = np.log1p(magnitude)
+        log_magnitude = np.nan_to_num(log_magnitude, nan=np.nanmean(log_magnitude), posinf=np.nanmax(log_magnitude), neginf=np.nanmin(log_magnitude))
+
+        # Adjust levels for contour plot
+        min_log_magnitude = np.min(log_magnitude)
+        max_log_magnitude = np.max(log_magnitude)
+        if min_log_magnitude == max_log_magnitude:
+            levels = [min_log_magnitude, min_log_magnitude + 1]
+        else:
+            levels = np.linspace(min_log_magnitude, max_log_magnitude, 50)
+
+        cont = ax.contourf(xv, yv, log_magnitude, levels=levels, cmap='viridis')  # Use viridis colormap
+        cbar = plt.colorbar(cont, ax=ax)
+        cbar.set_label('Logarithm of Magnitude of Energy Flux', fontsize=14)
+        cbar.ax.tick_params(labelsize=12)
+
+        # Plotting streamlines with aesthetic adjustments
+        strm = ax.streamplot(xv, yv, energy_flux_x, energy_flux_y, color='k', density=1, linewidth=1, arrowsize=1.5)
+
+        ax.set_xlabel('X', fontsize=14)
+        ax.set_ylabel('Y', fontsize=14)
+        ax.set_title('2D Gravitational Energy Flux on Log Scale', fontsize=16)
+        ax.tick_params(axis='both', which='major', labelsize=12)
+        ax.grid(True, linestyle='--', linewidth=0.5, alpha=0.7)  # Add gridlines
+
+        plt.tight_layout()  # Adjust layout
+        plt.show()
+    elif proj == "3D":
+        # Compute the magnitude of the vectors
+        magnitude = np.sqrt(energy_flux_x**2 + energy_flux_y**2 + energy_flux_z**2)
+
+        # Normalize the vectors
+        normalized_energy_flux_x = energy_flux_x / magnitude
+        normalized_energy_flux_y = energy_flux_y / magnitude
+        normalized_energy_flux_z = energy_flux_z / magnitude
+
+        # Create a 3D quiver plot
+        fig = plt.figure(figsize=(10, 8))
+        ax = fig.add_subplot(111, projection='3d')
+
+        # Use the magnitude to color the arrows and the viridis colormap to derive the colors
+        quiver = ax.quiver(xv, yv, zv, normalized_energy_flux_x, normalized_energy_flux_y, normalized_energy_flux_z, length=0.2, cmap='viridis', clim=[np.min(magnitude), np.max(magnitude)], lw=1.5)
+
+        # Add colorbar to represent magnitude
+        cbar = fig.colorbar(quiver, ax=ax, shrink=0.6)
+        cbar.set_label('Magnitude of Energy Flux', fontsize=14)
+
+        # Set labels and title
+        ax.set_xlabel('X', fontsize=14)
+        ax.set_ylabel('Y', fontsize=14)
+        ax.set_zlabel('Z', fontsize=14)
+        ax.set_title('3D Gravitational Energy Flux', fontsize=16)
+
+        plt.show()
+
+
+    
+    # elif proj == "3D":
+    #     fig = plt.figure()
+    #     ax = fig.gca(projection='3d')
+    #     quiver = ax.quiver(xv, yv, zv, energy_flux_x, energy_flux_y, energy_flux_z, color=colors)
+    #     ax.set_xlabel('X')
+    #     ax.set_ylabel('Y')
+    #     ax.set_zlabel('Z')
+    #     ax.set_title('3D Gravitational Energy Flux')
+    #     # Create a colorbar for the quiver plot
+    #     mappable = plt.cm.ScalarMappable(norm=norm, cmap=plt.cm.viridis)
+    #     mappable.set_array(magnitude)
+    #     cbar = plt.colorbar(mappable, ax=ax)
+    #     cbar.set_label('Magnitude of Energy Flux')
+    #     plt.show()
+
+
+
+# # The shape of LL_tensor should be (N, N, 4, 4)
+# if __name__ == "__main__":
+#     t_val = 0.1
+#     a0_val, ω_val = 1, 0.01
+#     m1_val, m2_val = 1, 1
+#     x_val, y_val, z_val = 0, 0, 0
+#     dxdt_val, dydt_val, dzdt_val = 0.0, 0.0, 0.0
+#     S1x, S1y, S1z, S2x, S2y, S2z = 0, 0, 1, 0, 0, 1
+#     test_values = (t_val, a0_val, ω_val, m1_val, m2_val, x_val, y_val, z_val, dxdt_val, dydt_val, dzdt_val, S1x, S1y, S1z, S2x, S2y, S2z)
+#     g_metric, g_inv, Gamma, Gamma_partials, riemann_tensor, ricci_tensor_test, ricci_scalar_test, K_test = calculate_tensors(test_values)
+#     LL_tensor = compute_landau_lifshitz(Gamma, g_inv)
+    
+#     # Parameters for grid
+#     Nx, Ny, Nz = 12, 12, 1
+#     x_min, x_max = -2, 2
+#     y_min, y_max = -2, 2
+#     z_min, z_max = -2, 2
+    
+#     proj = "2D"
+    
+#     if proj == "2D":
+#         xs = np.linspace(x_min, x_max, Nx)
+#         ys = np.linspace(y_min, y_max, Ny)
+#         xv, yv = np.meshgrid(xs, ys)
+#         z_val = 0
+        
+#         energy_flux_x = np.zeros((Nx, Ny))
+#         energy_flux_y = np.zeros((Nx, Ny))
+        
+#     elif proj == "3D":
+#         xs = np.linspace(x_min, x_max, Nx)
+#         ys = np.linspace(y_min, y_max, Ny)
+#         zs = np.linspace(z_min, z_max, Nz)
+#         xv, yv, zv = np.meshgrid(xs, ys, zs)
+        
+#         energy_flux_x = np.zeros((Nx, Ny, Nz))
+#         energy_flux_y = np.zeros((Nx, Ny, Nz))
+#         energy_flux_z = np.zeros((Nx, Ny, Nz))
+
+#     for i in range(Nx):
+#         for j in range(Ny):
+#             if proj == "2D":
+#                 x_val, y_val, z_val = xv[i, j], yv[i, j], 0
+#                 test_values = (t_val, a0_val, ω_val, m1_val, m2_val, x_val, y_val, z_val, dxdt_val, dydt_val, dzdt_val, S1x, S1y, S1z, S2x, S2y, S2z)
+#                 g_metric, g_inv, Gamma, Gamma_partials, riemann_tensor, ricci_tensor_test, ricci_scalar_test, K_test = calculate_tensors(test_values)
+#                 ll_tensor = compute_landau_lifshitz(Gamma, g_inv)
+#                 norm_factor = np.sqrt(ll_tensor[0,1]**2+ll_tensor[0,2]**2)  # Excluded z component
+#                 energy_flux_x[i, j] = ll_tensor[0, 1] / norm_factor
+#                 energy_flux_y[i, j] = ll_tensor[0, 2] / norm_factor
+#             elif proj == "3D":
+#                 for k in range(Nz):
+#                     x_val, y_val, z_val = xv[i, j, k], yv[i, j, k], zv[i, j, k]
+#                     test_values = (t_val, a0_val, ω_val, m1_val, m2_val, x_val, y_val, z_val, dxdt_val, dydt_val, dzdt_val, S1x, S1y, S1z, S2x, S2y, S2z)
+#                     g_metric, g_inv, Gamma, Gamma_partials, riemann_tensor, ricci_tensor_test, ricci_scalar_test, K_test = calculate_tensors(test_values)
+                    
+#                     ll_tensor = compute_landau_lifshitz(Gamma, g_inv)
+                    
+#                     norm_factor = np.sqrt(ll_tensor[0,1]**2+ll_tensor[0,2]**2+ll_tensor[0,3]**2)
+                    
+#                     energy_flux_x[i, j, k] = ll_tensor[0, 1] / norm_factor
+#                     energy_flux_y[i, j, k] = ll_tensor[0, 2] / norm_factor
+#                     energy_flux_z[i, j, k] = ll_tensor[0, 3] / norm_factor
+
+#     # magnitude = np.sqrt(energy_flux_x**2 + energy_flux_y**2 + energy_flux_z**2)
+#     # norm = plt.Normalize(np.min(magnitude.ravel), np.max(magnitude.ravel))
+
+#     if proj == "2D":
+
+#         fig, ax = plt.subplots()
+#         quiver = ax.quiver(xv, yv, energy_flux_x, energy_flux_y)
+        
+#         ax.set_xlabel('X')
+#         ax.set_ylabel('Y')
+#         ax.set_title('2D Gravitational Energy Flux')
+        
+#         plt.show()
+#     elif proj == "3D":
+        
+#         # quiver = ax.quiver(xv, yv, zv, energy_flux_x, energy_flux_y, energy_flux_z, 
+#         #                 length=0.1, normalize=True, colors=plt.cm.viridis(norm(magnitude)))
+#         fig = plt.figure()
+#         ax = fig.gca(projection='3d')
+#         quiver = ax.quiver(xv, yv, zv, energy_flux_x, energy_flux_y, energy_flux_z)
+#         ax.set_xlabel('X')
+#         ax.set_ylabel('Y')
+#         ax.set_zlabel('Z')
+#         ax.set_title('3D Gravitational Energy Flux')
+
+#         # # Create a colorbar for the quiver plot
+#         # mappable = plt.cm.ScalarMappable(norm=norm, cmap=plt.cm.viridis)
+#         # mappable.set_array(magnitude)
+#         # cbar = plt.colorbar(mappable, ax=ax)
+#         # cbar.set_label('Magnitude of Energy Flux')
+
+#         plt.show()
+#         # plt.quiver(xv, yv, energy_flux_x, energy_flux_y, scale=None, scale_units='inches')
+#         plt.xlabel('x')
+#         plt.ylabel('y')
+#         plt.title('Gravitational Energy Flux')
+#         plt.grid(True)
+#         # plt.colorbar(label='Magnitude of Energy Flux')
+#         plt.axis('equal')
+#     # plt.show()
+    
+    
+    
     # # Test function
     # t_val = 3.13
     # a0_val, ω_val = 1, 0.01

@@ -44,6 +44,7 @@ def g00(Param,Coord):
     term5 = 4/R1**2 * np.dot(v1, np.cross(S1, n1)) + 4/R2**2 * np.dot(v2, np.cross(S2, n2))
     
     # Not sure why negative sign needs to be added for simulation to match Neewtonian
+    # should be ds^2 ~ -(1-2M/r)dt^2 + 4 \eps_{ijk} n^j S^k dt dx^i + (1+2M/r)(dx_1^2+dx_2^2+dx_3^2) + [GW terms ~ O(1/r)]
     return + 1 - (term1 + term2 + term3a + term3b + term4 + term5)
 
 
